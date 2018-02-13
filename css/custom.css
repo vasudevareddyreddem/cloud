@@ -22,3 +22,63 @@
 .fon-s14{
 	font-size:14px !important;
 }
+.folder-img {
+	max-height:150px;
+	width:auto;
+	margin:0 auto;
+	padding:20px 0px;
+	vertical-align:center;
+	overflow:hidden;
+}
+.folder-img img{
+
+	width:100%;
+	margin:0 auto;
+}
+.card .folder-ti {
+    color: #555;
+    padding: 20px;
+    position: relative;
+    border-bottom: 1px solid rgba(204, 204, 204, 0.35);
+	background:#ddd;
+}
+li{
+	list-style-type:none;
+}
+.pad20 {
+   position: absolute;
+    top: 138px;
+    z-index: 1025;
+    right: 10px;
+    color: #fff;
+    background: #607d8b;
+    height: 30px;
+    width: 30px;
+    border-radius: :50%;
+    border-radius: 30px;
+    padding-left: 3px;
+    padding-top: 3px;
+	-webkit-box-shadow: -1px 0px 28px -4px rgba(0,0,0,0.75);
+-moz-box-shadow: -1px 0px 28px -4px rgba(0,0,0,0.75);
+box-shadow: -1px 0px 28px -4px rgba(0,0,0,0.75);
+}
+.fileUpload {
+    position: relative;
+    overflow: hidden;
+    margin: 10px;
+}
+.fileUpload input.upload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+.login-page,.signup-page {
+     background-image: url("../images/loginback.png");
+    
+}

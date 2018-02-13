@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>Welcome To | Bootstrap Based Admin Template - Material Design</title>
+    <title>Colud</title>
     <!-- Favicon-->
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 
@@ -28,6 +28,7 @@
 
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
     <link href="css/themes/all-themes.css" rel="stylesheet" />
+
 </head>
 
 <body class="theme-red">
@@ -62,10 +63,11 @@
                         <a href="javascript:void(0);" class="dropdown-toggle btn btn-blue-grey " data-toggle="dropdown" role="button">
                             Upload <span class="caret"></span>
                         </a>
-                        <ul class="dropdown-menu">
-                            <li><a href="javascript:void(0);"><i class="material-icons">file_upload</i>File Upload</a></li>
+						
+               <ul class="dropdown-menu fileUpload">
+                            <li><a href="javascript:void(0);"><i class="material-icons">file_upload</i><span type="file">File Upload</span><input type="file" class="upload" /></a></li>
                             <li role="seperator" class="divider"></li>
-                            <li><a href="javascript:void(0);"><i class="material-icons">folder</i>Folder Upload </a></li>
+                            <li><a href="javascript:void(0);"><i class="material-icons">folder</i><span>Folder Upload </span><input type="file" class="upload" /></a></li>
                             
                         </ul>
                     </li>
@@ -74,7 +76,7 @@
                             New <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="javascript:void(0);"><i class="material-icons">folder</i>Folder</a></li>
+                            <li data-toggle="modal" data-target="#smallModal"><a ><i class="material-icons">folder</i>Folder</a></li>
                             <li role="seperator" class="divider"></li>
                             <li><a href="javascript:void(0);"><i class="material-icons">assignment</i>Doc</a></li>
 							<li role="seperator" class="divider"></li>
@@ -212,13 +214,13 @@
                         </a>
                        
                         <ul class="dropdown-menu pull-right">
-                            <li><a href="javascript:void(0);"><i class="material-icons">person</i>Personal Account</a></li>
+                            <li><a href="profile.php"><i class="material-icons">person</i>Personal Account</a></li>
                             <li role="seperator" class="divider"></li>
                             <li><a href="javascript:void(0);"><i class="material-icons">settings</i>Settings</a></li>
                             <li><a href="javascript:void(0);"><i class="material-icons">open_in_browser</i>Upgrade</a></li>
                             <li><a href="javascript:void(0);"><i class="material-icons">live_help</i>Help</a></li>
                             <li role="seperator" class="divider"></li>
-                            <li><a href="javascript:void(0);"><i class="material-icons">input</i>Sign Out</a></li>
+                            <li><a href="login.php"><i class="material-icons">input</i>Sign Out</a></li>
                         </ul>
                     </li>
                     <!-- #END# Tasks -->
@@ -228,9 +230,33 @@
         </div>
     </nav>
     <!-- #Top Bar -->
-    
+    <div class="modal fade" id="smallModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-sm" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="smallModalLabel">Folder Name</h4>
+			</div>
+			<div class="modal-body">
+			    <div class="form-group">
+					<div class="form-line">
+						<input type="text" class="form-control" placeholder="Create Folder Name" />
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-link waves-effect">SAVE </button>
+				<button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
+			</div>
+		</div>
+	</div>
+</div>
 
 
 </body>
+<script>
+	document.getElementById("uploadBtn").onchange = function () {
+    document.getElementById("uploadFile").value = this.value;
+};
+</script>
 
 </html>

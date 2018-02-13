@@ -29,37 +29,18 @@
                 <ul class="list">
                     <li class="header">MAIN NAVIGATION</li>
                     <li class="active">
-                        <a href="index.html">
+                        <a href="index.php">
                             <i class="material-icons">dashboard</i>
                             <span>Dashboard</span>
                         </a>
                     </li>
                     
                     <li>
-                        <a href="javascript:void(0);" class="menu-toggle">
+                        <a href="pc.php" >
                             <i class="material-icons">important_devices</i>
                             <span>My Devices</span>
                         </a>
-                        <ul class="ml-menu">
-                            <li>
-                                <a href="pc.php" >
-                                    <span>PC</span>
-                                </a>
-                               
-                            </li>
-							 <li>
-                                <a href="javascript:void(0);" >
-                                    <span>Mobile</span>
-                                </a>
-                               
-                            </li>
-							 <li>
-                                <a href="javascript:void(0);" >
-                                    <span>Other Devices</span>
-                                </a>
-                               
-                            </li>
-                        </ul>
+                        
                     </li> 
 					<li>
                         <a href="javascript:void(0);" class="menu-toggle">
