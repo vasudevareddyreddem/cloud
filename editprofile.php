@@ -1,3 +1,4 @@
+
 <?php include('header.php'); ?>
 <?php include('sidebar.php'); ?>
 <section class="content">
@@ -41,10 +42,10 @@
                                     </div>
 								</div>
 								<div class="col-md-6">
-									 <div class="form-group">
-                                        <div class="form-line ">
-										<label>Name</label>
-                                            <input type="text" class="form-control" value="Lorem Ipsum is simply" placeholder="Enter your Name" />
+								 <div class="form-group">
+                                        <div class="form-line">
+										<label>Date of Birth</label>
+                                            <input type="text" class="datepicker form-control" placeholder="Please choose a date...">
                                         </div>
                                     </div>
 								</div>
@@ -55,15 +56,21 @@
                                             <input type="text" class="form-control" value="Lorem Ipsum is simply" placeholder="Enter your Name" />
                                         </div>
                                     </div>
-								</div>
+								</div>		
 								<div class="col-md-6">
 									 <div class="form-group">
                                         <div class="form-line ">
-										<label>Name</label>
-                                            <input type="text" class="form-control" value="Lorem Ipsum is simply" placeholder="Enter your Name" />
+										<label>Gender</label>
+									<select class="form-control show-tick">
+                                        <option value="">-- Please select Gender --</option>
+                                        <option value="10">Male</option>
+                                        <option value="10">Female</option>
+                                        
+                                    </select>
                                         </div>
                                     </div>
 								</div>
+								
 								<div class="col-md-6">
 									 <div class="form-group">
                                         <div class="form-line ">
@@ -97,4 +104,5 @@
             
             
     </section>
+	
 <?php include('footer.php'); ?>

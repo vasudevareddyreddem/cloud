@@ -33,8 +33,19 @@
 
     <!-- Sparkline Chart Plugin Js -->
     <script src="plugins/jquery-sparkline/jquery.sparkline.js"></script>
+<!-- Autosize Plugin Js -->
+    <script src="plugins/autosize/autosize.js"></script>
 
+    <!-- Moment Plugin Js -->
+    <script src="plugins/momentjs/moment.js"></script>
+
+    <!-- Bootstrap Material Datetime Picker Plugin Js -->
+    <script src="plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+
+ 
     <!-- Custom Js -->
     <script src="js/admin.js"></script>
+	  
+    <script src="js/pages/forms/basic-form-elements.js"></script>
     <script src="js/pages/index.js"></script>
 
