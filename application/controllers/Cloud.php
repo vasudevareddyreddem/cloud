@@ -134,7 +134,15 @@ class Cloud extends CI_Controller {
 			}else{
 				$email_check=$this->User_model->get_forgotpassword_details($post['email']);
 				if(count($email_chec)>0){
-					
+						$this->load->library('email');
+						$this->email->set_newline("\r\n");
+						$this->email->set_mailtype("html");
+						$this->email->from('Cloud.com');
+						$this->email->to($email);
+						$this->email->subject('shofus - Forgot Password');
+						$html = $this->load->view('email/forgetpassword', $data, true); 
+						$this->email->message($html);
+						$this->email->send();
 				}else{
 					$this->session->set_flashdata('error','You are unregistered email id. Please try again');
 					redirect('');
