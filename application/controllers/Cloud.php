@@ -125,8 +125,22 @@ class Cloud extends CI_Controller {
 	public function forgotpassword(){
 		if(!$this->session->userdata('userdetails'))
 		 {
-			$post=$this->input->post(); 
-			 echo '<pre>';print_r($post);exit;
+			$post=$this->input->post();
+			$this->form_validation->set_rules('email', 'Email', 'required|valid_email|trim|xss_clean');
+			if ($this->form_validation->run() == FALSE) {
+			$data['validationerrors'] = validation_errors();
+			$data['tab'] ='3';
+			$this->load->view('html/login',$data);
+			}else{
+				$email_check=$this->User_model->get_forgotpassword_details($post['email']);
+				if(count($email_chec)>0){
+					
+				}else{
+					$this->session->set_flashdata('error','You are unregistered email id. Please try again');
+					redirect('');
+				}
+			}		
+			 echo '<pre>';print_r($email_check);exit;
 		 }else{
 			$this->session->set_flashdata('loginerror','Please login to continue');
 			redirect('dashboard');

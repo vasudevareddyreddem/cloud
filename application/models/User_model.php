@@ -27,6 +27,10 @@ class User_model extends CI_Model
 		$this->db->select('users.u_id,users.role')->from('users');		
 		$this->db->where('u_email', $email);
 		return $this->db->get()->row_array();
+	}public function get_forgotpassword_details($email){
+		$this->db->select('users.u_id,users.role,users.u_orginalpassword,users.u_name,users.u_email')->from('users');		
+		$this->db->where('u_email', $email);
+		return $this->db->get()->row_array();
 	}public function check_mobile_unique($mobile){
 		$this->db->select('users.u_id,users.role')->from('users');		
 		$this->db->where('u_mobile', $mobile);
