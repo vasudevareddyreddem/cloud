@@ -4,6 +4,19 @@
 .mart-20{
 	margin-top:20px;
 }
+/* login page css strat */
+.mart-50{
+	margin-top:50px;
+}
+	.login-design{
+		background:#fff;
+		border-radius:8px;
+		padding:10px 30px;
+	}
+	.pad30{
+		padding:30px;
+	}
+/* login page css end */	
 .pos-ab{
 	position:absolute;
 	left:0;
