@@ -30,7 +30,12 @@
 							<?php } ?>
 							</div>
 							<form id="editform" name="editform" action="<?php echo base_url('profile/editpost'); ?>" method="post" enctype="multipart/form-data">
-
+								<?php $csrf = array(
+										'name' => $this->security->get_csrf_token_name(),
+										'hash' => $this->security->get_csrf_hash()
+								); ?>
+								<input type="hidden" name="<?=$csrf['name'];?>" value="<?=$csrf['hash'];?>" />
+							
 							<div class="col-md-8 card"><br>
 								<div class="row">	
 								<div class="col-md-6">
