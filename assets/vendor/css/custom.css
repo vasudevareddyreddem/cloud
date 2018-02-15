@@ -96,6 +96,15 @@ box-shadow: -1px 0px 28px -4px rgba(0,0,0,0.75);
     
 }
 /* notifications */
+.bg-succ{
+	background:#449d44 !important;
+}
+.bg-del{
+	background:#d9534f !important;
+}
+.bg-warn{
+	background:#f0ad4e !important;
+}
 	.ico_bac{
 		background:#fff;
 		border-radius:50%;
