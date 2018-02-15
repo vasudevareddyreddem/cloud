@@ -69,7 +69,14 @@
                         </a>
 						
 						<ul class="dropdown-menu ">
-							<li class="fileUpload"><a href="javascript:void(0);"><i class="material-icons">file_upload</i><span type="file">File Upload</span><input type="file" class="upload" /></a></li>
+							<li class="fileUpload">
+							<a href="javascript:void(0);"><i class="material-icons">file_upload</i>
+							<form id="imageadd" name="imageadd" action="<?php echo base_url('dashboard/filepost'); ?>" method="post" enctype="multipart/form-data">
+							<span type="file">File Upload</span>
+							<input type="file" name="file" id="file" class="upload" onchange="file_upload()" />
+							</form>
+							</a>
+							</li>
 							<li role="seperator" class="divider"></li>
 							<li class="fileUpload"><a href="javascript:void(0);"><i class="material-icons">folder</i><span>Folder Upload </span><input type="file" class="upload" /></a></li>
 							
@@ -259,4 +266,9 @@
 	document.getElementById("uploadBtn").onchange = function () {
     document.getElementById("uploadFile").value = this.value;
 };
+
+function file_upload(){
+	 document.getElementById("imageadd").submit();
+	
+}
 </script>
