@@ -19,36 +19,33 @@
 							<?php } ?>
 							</div>
 							<div class="col-md-8 card"><br>
-								<div class="form-group">
-							<label class=" control-label">Name</label>  
-							<div class=" inputGroupContainer">
-							<div class="input-group">
-							<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-							<input  name="custname" id="custname" placeholder="Name" class="form-control"  type="text">
-							</div>
-						</div>
-					</div>
-					<div class="form-group">
-						<label class=" control-label">E-Mail</label>  
-						<div class=" inputGroupContainer">
-						<div class="input-group">
-						<span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-						<input id="email" name="email" placeholder="E-Mail Address" class="form-control"  type="text" autocomplete="off">
-						</div>
-						</div>
-					</div>
-					<div class="form-group">
-						<label class=" control-label">Phone #</label>  
-							<div class=" inputGroupContainer">
-								<div class="input-group">
-								<span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
-								<input name="mobile" id="mobile" placeholder="Mobile" class="form-control" type="text">
-							</div>
-						</div>
-					</div>
-					<div class="form-group">
-						<label class=" control-label">DOB</label>  
-							<div class="form-line">
+								<div class="col-md-6">
+									 <div class="form-group">
+                                        <div class="form-line ">
+										<label>Name</label>
+                                            <input type="text" id="custname" name="custname" class="form-control" value="<?php echo htmlentities($userdetails['u_name']);?>" placeholder="Enter your Name" />
+                                        </div>
+                                    </div>
+								</div>
+								<div class="col-md-6">
+									 <div class="form-group">
+                                        <div class="form-line ">
+										<label>Email</label>
+                                            <input type="email" id="email" name="email" class="form-control" value="<?php echo htmlentities($userdetails['u_email']);?>" placeholder="Enter your Email" />
+                                        </div>
+                                    </div>
+								</div>
+								<div class="col-md-6">
+									 <div class="form-group">
+                                        <div class="form-line ">
+										<label>Mobile</label>
+                                            <input type="text" id="mobile" name="mobile" class="form-control" value="<?php echo htmlentities($userdetails['u_mobile']);?>"  />
+                                        </div>
+                                    </div>
+								</div>
+								<div class="col-md-6">
+								 <div class="form-group">
+                                        <div class="form-line">
 										<label>Date of Birth</label>
 										<?php if($userdetails['u_dob']!=''){ ?>
                                             <input type="text" id="dob" name="dob" class="datepicker form-control" placeholder="Please choose a date..." value="<?php echo htmlentities($userdetails['u_dob']);?> ">
@@ -57,25 +54,38 @@
 
 										<?php } ?>
                                         </div>
-					</div>
-					<div class="form-group">
-						<label class=" control-label">GENDER</label>  
-							<div class=" inputGroupContainer">
-								<div class="input-group">
-								<span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
-								<input name="mobile" id="mobile" placeholder="Mobile" class="form-control" type="text">
-							</div>
-						</div>
-					</div>
-					<div class="form-group">
-						<label class=" control-label">Profile Pic</label>  
-							<div class=" inputGroupContainer">
-								<div class="input-group">
-								<span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
-								<input name="mobile" id="mobile" placeholder="Mobile" class="form-control" type="text">
-							</div>
-						</div>
-					</div>
+                                   </div>
+								</div>
+								<div class="col-md-6">
+									 <div class="form-group">
+                                        <div class="form-line ">
+										<label>Gender</label>
+									<select class="form-control show-tick" id="gender" name="gender">
+                                        <option value="">-- Please select Gender --</option>
+                                        <?php if($userdetails['u_gender']=='Male'){ ?>
+										<option value="Male" selected>Male</option>
+                                        <option value="Female">Female</option>
+										<?php }if($userdetails['u_gender']=='Female'){?>
+										<option value="Male">Male</option>
+                                        <option value="Female" selected>Female</option>
+										<?php }else{ ?>
+										<option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+										<?php } ?>
+                                        
+                                    </select>
+                                        </div>
+                                    </div>
+								</div>
+								
+								<div class="col-md-6">
+									 <div class="form-group">
+                                        <div class="form-line ">
+										<label>Profile Pic</label>
+                                            <input type="file" name="image" id="image" class="form-control"  />
+                                        </div>
+                                    </div>
+								</div>
 								
 									<button type="submit"  class="btn btn-primary pull-right ">Update</button>
 									<div class="clearfix">&nbsp;</div>
