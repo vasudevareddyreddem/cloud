@@ -58,8 +58,18 @@
             <div class="navbar-header">
                 <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
                 <a href="javascript:void(0);" class="bars"></a>
-                <a class="navbar-brand" href="index.html">CLOUD-LOGO</a>
+                <a class="navbar-brand" href="<?php echo base_url(); ?>">CLOUD-LOGO</a>
             </div>
+			<?php if($this->session->flashdata('success')): ?>
+				<div class="alert_msg1 animated slideInUp bg-succ">
+				<?php echo $this->session->flashdata('success');?> &nbsp; <i class="glyphicon glyphicon-ok text-success ico_bac" aria-hidden="true"></i>
+				</div>
+			<?php endif; ?>
+			<?php if($this->session->flashdata('error')): ?>
+				<div class="alert_msg1 animated slideInUp bg-warn">
+				<?php echo $this->session->flashdata('error');?> &nbsp; <i class="glyphicon glyphicon-ok text-success ico_bac" aria-hidden="true"></i>
+				</div>
+			<?php endif; ?>
             <div class="collapse navbar-collapse" id="navbar-collapse">
                 <ul class="nav navbar-nav navbar-left m-l-100">
                     <!-- Call Search -->
@@ -72,6 +82,14 @@
 							<li class="fileUpload">
 							<a href="javascript:void(0);"><i class="material-icons">file_upload</i>
 							<form id="imageadd" name="imageadd" action="<?php echo base_url('dashboard/filepost'); ?>" method="post" enctype="multipart/form-data">
+							<?php $csrf = array(
+										'name' => $this->security->get_csrf_token_name(),
+										'hash' => $this->security->get_csrf_hash()
+								); ?>
+								<input type="hidden" name="<?=$csrf['name'];?>" value="<?=$csrf['hash'];?>" />
+								<input type="hidden" name="pageid" value="<?php echo isset($page_id)?$page_id:'0'; ?>" />
+								<input type="hidden" name="floderid" value="<?php echo isset($floder_id)?$floder_id:'0'; ?>" />
+							
 							<span type="file">File Upload</span>
 							<input type="file" name="file" id="file" class="upload" onchange="file_upload()" />
 							</form>
@@ -244,26 +262,33 @@
     <div class="modal fade" id="smallModal" tabindex="-1" role="dialog">
 	<div class="modal-dialog modal-sm" role="document">
 		<div class="modal-content">
+		<form id="createfloder" name="createfloder" action="<?php echo base_url('dashboard/flodername'); ?>" method="post">
+			<?php $csrf = array(
+										'name' => $this->security->get_csrf_token_name(),
+										'hash' => $this->security->get_csrf_hash()
+								); ?>
+			<input type="hidden" name="<?=$csrf['name'];?>" value="<?=$csrf['hash'];?>" />
+			<input type="hidden" name="pageid" value="<?php echo isset($page_id)?$page_id:0; ?>" />
+			<input type="hidden" name="floderid" value="<?php echo isset($floder_id)?$floder_id:0; ?>" />
 			<div class="modal-header">
 				<h4 class="modal-title" id="smallModalLabel">Folder Name</h4>
 			</div>
 			<div class="modal-body">
 			    <div class="form-group">
 					<div class="form-line">
-						<input type="text" class="form-control" placeholder="Create Folder Name" />
+						<input type="text" id="flodername" name="flodername" class="form-control" placeholder="Create Folder Name" />
 					</div>
 				</div>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-link waves-effect">SAVE </button>
+				<button type="submit" class="btn btn-link waves-effect">SAVE </button>
 				<button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
 			</div>
+			</form>
 		</div>
 	</div>
 </div>
-	<div class="alert_msg1 animated slideInUp bg-black">
-	Test Alert Notification &nbsp; <i class="glyphicon glyphicon-ok text-success ico_bac" aria-hidden="true"></i>
- </div>
+
 <script>
 	document.getElementById("uploadBtn").onchange = function () {
     document.getElementById("uploadFile").value = this.value;
@@ -273,4 +298,23 @@ function file_upload(){
 	 document.getElementById("imageadd").submit();
 	
 }
+$(document).ready(function() {
+    $('#createfloder').bootstrapValidator({
+        
+        fields: {
+            flodername: {
+               validators: {
+					notEmpty: {
+						message: 'Floder Name is required'
+					},
+					regexp: {
+					regexp: /^[a-zA-Z0-9. ]+$/,
+					message: 'Name can only consist of alphanumaric, space and dot'
+					}
+				}
+            }
+            }
+        })
+     
+	});
 </script>
