@@ -72,7 +72,7 @@ class Profile extends CI_Controller {
 			}
 			if ($this->form_validation->run() == FALSE) {
 				$data['validationerrors'] = validation_errors();
-				echo '<pre>';print_r($data);exit;
+				//echo '<pre>';print_r($data);exit;
 				$this->load->view('html/header',$data);
 				$this->load->view('html/sidebar',$data);
 				$this->load->view('html/editprofile',$data);
