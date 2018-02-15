@@ -261,7 +261,9 @@
 		</div>
 	</div>
 </div>
-
+	<div class="alert_msg1 animated slideInUp bg-black">
+	Test Alert Notification &nbsp; <i class="glyphicon glyphicon-ok text-success ico_bac" aria-hidden="true"></i>
+ </div>
 <script>
 	document.getElementById("uploadBtn").onchange = function () {
     document.getElementById("uploadFile").value = this.value;
