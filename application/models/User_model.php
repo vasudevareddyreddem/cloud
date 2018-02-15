@@ -45,6 +45,10 @@ class User_model extends CI_Model
 		$sql1="UPDATE users SET u_barcode ='".$u_id."', u_barcode_image ='".$barcode."' WHERE u_id = '".$u_id."'";
        	return $this->db->query($sql1);
 	}
+	public function update_user_data($u_id,$data){
+		$this->db->where('u_id', $u_id);
+		return $this->db->update('users', $data);
+	}
 
 
 }
