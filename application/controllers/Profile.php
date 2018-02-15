@@ -61,28 +61,28 @@ class Profile extends CI_Controller {
 			}else{
 				$this->form_validation->set_rules('email', 'Email', 'required|valid_email|trim|xss_clean|callback_check_email_unique');
 			}
-			if($post['mobile']== $data['userdetails']['u_mobile']){
+			if($data['userdetails']['u_mobile'] == $this->input->post('mobile')){
 			$this->form_validation->set_rules('mobile', 'Mobile',  'required|min_length[10]|xss_clean');
 			}else{
 			$this->form_validation->set_rules('mobile', 'Mobile',  'required|min_length[10]|xss_clean|callback_check_mobile_unique');
 			}
-				$this->form_validation->set_rules('gender', 'Gender',  'required|trim|xss_clean');
-				$this->form_validation->set_rules('mobile', 'Mobile',  'required|min_length[10]|xss_clean|callback_check_mobile_unique');
+			$this->form_validation->set_rules('gender', 'Gender',  'required|trim|xss_clean');
 			if($_FILES['file']['name']!=''){
 				$this->form_validation->set_rules('file', '', 'callback_file_check');
 			}
 			if ($this->form_validation->run() == FALSE) {
 				$data['validationerrors'] = validation_errors();
-				//echo '<pre>';print_r($data);exit;
+				echo '<pre>';print_r($data);exit;
 				$this->load->view('html/header',$data);
 				$this->load->view('html/sidebar',$data);
 				$this->load->view('html/editprofile',$data);
+				$this->load->view('html/footer');
 			}else{
 				
 				$username = $this->security->sanitize_filename($this->input->post('custname'), TRUE);
 				$useremail = $this->security->sanitize_filename($this->input->post('email'), TRUE);
 				$usermobile =$this->security->sanitize_filename($this->input->post('mobile'), TRUE);
-				$dob ='1992-07-14';
+				$dob =$post['dob'];
 				if($_FILES['file']['name']!=''){
 					$pic=$_FILES['file']['name'];
 					move_uploaded_file($_FILES['file']['tmp_name'], "assets/users/" . $pic);

@@ -9,6 +9,17 @@
                                     <h2><?php echo htmlentities($userdetails['u_name']);?> Edit Profile</h2>
                             </div>
                         </div>
+						<?php if($this->session->flashdata('error')): ?>
+						<div class="alert alert-warning alert-dismissable">
+						<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+						<?php echo $this->session->flashdata('error');?>
+						</div>
+					<?php endif; ?>
+					<?php if(validation_errors()):?>
+					<div class="alert alert-warning alert-dismissable">
+						<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+						<?php echo validation_errors(); ?></div>
+					<?php  endif;?>
                         <div class="body">
 						<div class="row clearfix">
 							<div class="col-md-2">
@@ -94,7 +105,7 @@
 								</div>
 								</div>
 								
-									<button type="submit pull-right" class="btn btn-warning" >Update <span class="glyphicon glyphicon-send"></span></button>
+									<button type="submit" class="btn btn-warning  pull-right" >Update <span class="glyphicon glyphicon-send"></span></button>
 									</br>
 									</br>
 									
@@ -110,6 +121,7 @@
             </div>
   </section>
  <script>
+ 
 	 $(document).ready(function() {
     $('#editform').bootstrapValidator({
         
@@ -162,16 +174,7 @@
 					message: 'Uploaded file is not a valid image. Only JPG, PNG and GIF files are allowed'
 					}
 				}
-            },
-			
-           
-            dob: {
-					 validators: {
-						 notEmpty: {
-						message: 'Date of Birth is required'
-					}
-					}
-				}
+            }
             }
         })
      
