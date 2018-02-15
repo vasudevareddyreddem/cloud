@@ -46,6 +46,21 @@ class Profile extends CI_Controller {
 		}
 		
 	}
+	public function editpost()
+	{
+		if($this->session->userdata('userdetails'))
+		{
+			$loginuser_id=$this->session->userdata('userdetails');
+			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
+			$this->load->view('html/header',$data);
+			$this->load->view('html/sidebar',$data);
+			$this->load->view('html/editprofile',$data);
+			$this->load->view('html/footer');
+		}else{
+			$this->load->view('html/login');
+		}
+		
+	}
 	
 	
 	
