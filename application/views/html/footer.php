@@ -1,9 +1,8 @@
 
-    <!-- Jquery Core Js -->
-    <script src="<?php echo base_url(); ?>assets/vendor/plugins/jquery/jquery.min.js"></script>
-
     <!-- Bootstrap Core Js -->
+	
     <script src="<?php echo base_url(); ?>assets/vendor/plugins/bootstrap/js/bootstrap.js"></script>
+	 <script src="<?php echo base_url(); ?>assets/vendor/js/bootstrapValidator.min.js"></script>
 	   <script src="<?php echo base_url(); ?>assets/vendor/plugins/bootstrap-select/js/bootstrap-select.js"></script>
 
     <!-- Select Plugin Js -->

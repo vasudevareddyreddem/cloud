@@ -13,7 +13,9 @@
     <link href="<?php echo base_url(); ?>assets/vendor/css/robotfont.css" rel="stylesheet" type="text/css">
 
     <!-- Bootstrap Core Css -->
+	
     <link href="<?php echo base_url(); ?>assets/vendor/plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+	<link href="<?php echo base_url(); ?>assets/vendor/css/bootstrapValidator.min.css" rel="stylesheet">
 	<link href="<?php echo base_url(); ?>assets/vendor/plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
 
     <!-- Waves Effect Css -->
@@ -29,7 +31,7 @@
 
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
     <link href="<?php echo base_url(); ?>assets/vendor/css/themes/all-themes.css" rel="stylesheet" />
-	
+	 <script src="<?php echo base_url(); ?>assets/vendor/plugins/jquery/jquery.min.js"></script>
 
 </head>
 

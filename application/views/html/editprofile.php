@@ -2,7 +2,7 @@
         <div class="container-fluid">
             <div class="row clearfix">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-				<form id="editform" name="editform" action="<?php echo base_url('profile/editpost'); ?>" method="post" enctype="multipart/form-data">
+				
                     <div class="card">
                         <div class="header">
                             <div class="row clearfix">
@@ -18,12 +18,14 @@
 							<img class="img-responsive thumbnail" src="<?php echo base_url('assets/users/user.png'); ?>"  alt="User" />
 							<?php } ?>
 							</div>
+							<form  method="post"  id="contact_form">
 							<div class="col-md-8 card"><br>
+								<div class="row">	
 								<div class="col-md-6">
 									 <div class="form-group">
-                                        <div class="form-line ">
-										<label>Name</label>
-                                            <input type="text" id="custname" name="custname" class="form-control" value="<?php echo htmlentities($userdetails['u_name']);?>" placeholder="Enter your Name" />
+										 <div class="input-group form-line ">
+										 <label class=" control-label">Name</label>
+                                            <input name="first_name" placeholder="First Name" class="form-control"  type="text">
                                         </div>
                                     </div>
 								</div>
@@ -31,15 +33,17 @@
 									 <div class="form-group">
                                         <div class="form-line ">
 										<label>Email</label>
-                                            <input type="email" id="email" name="email" class="form-control" value="<?php echo htmlentities($userdetails['u_email']);?>" placeholder="Enter your Email" />
+                                            <input type="email" class="form-control" value="Lorem @gmail.com" placeholder="Enter your Email" />
                                         </div>
                                     </div>
 								</div>
+								</div>
+								<div class="row">
 								<div class="col-md-6">
 									 <div class="form-group">
                                         <div class="form-line ">
-										<label>Mobile</label>
-                                            <input type="text" id="mobile" name="mobile" class="form-control" value="<?php echo htmlentities($userdetails['u_mobile']);?>"  />
+										<label>Name</label>
+                                            <input type="text" class="form-control" value="Lorem Ipsum is simply" placeholder="Enter your Name" />
                                         </div>
                                     </div>
 								</div>
@@ -47,123 +51,168 @@
 								 <div class="form-group">
                                         <div class="form-line">
 										<label>Date of Birth</label>
-										<?php if($userdetails['u_dob']!=''){ ?>
-                                            <input type="text" id="dob" name="dob" class="datepicker form-control" placeholder="Please choose a date..." value="<?php echo htmlentities($userdetails['u_dob']);?> ">
-										<?php }else{ ?>
-										     <input type="text" id="dob" name="dob" class="datepicker form-control" placeholder="Please choose a date..." value="">
-
-										<?php } ?>
+                                            <input type="text" class="datepicker form-control" placeholder="Please choose a date...">
                                         </div>
-                                   </div>
+                                    </div>
 								</div>
+								</div>
+								<div class="row">
+								<div class="col-md-6">
+									 <div class="form-group">
+                                        <div class="form-line ">
+										<label>Name</label>
+                                            <input type="text" class="form-control" value="Lorem Ipsum is simply" placeholder="Enter your Name" />
+                                        </div>
+                                    </div>
+								</div>		
 								<div class="col-md-6">
 									 <div class="form-group">
                                         <div class="form-line ">
 										<label>Gender</label>
-									<select class="form-control show-tick" id="gender" name="gender">
+									<select class="form-control show-tick">
                                         <option value="">-- Please select Gender --</option>
-                                        <?php if($userdetails['u_gender']=='Male'){ ?>
-										<option value="Male" selected>Male</option>
-                                        <option value="Female">Female</option>
-										<?php }if($userdetails['u_gender']=='Female'){?>
-										<option value="Male">Male</option>
-                                        <option value="Female" selected>Female</option>
-										<?php }else{ ?>
-										<option value="Male">Male</option>
-                                        <option value="Female">Female</option>
-										<?php } ?>
+                                        <option value="10">Male</option>
+                                        <option value="10">Female</option>
                                         
                                     </select>
                                         </div>
                                     </div>
 								</div>
-								
+								</div>
+								<div class="row">
+								<div class="col-md-6">
+									 <div class="form-group">
+                                        <div class="form-line ">
+										<label>Name</label>
+                                            <input type="text" class="form-control" value="Lorem Ipsum is simply" placeholder="Enter your Name" />
+                                        </div>
+                                    </div>
+								</div>
 								<div class="col-md-6">
 									 <div class="form-group">
                                         <div class="form-line ">
 										<label>Profile Pic</label>
-                                            <input type="file" name="image" id="image" class="form-control"  />
+                                            <input type="file" class="form-control"  />
                                         </div>
                                     </div>
 								</div>
+								</div>
 								
-									<button type="submit"  class="btn btn-primary pull-right ">Update</button>
-									<div class="clearfix">&nbsp;</div>
+									<button type="submit pull-right" class="btn btn-warning" >Update <span class="glyphicon glyphicon-send"></span></button>
 									</br>
+									</br>
+									
+								
 							</div>
+							</form>
 						</div>
                  </div>
             </div>
-			</form>
+			
             </div>
             </div>
             </div>
   </section>
-  <script>
-  $(document).ready(function() {
-    $('#editform').bootstrapValidator({
+ <script>
+	$(document).ready(function() {
+    $('#contact_form').bootstrapValidator({
         
         fields: {
-            custname: {
-               validators: {
-					notEmpty: {
-						message: 'Name is required'
-					},
-					regexp: {
-					regexp: /^[a-zA-Z0-9. ]+$/,
-					message: 'Name can only consist of alphanumaric, space and dot'
-					}
-				}
-            },
-             email: {
+            first_name: {
                 validators: {
-					notEmpty: {
-						message: 'Email is required'
-					},
-					regexp: {
-					regexp: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-					message: 'Please enter a valid email address. For example johndoe@domain.com.'
-					}
-				}
-            },
-			mobile: {
-              validators: {
-					 notEmpty: {
-						message: 'Mobile Number is required'
-					},
-                    regexp: {
-					regexp:  /^[0-9]{10}$/,
-					message:'Mobile Number must be 10 digits'
-					}
+                        stringLength: {
+                        min: 2,
+                    },
+                        notEmpty: {
+                        message: 'Please supply your first name'
+                    }
                 }
             },
-			gender: {
-              validators: {
-					 notEmpty: {
-						message: 'gender is required'
-					}
+             last_name: {
+                validators: {
+                     stringLength: {
+                        min: 2,
+                    },
+                    notEmpty: {
+                        message: 'Please supply your last name'
+                    }
                 }
             },
-			image: {
-              validators: {
-					  
-					regexp: {
-					regexp: /\.(jpe?g|png|gif)$/i,
-					message: 'Uploaded file is not a valid image. Only JPG, PNG and GIF files are allowed'
-					}
-				}
+            email: {
+                validators: {
+                    notEmpty: {
+                        message: 'Please supply your email address'
+                    },
+                    emailAddress: {
+                        message: 'Please supply a valid email address'
+                    }
+                }
             },
-			
-           
-            dob: {
-					 validators: {
-						 notEmpty: {
-						message: 'Date of Birth is required'
-					}
-					}
-				}
+            phone: {
+                validators: {
+                    notEmpty: {
+                        message: 'Please supply your phone number'
+                    },
+                    phone: {
+                        country: 'US',
+                        message: 'Please supply a vaild phone number with area code'
+                    }
+                }
+            },
+            address: {
+                validators: {
+                     stringLength: {
+                        min: 8,
+                    },
+                    notEmpty: {
+                        message: 'Please supply your street address'
+                    }
+                }
+            },
+            city: {
+                validators: {
+                     stringLength: {
+                        min: 4,
+                    },
+                    notEmpty: {
+                        message: 'Please supply your city'
+                    }
+                }
+            },
+            state: {
+                validators: {
+                    notEmpty: {
+                        message: 'Please select your state'
+                    }
+                }
+            },
+            zip: {
+                validators: {
+                    notEmpty: {
+                        message: 'Please supply your zip code'
+                    },
+                    zipCode: {
+                        country: 'US',
+                        message: 'Please supply a vaild zip code'
+                    }
+                }
+            },
+            comment: {
+                validators: {
+                      stringLength: {
+                        min: 10,
+                        max: 200,
+                        message:'Please enter at least 10 characters and no more than 200'
+                    },
+                    notEmpty: {
+                        message: 'Please supply a description of your project'
+                    }
+                    }
+                }
             }
         })
      
 });
-  </script>
+
+
+</script>
