@@ -9,6 +9,17 @@
                                     <h2><?php echo htmlentities($userdetails['u_name']);?> Edit Profile</h2>
                             </div>
                         </div>
+						<?php if($this->session->flashdata('error')): ?>
+						<div class="alert alert-warning alert-dismissable">
+						<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+						<?php echo $this->session->flashdata('error');?>
+						</div>
+					<?php endif; ?>
+					<?php if(validation_errors()):?>
+					<div class="alert alert-warning alert-dismissable">
+						<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+						<?php echo validation_errors(); ?></div>
+					<?php  endif;?>
                         <div class="body">
 						<div class="row clearfix">
 							<div class="col-md-2">
@@ -19,7 +30,12 @@
 							<?php } ?>
 							</div>
 							<form id="editform" name="editform" action="<?php echo base_url('profile/editpost'); ?>" method="post" enctype="multipart/form-data">
-
+								<?php $csrf = array(
+										'name' => $this->security->get_csrf_token_name(),
+										'hash' => $this->security->get_csrf_hash()
+								); ?>
+								<input type="hidden" name="<?=$csrf['name'];?>" value="<?=$csrf['hash'];?>" />
+							
 							<div class="col-md-8 card"><br>
 								<div class="row">	
 								<div class="col-md-6">
@@ -94,7 +110,7 @@
 								</div>
 								</div>
 								
-									<button type="submit pull-right" class="btn btn-warning" >Update <span class="glyphicon glyphicon-send"></span></button>
+									<button type="submit" class="btn btn-warning  pull-right" >Update <span class="glyphicon glyphicon-send"></span></button>
 									</br>
 									</br>
 									
@@ -110,6 +126,7 @@
             </div>
   </section>
  <script>
+ 
 	 $(document).ready(function() {
     $('#editform').bootstrapValidator({
         
@@ -162,16 +179,7 @@
 					message: 'Uploaded file is not a valid image. Only JPG, PNG and GIF files are allowed'
 					}
 				}
-            },
-			
-           
-            dob: {
-					 validators: {
-						 notEmpty: {
-						message: 'Date of Birth is required'
-					}
-					}
-				}
+            }
             }
         })
      

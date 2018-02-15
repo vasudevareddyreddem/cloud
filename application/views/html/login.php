@@ -31,7 +31,12 @@
 					<?php  endif;?>
 				<div id="login_form" <?php if(isset($tab)&& $tab ==1 ||  isset($tab) && $tab ==''){ ?> style="" <?php }else{ ?>style="display:none;" <?php } ?>>
                 <form action="<?php echo base_url('cloud/login_post'); ?>" id="sign_in" name="sign_in" method="POST">
-                  
+                  	<?php $csrf = array(
+										'name' => $this->security->get_csrf_token_name(),
+										'hash' => $this->security->get_csrf_hash()
+								); ?>
+								<input type="hidden" name="<?=$csrf['name'];?>" value="<?=$csrf['hash'];?>" />
+							
 				<div class="form-group">
 					<label class=" control-label">E-Mail</label>  
 					<div class=" inputGroupContainer">
@@ -77,7 +82,12 @@
 				
 				<div <?php if(isset($tab)&& $tab ==2){ ?> style="" <?php }else{ ?>style="display:none;"<?php } ?> id="register_form">
 				   <form id="sign_up" name="sign_up" action="<?php echo base_url('cloud/register_post'); ?>" method="POST">
-
+						<?php $csrf = array(
+										'name' => $this->security->get_csrf_token_name(),
+										'hash' => $this->security->get_csrf_hash()
+								); ?>
+								<input type="hidden" name="<?=$csrf['name'];?>" value="<?=$csrf['hash'];?>" />
+							
 					<div class="form-group">
 							<label class=" control-label">Name</label>  
 							<div class=" inputGroupContainer">
@@ -139,6 +149,12 @@
 				</div>
 				<div id="forgot_password"  style="display:none;">
 				<form id="forgotpass" name="forgotpass" action="<?php echo base_url('cloud/forgotpassword'); ?>" method="post">
+						<?php $csrf = array(
+										'name' => $this->security->get_csrf_token_name(),
+										'hash' => $this->security->get_csrf_hash()
+								); ?>
+								<input type="hidden" name="<?=$csrf['name'];?>" value="<?=$csrf['hash'];?>" />
+							
 					<div class="form-group">
 						<label class=" control-label">E-Mail</label>  
 							<div class=" inputGroupContainer">

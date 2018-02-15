@@ -36,6 +36,12 @@ class User_model extends CI_Model
 		$this->db->where('u_mobile', $mobile);
 		return $this->db->get()->row_array();
 	}
+	public function check_oldpassword_exits($u_id,$pwd){
+		$this->db->select('users.u_id,users.role')->from('users');		
+		$this->db->where('u_password', $pwd);
+		$this->db->where('u_id', $u_id);
+		return $this->db->get()->row_array();
+	}
 	public function get_user_all_details($uid){
 		$this->db->select('*')->from('users');		
 		$this->db->where('u_id', $uid);
