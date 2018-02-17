@@ -160,3 +160,8 @@ box-shadow: -2px 6px 39px -8px rgba(0,0,0,0.75);
     from {opacity :1;}
     to {opacity :0;}
 }
+.img-box{
+        display: inline-block;
+        text-align: center;
+        margin: 0 15px;
+  }

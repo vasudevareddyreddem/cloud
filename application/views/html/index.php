@@ -33,7 +33,7 @@
 													</a>
 													 <ul class="dropdown-menu pull-right">
 														<li><a  data-toggle="modal" data-target="#defaultModal" >Share</a></li>
-														<li><a target="_blank" href="<?php echo base_url('assets/files/'.$list->img_name); ?>">Download</a></li>
+														<li><a  target="_blank" href="<?php echo base_url('assets/files/'.$list->img_name); ?>">Download</a></li>
 														<li><a href="javascript:void(0);">Favourite</a></li>
 														<li><a href="javascript:void(0);">Rename</a></li>
 														<li><a href="javascript:void(0);">Move</a></li>
