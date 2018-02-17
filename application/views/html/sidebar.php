@@ -41,7 +41,7 @@
                     </li>
                     
                     <li>
-                        <a href="pc.php" >
+                        <a href="<?php echo base_url('device'); ?>" >
                             <i class="material-icons">important_devices</i>
                             <span>My Devices</span>
                         </a>
@@ -72,38 +72,32 @@
                         </ul>
                     </li>
 					 <li class="">
-                        <a href="#">
+                        <a href="<?php echo base_url('images'); ?>">
                             <i class="material-icons">dashboard</i>
                             <span>Images</span>
                         </a>
                     </li>
 				
 					 <li class="">
-                        <a href="#">
+                        <a href="<?php echo base_url('recent'); ?>">
                             <i class="material-icons">dashboard</i>
                             <span>Recent</span>
                         </a>
                     </li>
 					 <li class="">
-                        <a href="#">
+                        <a href="<?php echo base_url('shared'); ?>">
                             <i class="material-icons">dashboard</i>
                             <span>Shared</span>
                         </a>
                     </li>
-					 <li class="">
-                        <a href="#">
-                            <i class="material-icons">dashboard</i>
-                            <span>Links</span>
-                        </a>
-                    </li>
 					<li class="">
-                        <a href="filecall.php">
+                        <a href="<?php echo base_url('filecall'); ?>">
                             <i class="material-icons">dashboard</i>
                             <span>File Call</span>
                         </a>
                     </li>
 					<li class="">
-                        <a href="#">
+                        <a href="<?php echo base_url('recyclebin'); ?>">
                             <i class="material-icons">dashboard</i>
                             <span>Recycle Bin</span>
                         </a>
