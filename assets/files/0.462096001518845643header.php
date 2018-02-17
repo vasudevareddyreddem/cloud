@@ -103,10 +103,6 @@
 											'name' => $this->security->get_csrf_token_name(),
 											'hash' => $this->security->get_csrf_hash()
 									); ?>
-									<input type="hidden" name="<?=$csrf['name'];?>" value="<?=$csrf['hash'];?>" />
-								<input type="hidden" name="pageid" value="<?php echo isset($page_id)?$page_id:'0'; ?>" />
-								<input type="hidden" name="floderid" value="<?php echo isset($floder_id)?$floder_id:'0'; ?>" />
-							
 								   <input type="file" name="file[]" id="file" class="upload" onchange="multifile_upload()"  multiple="" directory="" webkitdirectory="" mozdirectory="">
 								</form>
 							</a>

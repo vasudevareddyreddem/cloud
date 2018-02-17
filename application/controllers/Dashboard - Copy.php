@@ -59,23 +59,10 @@ class Dashboard extends CI_Controller {
 			if($fid!=0){
 				$this->Dashboard_model->recently_view_data($rencently);
 			}
-			$userfloder_list=$this->Dashboard_model->get_customer_floder_list($loginuser_id['u_id']);
-			foreach($userfloder_list as $list){
-				if($list['floder_id']!='' && $list['floder_id']!=0){
-				$lids[]=$list['floder_id'];
-				}
-			}
-			if(isset($lids) && count($lids)>0){
-				$this->make_bread->add('Dashboard','dashboard');
-			foreach($lids as $li){
-				if($li < $fid){
-					$name=$this->Dashboard_model->get_customer_floder_name($li);
-					$this->make_bread->add($name['f_name'], 'dashboard/page/'.base64_encode($name["page_id"]).'/'.base64_encode($name["floder_id"]));
-				}
-				
-			}
+			$filedata['redirection_url']=$this->agent->referrer();
+			$this->make_bread->add('Dashboard', 'testing', 1);
+			$this->make_bread->add('test', 'the_test', 0);
 			$filedata['breadcoums'] = $this->make_bread->output();
-			}
 			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
 			$filedata['flodername']=$this->Dashboard_model->get_flodername($fid);
 			$data['page_id']=isset($pid)?$pid:'';

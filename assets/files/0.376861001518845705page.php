@@ -1,7 +1,7 @@
 <section class="content">
         <div class="container-fluid">
             <div class="block-header">
-                <?php echo isset($breadcoums)?$breadcoums:''; ?>
+                <h2>DASHBOARD</h2>
             </div>
 
             <!-- Widgets -->

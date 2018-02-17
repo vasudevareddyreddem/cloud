@@ -26,6 +26,16 @@ class Dashboard_model extends CI_Model
 		$this->db->where('f_id', $f_id);
 		return $this->db->get()->row_array();
 	}
+	public function get_customer_floder_list($u_id){
+		$this->db->select('floder_list.f_name,floder_list.page_id,floder_list.floder_id')->from('floder_list');		
+		$this->db->where('u_id', $u_id);
+		return $this->db->get()->result_array();
+	}
+	public function get_customer_floder_name($floder_id){
+		$this->db->select('floder_list.f_id,floder_list.f_name,floder_list.page_id,floder_list.floder_id')->from('floder_list');		
+		$this->db->where('floder_id', $floder_id);
+		return $this->db->get()->row_array();
+	}
 	public function get_fileupload_data($u_id){
 		$this->db->select('images.img_name,images.imag_org_name')->from('images');		
 		$this->db->where('u_id', $u_id);
