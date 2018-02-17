@@ -105,19 +105,41 @@
 													<input type="hidden" name="<?=$csrf['name'];?>" value="<?=$csrf['hash'];?>" />
 													<input type="hidden" name="pageid" value="<?php echo isset($page_id)?$page_id:0; ?>" />
 													<input type="hidden" name="floderid" value="<?php echo isset($floder_id)?$floder_id:0; ?>" />
-													<div class="modal-header">
+													<div class="modal-header bg-site">
 															<h4 class="modal-title" id="smallModalLabel">Select</h4>
 													</div>
-													<ul>
-													<li><i class="material-icons">folder</i><span>Folder Upload </span></li>
-													<li><i class="material-icons">folder</i><span>Folder Upload </span></li>
-													<li><i class="material-icons">folder</i><span>Folder Upload </span></li>
-													<li><i class="material-icons">folder</i><span>Folder Upload </span></li>
-													<li><i class="material-icons">folder</i><span>Folder Upload </span></li>
-													<li><i class="material-icons">folder</i><span>Folder Upload </span></li>
-													<li><i class="material-icons">folder</i><span>Folder Upload </span></li>
-													<li><i class="material-icons">folder</i><span>Folder Upload </span></li>
-													</ul>
+													<div class="pad-15lr">
+														<div class="row max-height-scroll"><br>
+														<div class="col-lg-12 ">
+														<ul class="demo-choose-skin">
+															<a href=""><li>
+																<div class=""><i class="material-icons">folder</i></div>
+																<span>folder-1</span>
+															</li></a>
+															<a href="#"><li >
+																<div class=""><i class="material-icons">folder</i></div>
+																<span>folder-2</span>
+															</li>
+															</a>
+															<a href="#"><li ><li >
+																<div class=""><i class="material-icons">folder</i></div>
+																<span>folder-3</span>
+															</li>
+															</a>
+															<a href="#"><li ><li >
+																<div class=""><i class="material-icons">folder</i></div>
+																<span>folder-4</span>
+															</li>	
+															</a>
+															<a href="#"><li ><li >
+																<div class=""><i class="material-icons">folder</i></div>
+																<span>folder-5</span>
+															</li></a>
+															</ul>
+														
+														</div>
+														</div>
+													</div>
 													<div class="modal-footer">
 													   <button type="submit" class="btn btn-link waves-effect">SAVE </button>
 													   <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
