@@ -1,6 +1,27 @@
 .mart-10{
 	margin-top:10px;
 }
+.bg-site{
+	background:#607d8b;
+	color:#fff;
+}
+.bg-def{
+	background:#ddd;
+	color:#fff;
+}
+.mart-neg{
+	margin-top:-30px;
+}
+.mart-neg span{
+	background:#607d8b;
+	border-radius:50%;
+	padding:10px;
+	color:#fff;
+	border:1px solid #ddd;
+}.
+.pad-cus{
+	padding-bottom:0px ;
+}
 .mart-20{
 	margin-top:20px;
 }
