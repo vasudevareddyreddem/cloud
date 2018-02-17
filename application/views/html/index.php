@@ -48,7 +48,9 @@
 										<div class="header help-class folder-ti">
 												<label > &nbsp; <?php echo htmlentities($list->imag_org_name); ?></label>
 											
-										
+										<div class="pos-fav">
+											<span class="glyphicon glyphicon-heart"></span>
+										</div>
 										</div>
 									  
 									   
