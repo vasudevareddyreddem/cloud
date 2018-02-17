@@ -47,7 +47,8 @@
 
     <script src="<?php echo base_url(); ?>assets/vendor/js/pages/index.js"></script>
 
-
+	<script src="<?php echo base_url(); ?>assets/vendor/plugins/select2/js/select2.js" ></script>
+    <script src="<?php echo base_url(); ?>assets/vendor/plugins/select2/js/select2-init.js" ></script>
 </body>
 
 
