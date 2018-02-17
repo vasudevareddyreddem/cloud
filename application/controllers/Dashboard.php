@@ -300,6 +300,88 @@ class Dashboard extends CI_Controller {
 		} 
 		
 	}
+	public function filerename()
+	{
+		if($this->session->userdata('userdetails'))
+		{
+			$loginuser_id=$this->session->userdata('userdetails');
+			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
+			
+			$post=$this->input->post();
+			$fname = $this->security->sanitize_filename($this->input->post('filerename'), TRUE);
+				$renamedata=array(
+						'u_id'=>$loginuser_id['u_id'],
+						'imag_org_name'=>$fname,
+						'f_update_at'=>date('Y-m-d H:i:s'),				
+						);
+					//echo '<pre>';print_r($floderdata);exit;
+					$renamechanges = $this->Dashboard_model->update_filename_changes($post['imagid'],$renamedata);
+					if(count($renamechanges)>0){
+						$this->session->set_flashdata('success',"Rename successfully changed");
+						if(isset($post['pageid']) && $post['pageid']!=''){
+							redirect('dashboard/page/'.base64_encode($post['pageid']).'/'.base64_encode($post['floderid']));
+						}else{
+							redirect('dashboard');
+						}
+					}else{
+						$this->session->set_flashdata('error',"technical problem will occurred. Please try again.");
+						if(isset($post['pageid']) && $post['pageid']!=''){
+							redirect('dashboard/page/'.base64_encode($post['pageid']).'/'.base64_encode($post['floderid']));
+						}else{
+							redirect('dashboard');
+						}
+					}
+				
+			
+		
+		}else{
+			 $this->session->set_flashdata('error','Please login to continue');
+			 redirect('');
+		} 
+		
+	}public function imgdelte()
+	{
+		if($this->session->userdata('userdetails'))
+		{
+			$loginuser_id=$this->session->userdata('userdetails');
+			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
+			
+			$post=$this->input->post();
+			$image_id=base64_decode($this->uri->segment(3));
+			$pid=base64_decode($this->uri->segment(4));
+			$fid=base64_decode($this->uri->segment(5));
+				$deletedata=array(
+						'u_id'=>$loginuser_id['u_id'],
+						'img_undo'=>1,
+						'f_update_at'=>date('Y-m-d H:i:s'),				
+						);
+					//echo '<pre>';print_r($renamedata);exit;
+					$delete_image = $this->Dashboard_model->update_filename_changes($image_id,$deletedata);
+					//echo $this->db->last_query();exit;
+					if(count($delete_image)>0){
+						$this->session->set_flashdata('success',"FIle successfully Deleted");
+						if(isset($pid) && $pid!=''){
+							redirect('dashboard/page/'.base64_encode($pid).'/'.base64_encode($fid));
+						}else{
+							redirect('dashboard');
+						}
+					}else{
+						$this->session->set_flashdata('error',"technical problem will occurred. Please try again.");
+						if(isset($pid) && $pid!=''){
+							redirect('dashboard/page/'.base64_encode($pid).'/'.base64_encode($fid));
+						}else{
+							redirect('dashboard');
+						}
+					}
+				
+			
+		
+		}else{
+			 $this->session->set_flashdata('error','Please login to continue');
+			 redirect('');
+		} 
+		
+	}
 	function files_check(){
         $allowed_mime_type_arr = array('application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/zip', 'application/msword', 'application/x-zip','application/x-download','application/pdf','image/gif','image/jpeg','image/pjpeg','image/png','image/x-png');
 		
@@ -342,6 +424,60 @@ class Dashboard extends CI_Controller {
             return false;
         }
     }
+	 public function addfavourite(){
+	 
+	if($this->session->userdata('userdetails'))
+	 {
+		$loginuser_id=$this->session->userdata('userdetails');
+		$post=$this->input->post();
+		$detailsa=array(
+		'u_id'=>$loginuser_id['u_id'],
+		'file_id'=>$post['item_id'],
+		'create_at'=>date('Y-m-d H:i:s'),
+		'yes'=>1,
+		'status'=>1,
+		);
+		$favourite = $this->Dashboard_model->get_favourite_list($loginuser_id['u_id']);
+		if(count($favourite)>0){
+				foreach($favourite as $lists) { 
+							
+								$itemsids[]=$lists['file_id'];
+				}
+			if(in_array($post['item_id'],$itemsids)){
+				$removefavourite=$this->Dashboard_model->remove_favourite($loginuser_id['u_id'],$post['item_id']);
+				if(count($removefavourite)>0){
+				$data['msg']=2;	
+				echo json_encode($data);
+				}
+			
+			}else{
+				$addfavourite = $this->Dashboard_model->add_favourite($detailsa);
+				if(count($addfavourite)>0){
+				$data['msg']=1;	
+				echo json_encode($data);
+				}
+			}
+			
+		}else{
+			$addfavourite = $this->Dashboard_model->add_favourite($detailsa);
+			//echo $this->db->last_query();
+				if(count($addfavourite)>0){
+				$data['msg']=1;	
+				echo json_encode($data);
+				}
+			
+		}
+		
+	
+		
+	}else{
+		$data['msg']=0;	
+		echo json_encode($data); 
+		$this->session->set_flashdata('loginerror','Please login to continue');
+		 //redirect('customer');
+	}
+	 
+ }
 	
 	
 	

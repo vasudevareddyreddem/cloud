@@ -37,7 +37,7 @@ class Dashboard_model extends CI_Model
 		return $this->db->get()->row_array();
 	}
 	public function get_fileupload_data($u_id){
-		$this->db->select('images.img_name,images.imag_org_name')->from('images');		
+		$this->db->select('images.img_id,images.img_name,images.imag_org_name')->from('images');		
 		$this->db->where('u_id', $u_id);
 		$this->db->where('img_undo', 0);
 		$this->db->where('page_id', 0);
@@ -57,12 +57,13 @@ class Dashboard_model extends CI_Model
 		return $this->db->get()->result();
 	}
 	public function get_pagewisefileupload_data($u_id,$p_id,$f_id){
-		$this->db->select('images.img_name,images.imag_org_name')->from('images');		
-		$this->db->where('u_id', $u_id);
-		$this->db->where('img_undo', 0);
-		$this->db->where('floder_id',$f_id);
+		$this->db->select('images.img_id,images.img_name,images.imag_org_name,favourite.yes,favourite.u_id as favourite_u_id')->from('images');
+		$this->db->join('favourite', 'favourite.file_id = images.img_id', 'left');
+		$this->db->where('images.u_id', $u_id);
+		$this->db->where('images.img_undo', 0);
+		$this->db->where('images.floder_id',$f_id);
 		$this->db->order_by("images.img_create_at", "DESC");
-		$this->db->where('page_id',$p_id);
+		$this->db->where('images.page_id',$p_id);
 		return $this->db->get()->result();
 	}
 	public function get_pagewiseflodername_data($u_id,$p_id,$f_id){
@@ -88,6 +89,27 @@ class Dashboard_model extends CI_Model
 		$this->db->where('u_id', $u_id);
 		return $this->db->update('users', $data);
 	}
+	/*fav*/
+	public function get_favourite_list($u_id){
+		$this->db->select('*')->from('favourite');
+		$this->db->where('u_id', $u_id);
+        return $this->db->get()->result_array();
+	}
+	public function remove_favourite($u_id,$file_id){
+		$sql1="DELETE FROM favourite WHERE u_id = '".$u_id."' AND  file_id = '".$file_id."'";
+		return $this->db->query($sql1);
+	}
+	public function add_favourite($data){
+		$this->db->insert('favourite', $data);
+		return $insert_id = $this->db->insert_id();
+	}
+	/*fav*/
+	/*rename*/
+	public function update_filename_changes($img_id,$data){
+		$this->db->where('img_id', $img_id);
+		return $this->db->update('images', $data);
+	}
+	/*rename*/
 
 
 }
