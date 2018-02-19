@@ -14,6 +14,7 @@ class Recent extends CI_Controller {
 		$this->load->helper('security');
 		$this->load->library('zend');
 		$this->load->model('User_model');
+		$this->load->model('Recent_model');
 		$this->load->library('zend');
 		}
 	public function index()
@@ -22,10 +23,12 @@ class Recent extends CI_Controller {
 		{
 			$loginuser_id=$this->session->userdata('userdetails');
 			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
-			//echo '<pre>';print_r();exit;
+			$filedata['file_data']=$this->Recent_model->recen_get_pagewisefileupload_data($loginuser_id['u_id']);
+			$filedata['floder_data']=$this->Recent_model->recen_get_floder_data($loginuser_id['u_id']);
+			//echo '<pre>';print_r($filedata);exit;
 			$this->load->view('html/header',$data);
 			$this->load->view('html/sidebar',$data);
-			$this->load->view('html/recent',$data);
+			$this->load->view('html/recent',$filedata);
 			$this->load->view('html/footer');
 		}else{
 			$this->load->view('html/login');

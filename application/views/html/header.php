@@ -305,9 +305,6 @@
 </div>
 
 <script>
-	document.getElementById("uploadBtn").onchange = function () {
-    document.getElementById("uploadFile").value = this.value;
-};
 
 function file_upload(){
 	 document.getElementById("imageadd").submit();

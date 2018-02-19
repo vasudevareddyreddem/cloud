@@ -29,7 +29,6 @@ class Dashboard extends CI_Controller {
 			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
 			//$filedata['recen_file_data']=$this->Dashboard_model->recen_get_pagewisefileupload_data($loginuser_id['u_id']);
 			$filedata['recen_floder_data']=$this->Dashboard_model->recen_get_floder_data($loginuser_id['u_id']);
-			
 			$filedata['file_data']=$this->Dashboard_model->get_fileupload_data($loginuser_id['u_id']);
 			$filedata['floder_data']=$this->Dashboard_model->get_flodername_data($loginuser_id['u_id']);
 			//echo '<pre>';print_r($filedata);exit;
@@ -82,6 +81,8 @@ class Dashboard extends CI_Controller {
 			$data['floder_id']=isset($fid)?$fid:'';
 			$filedata['file_data']=$this->Dashboard_model->get_pagewisefileupload_data($loginuser_id['u_id'],$pid,$fid);
 			$filedata['floder_data']=$this->Dashboard_model->get_pagewiseflodername_data($loginuser_id['u_id'],$pid,$fid);	
+			$filedata['floder_name_list']=$this->Dashboard_model->get_flodername_list($loginuser_id['u_id']);	
+			//$filedata['users_list']=$this->Dashboard_model->get_all_users_list();	
 			//echo '<pre>';print_r($filedata);exit;
 			$this->load->view('html/header',$data);
 			$this->load->view('html/sidebar',$data);
@@ -317,6 +318,14 @@ class Dashboard extends CI_Controller {
 					//echo '<pre>';print_r($floderdata);exit;
 					$renamechanges = $this->Dashboard_model->update_filename_changes($post['imagid'],$renamedata);
 					if(count($renamechanges)>0){
+						$recentlyopen_file=array(
+						'u_id'=>$loginuser_id['u_id'],
+						'file_id'=>$post['imagid'],
+						'r_file_status'=>1,
+						'r_file_create_at'=>date('Y-m-d H:i:s'),
+						'r_file_updated_at'=>date('Y-m-d H:i:s'),
+						);
+						$this->Dashboard_model->save_recently_file_open($recentlyopen_file);
 						$this->session->set_flashdata('success',"Rename successfully changed");
 						if(isset($post['pageid']) && $post['pageid']!=''){
 							redirect('dashboard/page/'.base64_encode($post['pageid']).'/'.base64_encode($post['floderid']));
@@ -359,6 +368,15 @@ class Dashboard extends CI_Controller {
 					$delete_image = $this->Dashboard_model->update_filename_changes($image_id,$deletedata);
 					//echo $this->db->last_query();exit;
 					if(count($delete_image)>0){
+						$recentlyopen_file=array(
+						'u_id'=>$loginuser_id['u_id'],
+						'file_id'=>$image_id,
+						'r_file_status'=>1,
+						'r_file_create_at'=>date('Y-m-d H:i:s'),
+						'r_file_updated_at'=>date('Y-m-d H:i:s'),
+						);
+						$this->Dashboard_model->save_recently_file_open($recentlyopen_file);
+						
 						$this->session->set_flashdata('success',"FIle successfully Deleted");
 						if(isset($pid) && $pid!=''){
 							redirect('dashboard/page/'.base64_encode($pid).'/'.base64_encode($fid));
@@ -453,6 +471,15 @@ class Dashboard extends CI_Controller {
 			}else{
 				$addfavourite = $this->Dashboard_model->add_favourite($detailsa);
 				if(count($addfavourite)>0){
+					$recentlyopen_file=array(
+						'u_id'=>$loginuser_id['u_id'],
+						'file_id'=>$addfavourite,
+						'r_file_status'=>1,
+						'r_file_create_at'=>date('Y-m-d H:i:s'),
+						'r_file_updated_at'=>date('Y-m-d H:i:s'),
+						);
+						$this->Dashboard_model->save_recently_file_open($recentlyopen_file);
+						
 				$data['msg']=1;	
 				echo json_encode($data);
 				}
@@ -462,6 +489,15 @@ class Dashboard extends CI_Controller {
 			$addfavourite = $this->Dashboard_model->add_favourite($detailsa);
 			//echo $this->db->last_query();
 				if(count($addfavourite)>0){
+					$recentlyopen_file=array(
+						'u_id'=>$loginuser_id['u_id'],
+						'file_id'=>$addfavourite,
+						'r_file_status'=>1,
+						'r_file_create_at'=>date('Y-m-d H:i:s'),
+						'r_file_updated_at'=>date('Y-m-d H:i:s'),
+						);
+						$this->Dashboard_model->save_recently_file_open($recentlyopen_file);
+						
 				$data['msg']=1;	
 				echo json_encode($data);
 				}

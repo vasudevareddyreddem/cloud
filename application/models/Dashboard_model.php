@@ -21,6 +21,10 @@ class Dashboard_model extends CI_Model
 		$this->db->insert('recently_floder_open', $data);
 		return $insert_id = $this->db->insert_id();
 	}
+	public function save_recently_file_open($data){
+		$this->db->insert('recently_file_open', $data);
+		return $insert_id = $this->db->insert_id();
+	}
 	public function get_flodername($f_id){
 		$this->db->select('floder_list.f_id,floder_list.f_name')->from('floder_list');		
 		$this->db->where('f_id', $f_id);
@@ -44,6 +48,13 @@ class Dashboard_model extends CI_Model
 		$this->db->where('floder_id', 0);
 		$this->db->order_by("images.img_create_at", "DESC");
 		$this->db->limit(8);
+		return $this->db->get()->result();
+	}
+	
+	public function get_flodername_list($u_id){
+		$this->db->select('floder_list.f_id,floder_list.f_name,floder_list.page_id')->from('floder_list');		
+		$this->db->where('u_id', $u_id);
+		$this->db->where('f_undo', 0);
 		return $this->db->get()->result();
 	}
 	public function get_flodername_data($u_id){
