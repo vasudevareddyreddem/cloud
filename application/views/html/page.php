@@ -16,7 +16,25 @@
                             <div class="text"><h3><?php echo htmlentities($fnames->f_name); ?></h3></div>
                             
                         </div>
+							
                     </div>
+					<ul class="header-dropdown m-r--5">
+                                <li class="dropdown drop-fold" >
+                                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                        <i class="material-icons ">more_vert</i>
+                                    </a>
+                                     <ul class="dropdown-menu pull-right">
+                                        <li><a href="javascript:void(0);">Share</a></li>
+                                        <li><a href="javascript:void(0);">Download</a></li>
+                                        <li><a href="javascript:void(0);">Favourite</a></li>
+                                        <li><a href="javascript:void(0);">Rename</a></li>
+                                        <li><a href="javascript:void(0);">Move</a></li>
+                                        <li><a href="javascript:void(0);">Copy</a></li>
+                                        <li><a href="javascript:void(0);">Delete</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+					
                 </div></a>
 				
 			<?php } ?>

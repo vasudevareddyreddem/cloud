@@ -48,6 +48,16 @@
 .mart-20{
 	margin-top:20px;
 }
+.drop-fold{
+	position: absolute;
+    top: 20px;
+    right: 6px;
+    background: #ddd;
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    padding: 2px;
+}
 /* login page css strat */
 .mart-50{
 	margin-top:50px;
