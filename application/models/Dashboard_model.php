@@ -33,12 +33,22 @@ class Dashboard_model extends CI_Model
 	public function get_customer_floder_list($u_id){
 		$this->db->select('floder_list.f_name,floder_list.page_id,floder_list.floder_id')->from('floder_list');		
 		$this->db->where('u_id', $u_id);
+		$this->db->group_by('floder_list.f_id');
 		return $this->db->get()->result_array();
 	}
 	public function get_customer_floder_name($floder_id){
 		$this->db->select('floder_list.f_id,floder_list.f_name,floder_list.page_id,floder_list.floder_id')->from('floder_list');		
 		$this->db->where('floder_id', $floder_id);
 		return $this->db->get()->row_array();
+	}
+	public function recen_get_pagewisefileupload_data($u_id){
+		$this->db->select('images.img_id,images.img_name,images.imag_org_name')->from('recently_file_open');		
+		$this->db->join('images', 'images.img_id = recently_file_open.file_id', 'left');
+		$this->db->where('images.u_id', $u_id);
+		$this->db->where('images.img_undo', 0);
+		$this->db->limit(4);
+		$this->db->order_by("recently_file_open.r_file_updated_at", "DESC");
+		return $this->db->get()->result();
 	}
 	public function get_fileupload_data($u_id){
 		$this->db->select('images.img_id,images.img_name,images.imag_org_name')->from('images');		
@@ -47,7 +57,6 @@ class Dashboard_model extends CI_Model
 		$this->db->where('page_id', 0);
 		$this->db->where('floder_id', 0);
 		$this->db->order_by("images.img_create_at", "DESC");
-		$this->db->limit(8);
 		return $this->db->get()->result();
 	}
 	
@@ -57,11 +66,17 @@ class Dashboard_model extends CI_Model
 		$this->db->where('f_undo', 0);
 		return $this->db->get()->result();
 	}
+	public function get_floder_movingname_list($u_id,$f_id){
+		$this->db->select('floder_list.f_id,floder_list.f_name,floder_list.page_id')->from('floder_list');		
+		$this->db->where('u_id', $u_id);
+		$this->db->where('floder_id <', $f_id);
+		$this->db->where('f_undo', 0);
+		return $this->db->get()->result();
+	}
 	public function get_flodername_data($u_id){
 		$this->db->select('floder_list.f_id,floder_list.f_name')->from('floder_list');		
 		$this->db->where('u_id', $u_id);
 		$this->db->where('f_undo', 0);
-		$this->db->where('page_id', 0);
 		$this->db->where('floder_id', 0);
 		$this->db->limit(8);
 		$this->db->order_by("floder_list.f_create_at", "DESC");
@@ -90,6 +105,7 @@ class Dashboard_model extends CI_Model
 		$this->db->select('floder_list.f_id,floder_list.f_name')->from('recently_floder_open');		
 		$this->db->join('floder_list', 'floder_list.f_id = recently_floder_open.f_id', 'left');		
 		$this->db->where('recently_floder_open.u_id', $u_id);
+		$this->db->group_by('floder_list.f_id');
 		$this->db->where('f_undo', 0);
 		$this->db->limit(4);
 		$this->db->order_by("recently_floder_open.r_f_create_at", "DESC");
@@ -101,14 +117,27 @@ class Dashboard_model extends CI_Model
 		return $this->db->update('users', $data);
 	}
 	/*fav*/
+	public function get_floderfavourite_list($u_id){
+		$this->db->select('*')->from('floder_favourite');
+		$this->db->where('u_id', $u_id);
+        return $this->db->get()->result_array();
+	}
 	public function get_favourite_list($u_id){
 		$this->db->select('*')->from('favourite');
 		$this->db->where('u_id', $u_id);
         return $this->db->get()->result_array();
 	}
+	public function remove_folder_favourite($u_id,$f_id){
+		$sql1="DELETE FROM floder_favourite WHERE u_id = '".$u_id."' AND  f_id = '".$f_id."'";
+		return $this->db->query($sql1);
+	}
 	public function remove_favourite($u_id,$file_id){
 		$sql1="DELETE FROM favourite WHERE u_id = '".$u_id."' AND  file_id = '".$file_id."'";
 		return $this->db->query($sql1);
+	}
+	public function add_folder_favourite($data){
+		$this->db->insert('floder_favourite', $data);
+		return $insert_id = $this->db->insert_id();
 	}
 	public function add_favourite($data){
 		$this->db->insert('favourite', $data);
@@ -119,8 +148,36 @@ class Dashboard_model extends CI_Model
 	public function update_filename_changes($img_id,$data){
 		$this->db->where('img_id', $img_id);
 		return $this->db->update('images', $data);
+	}public function update_flodername_changes($f_id,$data){
+		$this->db->where('f_id', $f_id);
+		return $this->db->update('floder_list', $data);
+	}
+	public function get_folder_details($f_id){
+		$this->db->select('floder_list.f_id,floder_list.page_id,floder_list.floder_id')->from('floder_list');		
+		$this->db->where('f_id', $f_id);
+		return $this->db->get()->row_array();
 	}
 	/*rename*/
+	/*floderDeleteing*/
+	
+	public function get_linked_floder_details($f_id,$u_id){
+		$this->db->select('floder_list.f_id,floder_list.page_id,floder_list.floder_id')->from('floder_list');		
+		$this->db->where('floder_id', $f_id);
+		$this->db->where('u_id', $u_id);
+		return $this->db->get()->result_array();
+	}
+	public function get_sublinked_floder_details($f_id,$u_id){
+		$this->db->select('floder_list.f_id,floder_list.page_id,floder_list.floder_id')->from('floder_list');		
+		$this->db->where('floder_id', $f_id);
+		$this->db->where('u_id', $u_id);
+		return $this->db->get()->result_array();
+	}
+	public function update_folder_todelte($f_id,$data){
+		$this->db->where('f_id', $f_id);
+		return $this->db->update('floder_list', $data);
+	}
+	
+	/*floderDeleteing*/
 
 
 }

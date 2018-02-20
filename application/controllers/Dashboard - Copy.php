@@ -29,7 +29,6 @@ class Dashboard extends CI_Controller {
 			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
 			//$filedata['recen_file_data']=$this->Dashboard_model->recen_get_pagewisefileupload_data($loginuser_id['u_id']);
 			$filedata['recen_floder_data']=$this->Dashboard_model->recen_get_floder_data($loginuser_id['u_id']);
-			
 			$filedata['file_data']=$this->Dashboard_model->get_fileupload_data($loginuser_id['u_id']);
 			$filedata['floder_data']=$this->Dashboard_model->get_flodername_data($loginuser_id['u_id']);
 			//echo '<pre>';print_r($filedata);exit;
@@ -47,7 +46,7 @@ class Dashboard extends CI_Controller {
 		if($this->session->userdata('userdetails'))
 		{
 			$pid=base64_decode($this->uri->segment(3));
-			$fid=base64_decode($this->uri->segment(4));
+			echo $fid=base64_decode($this->uri->segment(4));
 			$loginuser_id=$this->session->userdata('userdetails');
 			$rencently=array(
 			'u_id'=>$loginuser_id['u_id'],
@@ -59,16 +58,34 @@ class Dashboard extends CI_Controller {
 			if($fid!=0){
 				$this->Dashboard_model->recently_view_data($rencently);
 			}
-			$filedata['redirection_url']=$this->agent->referrer();
-			$this->make_bread->add('Dashboard', 'testing', 1);
-			$this->make_bread->add('test', 'the_test', 0);
+			$userfloder_list=$this->Dashboard_model->get_customer_floder_list($loginuser_id['u_id']);
+			//$folder_details = $this->Dashboard_model->get_folder_details($fid);
+			foreach($userfloder_list as $list){
+				if($list['floder_id']!='' && $list['floder_id']!=0){
+				$lids[]=$list['floder_id'];
+				}
+			}
+			if(isset($lids) && count($lids)>0){
+				$this->make_bread->add('Dashboard','dashboard');
+			foreach($lids as $li){
+				
+				if($li < $fid){
+					$name=$this->Dashboard_model->get_customer_floder_name($li);
+					$this->make_bread->add($name['f_name'], 'dashboard/page/'.base64_encode($name["page_id"]).'/'.base64_encode($name["floder_id"]));
+				}
+				
+			}
 			$filedata['breadcoums'] = $this->make_bread->output();
+			}	
 			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
 			$filedata['flodername']=$this->Dashboard_model->get_flodername($fid);
 			$data['page_id']=isset($pid)?$pid:'';
 			$data['floder_id']=isset($fid)?$fid:'';
 			$filedata['file_data']=$this->Dashboard_model->get_pagewisefileupload_data($loginuser_id['u_id'],$pid,$fid);
 			$filedata['floder_data']=$this->Dashboard_model->get_pagewiseflodername_data($loginuser_id['u_id'],$pid,$fid);	
+			$filedata['floder_name_list']=$this->Dashboard_model->get_flodername_list($loginuser_id['u_id']);	
+			$filedata['floder_moving_list']=$this->Dashboard_model->get_floder_movingname_list($loginuser_id['u_id'],$fid);	
+			//$filedata['users_list']=$this->Dashboard_model->get_all_users_list();	
 			//echo '<pre>';print_r($filedata);exit;
 			$this->load->view('html/header',$data);
 			$this->load->view('html/sidebar',$data);
@@ -235,7 +252,7 @@ class Dashboard extends CI_Controller {
 			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
 			
 			$post=$this->input->post();
-			//echo '<pre>';print_r($post);
+			//echo '<pre>';print_r($post);exit;
 			$this->load->helper('file');
 			$this->form_validation->set_rules('flodername', 'Floder Name', 'required');
 			if($this->form_validation->run() == FALSE) {
@@ -244,7 +261,7 @@ class Dashboard extends CI_Controller {
 				if(isset($post['pageid']) && $post['pageid']!=''){
 					$p=$post['pageid'];
 				}else{
-					$p=0;
+					$p=1;
 				}if(isset($post['floderid']) && $post['floderid']!=''){
 					$f=$post['floderid'];
 				}else{
@@ -280,6 +297,201 @@ class Dashboard extends CI_Controller {
 					}
 				
 				}
+		
+		}else{
+			 $this->session->set_flashdata('error','Please login to continue');
+			 redirect('');
+		} 
+		
+	}
+	public function filerename()
+	{
+		if($this->session->userdata('userdetails'))
+		{
+			$loginuser_id=$this->session->userdata('userdetails');
+			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
+			
+			$post=$this->input->post();
+			$fname = $this->security->sanitize_filename($this->input->post('filerename'), TRUE);
+				$renamedata=array(
+						'u_id'=>$loginuser_id['u_id'],
+						'imag_org_name'=>$fname,
+						'f_update_at'=>date('Y-m-d H:i:s'),				
+						);
+					//echo '<pre>';print_r($floderdata);exit;
+					$renamechanges = $this->Dashboard_model->update_filename_changes($post['imagid'],$renamedata);
+					if(count($renamechanges)>0){
+						$recentlyopen_file=array(
+						'u_id'=>$loginuser_id['u_id'],
+						'file_id'=>$post['imagid'],
+						'r_file_status'=>1,
+						'r_file_create_at'=>date('Y-m-d H:i:s'),
+						'r_file_updated_at'=>date('Y-m-d H:i:s'),
+						);
+						$this->Dashboard_model->save_recently_file_open($recentlyopen_file);
+						$this->session->set_flashdata('success',"Rename successfully changed");
+						if(isset($post['recent']) && $post['recent']==1){
+							redirect('recent');
+						}else if(isset($post['pageid']) && $post['pageid']!=''){
+							redirect('dashboard/page/'.base64_encode($post['pageid']).'/'.base64_encode($post['floderid']));
+						}else{
+							redirect('dashboard');
+						}
+					}else{
+						$this->session->set_flashdata('error',"technical problem will occurred. Please try again.");
+						if(isset($post['recent']) && $post['recent']==1){
+							redirect('recent');
+						}else if(isset($post['pageid']) && $post['pageid']!=''){
+							redirect('dashboard/page/'.base64_encode($post['pageid']).'/'.base64_encode($post['floderid']));
+						}else{
+							redirect('dashboard');
+						}
+					}
+				
+			
+		
+		}else{
+			 $this->session->set_flashdata('error','Please login to continue');
+			 redirect('');
+		} 
+		
+	}
+	public function folderrename()
+	{
+		if($this->session->userdata('userdetails'))
+		{
+			$loginuser_id=$this->session->userdata('userdetails');
+			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
+			
+			$post=$this->input->post();
+			//echo '<pre>';print_r($post);exit;
+			$fname = $this->security->sanitize_filename($this->input->post('folderrename'), TRUE);
+				$renamedata=array(
+						'u_id'=>$loginuser_id['u_id'],
+						'f_name'=>$fname,
+						'f_updated_at'=>date('Y-m-d H:i:s'),				
+						);
+					//echo '<pre>';print_r($floderdata);exit;
+					$renamechanges = $this->Dashboard_model->update_flodername_changes($post['renamefloderid'],$renamedata);
+					if(count($renamechanges)>0){
+						$recentlyopen_folder=array(
+						'u_id'=>$loginuser_id['u_id'],
+						'f_id'=>$post['renamefloderid'],
+						'r_f_status'=>1,
+						'r_f_create_at'=>date('Y-m-d H:i:s'),
+						'r_f_updated_at'=>date('Y-m-d H:i:s'),
+						);
+						$this->Dashboard_model->recently_view_data($recentlyopen_folder);
+						$this->session->set_flashdata('success',"Rename successfully changed");
+						
+						if(isset($post['recent']) && $post['recent']=1){
+						redirect('recent');	
+						}else if(isset($post['pageid']) && $post['pageid']!=''){
+							redirect('dashboard/page/'.base64_encode($post['pageid']).'/'.base64_encode($post['floderid']));
+						}else{
+							redirect('dashboard');
+						}
+					}else{
+						$this->session->set_flashdata('error',"technical problem will occurred. Please try again.");
+						if(isset($post['recent']) && $post['recent']=1){
+						redirect('recent');	
+						}else if(isset($post['pageid']) && $post['pageid']!=''){
+							redirect('dashboard/page/'.base64_encode($post['pageid']).'/'.base64_encode($post['floderid']));
+						}else{
+							redirect('dashboard');
+						}
+					}
+				
+			
+		
+		}else{
+			 $this->session->set_flashdata('error','Please login to continue');
+			 redirect('');
+		} 
+		
+	}
+	public function imgdelte()
+	{
+		if($this->session->userdata('userdetails'))
+		{
+			$loginuser_id=$this->session->userdata('userdetails');
+			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
+			
+			$post=$this->input->post();
+			$image_id=base64_decode($this->uri->segment(3));
+			$pid=base64_decode($this->uri->segment(4));
+			$fid=base64_decode($this->uri->segment(5));
+				$deletedata=array(
+						'u_id'=>$loginuser_id['u_id'],
+						'img_undo'=>1,
+						'f_update_at'=>date('Y-m-d H:i:s'),				
+						);
+					//echo '<pre>';print_r($renamedata);exit;
+					$delete_image = $this->Dashboard_model->update_filename_changes($image_id,$deletedata);
+					//echo $this->db->last_query();exit;
+					if(count($delete_image)>0){
+						$recentlyopen_file=array(
+						'u_id'=>$loginuser_id['u_id'],
+						'file_id'=>$image_id,
+						'r_file_status'=>1,
+						'r_file_create_at'=>date('Y-m-d H:i:s'),
+						'r_file_updated_at'=>date('Y-m-d H:i:s'),
+						);
+						$this->Dashboard_model->save_recently_file_open($recentlyopen_file);
+						
+						$this->session->set_flashdata('success',"FIle successfully Deleted");
+						if(isset($pid) && $pid =='recent'){
+							redirect('recent');
+						}else if(isset($pid) && $pid!=''){
+							redirect('dashboard/page/'.base64_encode($pid).'/'.base64_encode($fid));
+						}else{
+							redirect('dashboard');
+						}
+					}else{
+						$this->session->set_flashdata('error',"technical problem will occurred. Please try again.");
+						if(isset($pid) && $pid =='recent'){
+							redirect('recent');
+						}else if(isset($pid) && $pid!=''){
+							redirect('dashboard/page/'.base64_encode($pid).'/'.base64_encode($fid));
+						}else{
+							redirect('dashboard');
+						}
+					}
+				
+			
+		
+		}else{
+			 $this->session->set_flashdata('error','Please login to continue');
+			 redirect('');
+		} 
+		
+	}
+	public function deletefloder()
+	{
+		if($this->session->userdata('userdetails'))
+		{
+			$loginuser_id=$this->session->userdata('userdetails');
+			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
+			
+			$post=$this->input->post();
+			$floder_id=base64_decode($this->uri->segment(3));
+			$folder_details = $this->Dashboard_model->get_linked_floder_details($floder_id,$loginuser_id['u_id']);
+			foreach($folder_details as $m_links){
+				$s_f_links = $this->Dashboard_model->get_sublinked_floder_details($m_links['f_id'],$loginuser_id['u_id']);
+				foreach($s_f_links as $sud_s_links){
+						$s_s_f_links = $this->Dashboard_model->get_sublinked_floder_details($sud_s_links['f_id'],$loginuser_id['u_id']);
+						foreach($s_s_f_links as $sub_s_s__links){
+						$s_s_s_f_links = $this->Dashboard_model->get_sublinked_floder_details($sub_s_s__links['f_id'],$loginuser_id['u_id']);
+							foreach($s_s_s_f_links as $list){
+								
+							}
+						}
+					}
+				}
+			exit;
+			echo '<pre>';print_r($folder_details);exit;
+					
+			
 		
 		}else{
 			 $this->session->set_flashdata('error','Please login to continue');
@@ -329,6 +541,151 @@ class Dashboard extends CI_Controller {
             return false;
         }
     }
+	 public function addfavourite(){
+	 
+	if($this->session->userdata('userdetails'))
+	 {
+		$loginuser_id=$this->session->userdata('userdetails');
+		$post=$this->input->post();
+		$detailsa=array(
+		'u_id'=>$loginuser_id['u_id'],
+		'file_id'=>$post['item_id'],
+		'create_at'=>date('Y-m-d H:i:s'),
+		'yes'=>1,
+		'status'=>1,
+		);
+		$favourite = $this->Dashboard_model->get_favourite_list($loginuser_id['u_id']);
+		if(count($favourite)>0){
+				foreach($favourite as $lists) { 
+							
+								$itemsids[]=$lists['file_id'];
+				}
+			if(in_array($post['item_id'],$itemsids)){
+				$removefavourite=$this->Dashboard_model->remove_favourite($loginuser_id['u_id'],$post['item_id']);
+				if(count($removefavourite)>0){
+				$data['msg']=2;	
+				echo json_encode($data);
+				}
+			
+			}else{
+				$addfavourite = $this->Dashboard_model->add_favourite($detailsa);
+				if(count($addfavourite)>0){
+					$recentlyopen_file=array(
+						'u_id'=>$loginuser_id['u_id'],
+						'file_id'=>$post['item_id'],
+						'r_file_status'=>1,
+						'r_file_create_at'=>date('Y-m-d H:i:s'),
+						'r_file_updated_at'=>date('Y-m-d H:i:s'),
+						);
+						$this->Dashboard_model->save_recently_file_open($recentlyopen_file);
+						
+				$data['msg']=1;	
+				echo json_encode($data);
+				}
+			}
+			
+		}else{
+			$addfavourite = $this->Dashboard_model->add_favourite($detailsa);
+			//echo $this->db->last_query();
+				if(count($addfavourite)>0){
+					$recentlyopen_file=array(
+						'u_id'=>$loginuser_id['u_id'],
+						'file_id'=>$post['item_id'],
+						'r_file_status'=>1,
+						'r_file_create_at'=>date('Y-m-d H:i:s'),
+						'r_file_updated_at'=>date('Y-m-d H:i:s'),
+						);
+						$this->Dashboard_model->save_recently_file_open($recentlyopen_file);
+						//echo $this->db->last_query();exit;
+						
+				$data['msg']=1;	
+				echo json_encode($data);
+				}
+			
+		}
+		
+	
+		
+	}else{
+		$data['msg']=0;	
+		echo json_encode($data); 
+		$this->session->set_flashdata('loginerror','Please login to continue');
+		 //redirect('customer');
+	}
+	 
+ } 
+ public function addfolderfavourite(){
+	 
+	if($this->session->userdata('userdetails'))
+	 {
+		$loginuser_id=$this->session->userdata('userdetails');
+		$post=$this->input->post();
+		$detailsa=array(
+		'u_id'=>$loginuser_id['u_id'],
+		'f_id'=>$post['item_id'],
+		'create_at'=>date('Y-m-d H:i:s'),
+		'yes'=>1,
+		'status'=>1,
+		);
+		$favourite = $this->Dashboard_model->get_floderfavourite_list($loginuser_id['u_id']);
+		if(count($favourite)>0){
+				foreach($favourite as $lists) { 
+							
+								$itemsids[]=$lists['f_id'];
+				}
+			if(in_array($post['item_id'],$itemsids)){
+				$removefavourite=$this->Dashboard_model->remove_folder_favourite($loginuser_id['u_id'],$post['item_id']);
+				if(count($removefavourite)>0){
+				$data['msg']=2;	
+				echo json_encode($data);
+				}
+			
+			}else{
+				$addfavourite = $this->Dashboard_model->add_folder_favourite($detailsa);
+				if(count($addfavourite)>0){
+					$recentlyopen_folder=array(
+						'u_id'=>$loginuser_id['u_id'],
+						'f_id'=>$post['item_id'],
+						'r_f_status'=>1,
+						'r_f_create_at'=>date('Y-m-d H:i:s'),
+						'r_f_updated_at'=>date('Y-m-d H:i:s'),
+						);
+						$this->Dashboard_model->recently_view_data($recentlyopen_folder);
+						
+				$data['msg']=1;	
+				echo json_encode($data);
+				}
+			}
+			
+		}else{
+			$addfavourite = $this->Dashboard_model->add_folder_favourite($detailsa);
+			//echo $this->db->last_query();
+				if(count($addfavourite)>0){
+					$recentlyopen_folder=array(
+						'u_id'=>$loginuser_id['u_id'],
+						'f_id'=>$post['item_id'],
+						'r_f_status'=>1,
+						'r_f_create_at'=>date('Y-m-d H:i:s'),
+						'r_f_updated_at'=>date('Y-m-d H:i:s'),
+						);
+						$this->Dashboard_model->recently_view_data($recentlyopen_folder);
+						
+				$data['msg']=1;	
+				echo json_encode($data);
+				}
+			
+		}
+		
+	
+		
+	}else{
+		$data['msg']=0;	
+		echo json_encode($data); 
+		$this->session->set_flashdata('loginerror','Please login to continue');
+		 //redirect('customer');
+	}
+	 
+ }
 	
 	
 	

@@ -5,43 +5,7 @@
             </div>
 			<div id="sucessmsg" style="display:none;"></div>
             <!-- Widgets -->
-            <div class="row clearfix">
-			<?php //echo '<pre>';print_r($floder_data); exit; ?>
-			<?php $count=1;foreach($floder_data as $fnames){ ?>
-                <a href="<?php echo base_url('recyclebin/folder/'.base64_encode($fnames->f_id)); ?>">
-				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <div class="info-box bg-pink hover-expand-effect">
-                        <div class="icon">
-                            <i class="material-icons">folder</i>
-                        </div>
-                        <div class="content">
-                            <div class="text"><h3><?php echo htmlentities($fnames->f_name); ?></h3></div>
-                            
-                        </div>
-							
-                    </div>
-						<ul class="header-dropdown m-r--5">
-                                <li class="dropdown drop-fold" >
-                                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                        <i class="material-icons ">more_vert</i>
-                                    </a>
-                                     <ul class="dropdown-menu pull-right">
-                                        <li><a href="<?php echo base_url('recyclebin/deletefolder/'.base64_encode($fnames->f_id).'/'.base64_encode($fnames->u_id)); ?>">Delete</a></li>
-                                    </ul>
-                                </li>
-						</ul>
-				</div>
-				</a>
-					
-					<!-- floderrename-->
-					<!-- flodermoving-->
-					
-				
-			<?php $count++;} ?>
-                
-                
-                
-            </div>
+           
             <!-- #END# Widgets -->
             <!-- CPU Usage -->
 			
@@ -65,7 +29,7 @@
 														<i class="material-icons pull-right pad20">more_vert</i>
 													</a>
 													 <ul class="dropdown-menu pull-right">
-														<li><a href="<?php echo base_url('recyclebin/restore/'.base64_encode($list->img_id)); ?>">Restore</a></li>
+														<li><a  href="<?php echo base_url('assets/files/'.$list->img_name); ?>" download>Download</a></li>
 														<li><a href="<?php echo base_url('recyclebin/imgdelte/'.base64_encode($list->img_id)); ?>">Delete</a></li>
 													</ul>
 												</li>
