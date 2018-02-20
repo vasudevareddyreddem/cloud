@@ -4,7 +4,13 @@
                 <?php echo isset($breadcoums)?$breadcoums:''; ?>
             </div>
 			<div id="sucessmsg" style="display:none;"></div>
+			<?php if(isset($file_data) && count($file_data)=='0' || isset($floder_data) && count($floder_data)=='0'){ ?>
+				<div>
+					<p>No data Avaiable Here.</p>
+				</div>
+			<?php } ?>
             <!-- Widgets -->
+			<?php if(isset($floder_data) && count($floder_data)>0){ ?>
             <div class="row clearfix">
 			<?php //echo '<pre>';print_r($floder_data); exit; ?>
 			<?php $count=1;foreach($floder_data as $fnames){ ?>
@@ -42,9 +48,10 @@
                 
                 
             </div>
+			<?php } ?>
             <!-- #END# Widgets -->
             <!-- CPU Usage -->
-			
+			<?php if(isset($file_data) && count($file_data)>0){ ?>
             <div class="row clearfix">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="card">
@@ -103,6 +110,8 @@
             </div>
             </div>
             </div>
+			
+			<?php } ?>
             </div>
             <!-- #END# CPU Usage -->
 	

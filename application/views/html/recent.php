@@ -25,15 +25,16 @@
                                         <i class="material-icons ">more_vert</i>
                                     </a>
                                      <ul class="dropdown-menu pull-right">
+                                        <li><a href="javascript:void(0);">Share</a></li>
+                                        <li><a href="<?php echo base_url('images/floderdatazip/'.base64_encode($fnames->f_id)); ?>" >Download</a></li>
                                         <li><a href="javascript:void(0);" onclick="addfloderfavourite('<?php echo $fnames->f_id; ?>','<?php echo $count; ?>');" >Favourite</a></li>
                                        <li data-toggle="modal" data-target="#foldersmallModal<?php echo $fnames->f_id; ?>"><a href="javascript:void(0);" >Rename</a></li>
-                                        <li><a href="javascript:void(0);">Delete</a></li>
+                                        <li><a href="<?php echo base_url('dashboard/deletefloder/'.base64_encode($fnames->f_id).'/'.base64_encode( isset($page_id)?$page_id:'0').'/'.base64_encode(isset($floder_id)?$floder_id:'0')); ?>">Delete</a></li>
                                     </ul>
                                 </li>
 						</ul>
 				</div>
 				</a>
-					<!-- floderrename-->
 					<div class="modal fade" id="foldersmallModal<?php echo $fnames->f_id; ?>" tabindex="-1" role="dialog">
 						<div class="modal-dialog modal-sm" role="document">
 							<div class="modal-content">
@@ -67,6 +68,7 @@
 					</div>
 					<!-- floderrename-->
 					<!-- flodermoving-->
+					
 					
 				
 			<?php $count++;} ?>
@@ -224,6 +226,7 @@ function recentaddfavourite(id,val){
 				data: {
 					form_key : window.FORM_KEY,
 					item_id: id,
+					'<?php echo $this->security->get_csrf_token_name(); ?>' : '<?php echo $this->security->get_csrf_hash(); ?>'
 					},
 				dataType: 'JSON',
 					success: function (data) {
@@ -253,6 +256,7 @@ function recentaddfavourite(id,val){
 				data: {
 					form_key : window.FORM_KEY,
 					item_id: id,
+					'<?php echo $this->security->get_csrf_token_name(); ?>' : '<?php echo $this->security->get_csrf_hash(); ?>'
 					},
 				dataType: 'JSON',
 					success: function (data) {

@@ -25,6 +25,8 @@ class Images extends CI_Controller {
 			$loginuser_id=$this->session->userdata('userdetails');
 			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
 			$filedata['file_data']=$this->Images_model->get_fileupload_data($loginuser_id['u_id']);
+			$filedata['floder_name_list']=$this->Dashboard_model->get_flodername_list($loginuser_id['u_id']);	
+
 			//echo '<pre>';print_r();exit;
 			$this->load->view('html/header',$data);
 			$this->load->view('html/sidebar',$data);

@@ -328,6 +328,7 @@ function addfavourite(id,val){
 				data: {
 					form_key : window.FORM_KEY,
 					item_id: id,
+					'<?php echo $this->security->get_csrf_token_name(); ?>' : '<?php echo $this->security->get_csrf_hash(); ?>'
 					},
 				dataType: 'JSON',
 					success: function (data) {
@@ -357,6 +358,7 @@ function addfavourite(id,val){
 				data: {
 					form_key : window.FORM_KEY,
 					item_id: id,
+					'<?php echo $this->security->get_csrf_token_name(); ?>' : '<?php echo $this->security->get_csrf_hash(); ?>'
 					},
 				dataType: 'JSON',
 					success: function (data) {
