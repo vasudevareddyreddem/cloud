@@ -46,5 +46,14 @@ class Mobile_model extends CI_Model
 		$this->db->where('u_id', $uid);
 		return $this->db->get()->row_array();
 	}
+	public function update_user_details($u_id,$data){
+		$this->db->where('u_id', $u_id);
+		return $this->db->update('users', $data);
+	}
+	public function save_floders($data){
+		$this->db->insert('floder_list', $data);
+		return $insert_id = $this->db->insert_id();
+	}
+
 
 }
