@@ -75,10 +75,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => '',
-	'database' => 'cloud',
+	'hostname' => '43.255.154.8',
+	'username' => 'cloudlive',
+	'password' => 'cloudlive@123',
+	'database' => 'cloud_live',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
