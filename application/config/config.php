@@ -403,7 +403,7 @@ $config['sess_regenerate_destroy'] = FALSE;
 $config['cookie_prefix']	= '';
 $config['cookie_domain']	= '';
 $config['cookie_path']		= '/';
-$config['cookie_secure']	= TRUE;
+$config['cookie_secure']	= FALSE;
 $config['cookie_httponly'] 	= FALSE;
 
 /*
@@ -453,7 +453,7 @@ $config['csrf_token_name'] = 'csrf_test_name';
 $config['csrf_cookie_name'] = 'csrf_cookie_name';
 $config['csrf_expire'] = 7200;
 $config['csrf_regenerate'] = TRUE;
-$config['csrf_exclude_uris'] = array();
+$config['csrf_exclude_uris'] = array('api/mobile/user_create','api/mobile/user_login','api/mobile/user_forgotpassword','api/mobile/user_changepassword','api/mobile/check_email_unique','api/mobile/check_mobile_unique');
 
 /*
 |--------------------------------------------------------------------------

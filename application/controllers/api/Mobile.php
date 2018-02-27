@@ -1,0 +1,191 @@
+<?php
+
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+// This can be removed if you use __autoload() in config.php OR use Modular Extensions
+/** @noinspection PhpIncludeInspection */
+require APPPATH . 'libraries/REST_Controller.php';
+
+/**
+ * This is an example of a few basic user interaction methods you could use
+ * all done with a hardcoded array
+ *
+ * @package         CodeIgniter
+ * @subpackage      Rest Server
+ * @category        Controller
+ * @author          Phil Sturgeon, Chris Kacerguis
+ * @license         MIT
+ * @link            https://github.com/chriskacerguis/codeigniter-restserver
+ */
+class Mobile extends REST_Controller {
+
+    function __construct()
+    {
+        // Construct the parent class
+        parent::__construct();
+
+        // Configure limits on our controller methods
+        // Ensure you have created the 'limits' table and enabled 'limits' within application/config/rest.php
+        $this->methods['users_get']['limit'] = 500; // 500 requests per hour per user/key
+        $this->methods['users_post']['limit'] = 100; // 100 requests per hour per user/key
+        $this->methods['users_delete']['limit'] = 50; // 50 requests per hour per user/key
+		$this->load->library('email');
+		$this->load->library('form_validation');
+		$this->load->library('session');
+		$this->load->helper('security');
+		$this->load->model('Mobile_model');
+		$this->load->library('zend');
+    }
+
+  
+
+    public function user_create_post()
+    {
+        
+		$name=$this->post('name');
+        $email=$this->post('email');
+        $mobile=$this->post('mobile');
+        $password=$this->post('password');
+		if($name ==''){
+		$message = array('status'=>0,'message'=>'Nameis required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}if($email ==''){
+		$message = array('status'=>0,'message'=>'Email is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}if($mobile ==''){
+		$message = array('status'=>0,'message'=>'Mobile Number is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}if($password ==''){
+		$message = array('status'=>0,'message'=>'Password is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$emailcheking =$this->Mobile_model->mobile_checking($email);
+		if(count($emailcheking)>0){
+			$message = array('status'=>0,'message'=>'Email id already exist. Please use  another Email id');
+			$this->response($message, REST_Controller::HTTP_OK);
+		}			
+		$mobilecheking =$this->Mobile_model->mobile_checking($mobile);
+		if(count($mobilecheking)>0){
+			$message = array('status'=>0,'message'=>'Mobile number already exist. Please use  another Mobile Number');
+			$this->response($message, REST_Controller::HTTP_OK);	
+		}
+		$username = $this->security->sanitize_filename($this->post('name'), TRUE);
+		$useremail = $this->security->sanitize_filename($this->post('email'), TRUE);
+		$usermobile = $this->security->sanitize_filename($this->post('mobile'), TRUE);
+		$userdata=array(
+				'u_name'=>$username,
+				'u_email'=>$useremail,
+				'u_mobile'=>$usermobile,
+				'u_password'=>md5($password),
+				'u_orginalpassword'=>$password,
+				'u_status'=>1,
+				'role'=>1,
+				'u_create_at'=>date('Y-m-d H:i:s'),
+				);
+				$saveduser = $this->Mobile_model->save_user($userdata);
+				if(count($saveduser)>0){
+					$this->zend->load('Zend/Barcode');
+					$file = Zend_Barcode::draw('code128', 'image', array('text' => $saveduser), array());
+					$code = time().$saveduser;
+					$store_image1 = imagepng($file, $this->config->item('documentroot')."assets/userbarcodes/{$code}.png");
+					$this->Mobile_model->update_user_barcode($saveduser,$code.'.png');
+					$userdetals=$this->Mobile_model->get_user_details($saveduser);
+					$this->session->set_userdata('userdetails',$userdetals);
+					$message = array('status'=>1,'userid'=>$saveduser,'message'=>'User successfully register');
+					$this->response($message, REST_Controller::HTTP_OK);
+				}else{
+					$message = array('status'=>0,'message'=>'technical problem will occurred. Please try again.');
+					$this->response($message, REST_Controller::HTTP_OK);
+				}
+		
+    }
+	 public function user_login_post()
+    {
+        
+        $email=$this->post('email');
+        $password=$this->post('password');
+		if($email ==''){
+		$message = array('status'=>0,'message'=>'Email is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}if($password ==''){
+		$message = array('status'=>0,'message'=>'Password is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$useremail = $this->security->sanitize_filename($this->post('email'), TRUE);
+		$check_login=$this->Mobile_model->check_login_details($useremail,md5($password));
+		if(count($check_login)>0){
+					$this->session->set_userdata('userdetails',$check_login);
+					$message = array('status'=>1,'userdetails'=>$check_login,'message'=>'User successfully Login');
+					$this->response($message, REST_Controller::HTTP_OK);
+				}else{
+					$message = array('status'=>0,'message'=>'Login Details are wrong. Plase try again.');
+					$this->response($message, REST_Controller::HTTP_OK);
+				}
+
+	}
+	public function user_changepassword_post()
+    {
+        
+        $userid=$this->post('userid');
+        $oldpwd=$this->post('oldpwd');
+        $newpwd=$this->post('newpwd');
+		if($userid ==''){
+		$message = array('status'=>0,'message'=>'User Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}if($oldpwd ==''){
+		$message = array('status'=>0,'message'=>'Old Password is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}if($newpwd ==''){
+		$message = array('status'=>0,'message'=>'New Password is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$checkoldpassword = $this->Mobile_model->oldpassword($userid,$oldpwd);
+			if(count($checkoldpassword)>0){
+					$changepassword = $this->Mobile_model->set_user_password($userid,$newpwd);
+					//echo $this->db->last_query();exit;
+					if(count($changepassword)>0){
+						$message = array('status'=>1,'userid'=>$userid,'message'=>'password successfully Updated');
+					$this->response($message, REST_Controller::HTTP_OK);	
+					}else{
+						$message = array('status'=>0,'userid'=>$userid,'message'=>'Technical problem will occurred .Please try again');
+					$this->response($message, REST_Controller::HTTP_OK);
+					}
+			}else{
+				$message = array('status'=>0,'userid'=>$userid,'message'=>'Old password is wrong .please try again');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}
+
+	}
+	public function user_forgotpassword_post()
+    {
+        
+        $email=$this->post('email');
+		if($email ==''){
+		$message = array('status'=>0,'message'=>'Email Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$emailcheking =$this->Mobile_model->mobile_checking($email);
+		if(count($emailcheking)>0){
+				$data['usedetails']=$emailcheking;
+				$this->load->library('email');
+				$this->email->set_newline("\r\n");
+				$this->email->set_mailtype("html");
+				$this->email->from('Cloud.com');
+				$this->email->to($email);
+				$this->email->subject('shofus - Forgot Password');
+				$html = $this->load->view('email/forgetpassword', $data, true); 
+				$this->email->message($html);
+				$this->email->send();
+			echo '<pre>';print_r($html);exit;
+			$message = array('status'=>0,'message'=>'Email id already exist. Please use  another Email id');
+			$this->response($message, REST_Controller::HTTP_OK);
+		}else{
+				$message = array('status'=>0,'userid'=>$userid,'message'=>'Email id not Registered. Please use another Email Address');
+				$this->response($message, REST_Controller::HTTP_OK);
+		}
+
+	}
+
+    
+
+}
