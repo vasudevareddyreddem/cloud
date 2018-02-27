@@ -41,5 +41,10 @@ class Mobile_model extends CI_Model
 		$sql1="UPDATE users SET u_password ='".md5($pass)."', u_orginalpassword ='".$pass."' WHERE u_id = '".$usid."'";
        	return $this->db->query($sql1);
 	}
+	public function get_all_user_details($uid){
+		$this->db->select('users.u_id,users.role,users.u_name,users.u_email,users.u_mobile,users.u_dob,users.u_gender,users.u_barcode,users.u_barcode_image,u_profilepic')->from('users');		
+		$this->db->where('u_id', $uid);
+		return $this->db->get()->row_array();
+	}
 
 }

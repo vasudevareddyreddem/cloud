@@ -175,15 +175,36 @@ class Mobile extends REST_Controller {
 				$this->email->subject('shofus - Forgot Password');
 				$html = $this->load->view('email/forgetpassword', $data, true); 
 				$this->email->message($html);
-				$this->email->send();
-			echo '<pre>';print_r($html);exit;
-			$message = array('status'=>0,'message'=>'Email id already exist. Please use  another Email id');
-			$this->response($message, REST_Controller::HTTP_OK);
+				if($this->email->send()){
+					$message = array('status'=>1,'userid'=>$emailcheking['u_id'],'message'=>'Temporary password sent to email. check your registered email.');
+					$this->response($message, REST_Controller::HTTP_OK);
+				}else{
+					$message = array('status'=>1,'userid'=>$emailcheking['u_id'],'message'=>"In Local Host Email are can't sent");
+					$this->response($message, REST_Controller::HTTP_OK);
+				}
+			
 		}else{
 				$message = array('status'=>0,'userid'=>$userid,'message'=>'Email id not Registered. Please use another Email Address');
 				$this->response($message, REST_Controller::HTTP_OK);
 		}
 
+	}
+	public function user_profile_post()
+    {
+		$userid=$this->post('userid');
+		if($userid ==''){
+		$message = array('status'=>0,'message'=>'User Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$user_details=$this->Mobile_model->get_all_user_details($userid);
+		if(count($user_details)>0){
+					$this->session->set_userdata('userdetails',$user_details);
+					$message = array('status'=>1,'userdetails'=>$user_details,'profilepath'=>base_url('assets/users/'),'barcodepath'=>base_url('assets/userbarcodes/'),'message'=>'User details are found');
+					$this->response($message, REST_Controller::HTTP_OK);
+				}else{
+					$message = array('status'=>0,'message'=>'User id is wrong. Please  try again once');
+					$this->response($message, REST_Controller::HTTP_OK);
+				}
 	}
 
     
