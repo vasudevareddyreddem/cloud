@@ -1,3 +1,5 @@
+<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/vendor/css/jquery-ui.css">
+<script src="<?php echo base_url(); ?>assets/vendor/js/jquery-auto.js"></script>
 <section class="content">
         <div class="container-fluid">
             <div class="block-header">
@@ -6,7 +8,7 @@
 
             <!-- Widgets -->
             <div class="row clearfix">
-			
+				
 			 <div class="row clearfix">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="card">
@@ -22,6 +24,7 @@
                         </div>
                         <div class="body">
 						<div class="row clearfix">
+								
 						
 						<?php $cnt=5;foreach($recen_file_data as $list){ ?>
 								<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
