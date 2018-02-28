@@ -318,28 +318,34 @@
 												<input type="hidden" name="<?=$csrf['name'];?>" value="<?=$csrf['hash'];?>" />
 												<input type="hidden" id="sharingfile_id" name="sharingfile_id" value="" />
 												 <div class="modal-body pad-cus" style="padding-bottom:0px ;">
+													<div class="row ">
+													<div class="col-md-8 ">
 													<div class="form-group ">
 													   <label>Share to another cloud account</label>
-													   <div class="container">
-													   <div class="row">
-													   <div  class=" col-md-8">
+													  
 														  <select style="width:100%" id="multiple" name="filesharing[]"  class="form-line select2-multiple" multiple>
 																<?php foreach($all_users_list as $list){ ?>
 																<option value="<?php echo $list['u_id']; ?>"><?php echo $list['u_name']; ?></option>
 																<?php } ?>
 														  </select>
-														  </div>
-														  <div class=" col-md-2">
-														  <select style="width:20%"  name="permissions" id="permissions"  >
+														 
+													</div>
+													</div>
+													<div class="col-md-2 ">
+													<style>.bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) { width: 150px;border: 1px solid #ddd;
+}
+													</style>
+													<div class="form-group " style="width:100px;">
+													   <label>&nbsp;</label>
+														  <select  name="permissions" id="permissions" style="width:100px;" >
 																<option value="">Select</option>
 																<option value="Read">READ</option>
 																<option value="Write">WRITE</option>
 														  </select>
-														  </div>
-														  <div class="clearfix"></div>
-													   </div>
-													   </div>
 													</div>
+													</div>
+													</div>
+													
 													<br>
 													<hr >
 													<h4 class="text-center mart-neg"><span>OR</span></h4>
