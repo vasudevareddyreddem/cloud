@@ -185,6 +185,21 @@ class Dashboard_model extends CI_Model
 	}
 	
 	/*floderDeleteing*/
-
+/* testing*/
+public function delete_for_all_datasss($f_id,$u_id){
+		$this->db->select('floder_list.f_id,floder_list.page_id,floder_list.floder_id')->from('floder_list');		
+		$this->db->where('floder_id', $f_id);
+		$this->db->where('u_id', $u_id);
+		return $this->db->get()->result_array();
+}
+public function delete_for_all_data($f_id,$u_id){
+		$this->db->select('floder_id,f_id,( SELECT  COUNT(*)FROM    floder_list WHERE   floder_id = f_id ) + ( SELECT  COUNT(*) FROM    floder_list WHERE   floder_id = f_id ) - ( SELECT  COUNT(*) FROM    floder_list WHERE   floder_id = f_id AND floder_id = f_id )  COUNT')->from('floder_list');		
+		$this->db->where('floder_id >=', $f_id);
+		$this->db->where('u_id', $u_id);
+		$this->db->where('f_undo', 0);
+		return $this->db->get()->result_array();
+}
+	
+/* testing*/
 
 }

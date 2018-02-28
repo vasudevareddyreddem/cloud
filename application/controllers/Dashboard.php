@@ -28,7 +28,8 @@ class Dashboard extends CI_Controller {
 			$data['floder_id']='';
 			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
 			$filedata['recen_file_data']=$this->Dashboard_model->recen_get_pagewisefileupload_data($loginuser_id['u_id']);
-			$filedata['recen_floder_data']=$this->Dashboard_model->recen_get_floder_data($loginuser_id['u_id']);
+			//$filedata['recen_floder_data']=$this->Dashboard_model->recen_get_floder_data($loginuser_id['u_id']);
+			$filedata['recen_floder_data']=array();
 			$filedata['file_data']=$this->Dashboard_model->get_fileupload_data($loginuser_id['u_id']);
 			$filedata['floder_data']=$this->Dashboard_model->get_flodername_data($loginuser_id['u_id']);
 			$filedata['floder_name_list']=$this->Dashboard_model->get_flodername_list($loginuser_id['u_id']);	
@@ -499,17 +500,10 @@ class Dashboard extends CI_Controller {
 			$floder_id=base64_decode($this->uri->segment(3));
 			$pid=base64_decode($this->uri->segment(4));
 			$fid=base64_decode($this->uri->segment(5));
-			$folder_details = $this->Dashboard_model->get_linked_floder_details($floder_id,$loginuser_id['u_id']);
+			$folder_details = $this->Dashboard_model->delete_for_all_data($floder_id,$loginuser_id['u_id']);
 				if(count($folder_details)>0){
 					foreach($folder_details as $m_links){
-						$s_f_links = $this->Dashboard_model->get_sublinked_floder_details($m_links['f_id'],$loginuser_id['u_id']);
-							if(count($s_f_links)>0){
-								foreach($s_f_links as $s_m_links){
-										$this->Dashboard_model->update_folder_todelte($s_m_links['f_id'],array('f_undo'=>1));
-								}
-							}
-					$this->Dashboard_model->update_folder_todelte($m_links['f_id'],array('f_undo'=>1));
-
+						$this->Dashboard_model->update_folder_todelte($m_links['f_id'],array('f_undo'=>1));
 					}
 				}
 			$del=$this->Dashboard_model->update_folder_todelte($floder_id,array('f_undo'=>1));
@@ -726,6 +720,21 @@ class Dashboard extends CI_Controller {
 		$this->session->set_flashdata('loginerror','Please login to continue');
 		 //redirect('customer');
 	}
+	 
+ }
+ public function cloud(){
+	 
+	 			$folder_details = $this->Dashboard_model->delete_for_all_data(3,5492214);
+				foreach($folder_details as $list){
+					
+					//echo '<pre>';print_r($list);
+				$this->Dashboard_model->update_folder_todelte($list['f_id'],array('f_undo'=>1));
+
+					
+				}
+				
+				echo '<pre>';print_r($folder_details);exit;
+
 	 
  }
 	
