@@ -78,6 +78,8 @@ class Dashboard extends CI_Controller {
 				
 			}
 			$filedata['breadcoums'] = $this->make_bread->output();
+			}else{
+				$filedata['breadcoums']='';
 			}
 			//echo '<pre>';print_r($filedata);exit;			
 			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
