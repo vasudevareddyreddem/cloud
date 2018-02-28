@@ -140,7 +140,7 @@
 														<i class="material-icons pull-right pad20">more_vert</i>
 													</a>
 													 <ul class="dropdown-menu pull-right">
-														<li><a  data-toggle="modal" data-target="#defaultModal" >Share</a></li>
+														<li><a  onclick="getfileid('<?php echo $list->img_id; ?>');" data-toggle="modal" data-target="#defaultModal" >Share</a></li>
 														<li><a  href="<?php echo base_url('assets/files/'.$list->img_name); ?>" download>Download</a></li>
 														<li><a href="javascript:void(0);" onclick="addfavourite('<?php echo $list->img_id; ?>','<?php echo $cnt; ?>');" >Favourite</a></li>
 														<li data-toggle="modal" data-target="#smallModal<?php echo $list->img_id; ?>"><a href="javascript:void(0);" >Rename</a></li>
@@ -254,46 +254,7 @@
             </div>
             </div>
             <!-- #END# CPU Usage -->
-			<!-- sharing--->
-											<div class="modal fade help-class-modal" id="defaultModal" tabindex="-1" role="dialog">
-												<div class="modal-dialog" role="document">
-												<div class="modal-content">
-												 <div class="modal-header bg-site">
-													<h4 class="modal-title" id="defaultModalLabel">Sharing</h4>
-												 </div>
-												 <div class="modal-body pad-cus" style="padding-bottom:0px ;">
-													<div class="form-group ">
-													   <label>Share to another cloud account</label>
-													   <div class="">
-														  <select style="width:100%;" id="multiple" onclick="getcustomer_list(this.value)" class="form-line select2-multiple" multiple>
-															 <optgroup label="Alaskan/Hawaiian Time Zone">
-																<option value="AK">Alaska</option>
-																<option value="HI">Hawaii</option>
-															 </optgroup>
-														  </select>
-													   </div>
-													</div>
-													<br>
-													<hr >
-													<h4 class="text-center mart-neg"><span>OR</span></h4>
-													<br>
-													<div class="form-group">
-													   <div class="form-line ">
-														  <label>Enter email address,we will mail to them for you</label>
-														  <input type="email"  class="form-control" placeholder="Enter your email" />
-													   </div>
-													   <br>
-													   <div class="modal-footer ">
-														  <button type="button" class="btn btn-link waves-effect">SHARE</button>
-														  <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
-													   </div>
-													</div>
-												 </div>
-												</div>
-												</div>
-											</div>
-
-										<!-- sharing--->
+			
             
     </section>
 	

@@ -23,7 +23,7 @@
 														<i class="material-icons pull-right pad20">more_vert</i>
 													</a>
 													 <ul class="dropdown-menu pull-right">
-														<li><a  data-toggle="modal" data-target="#defaultModal" >Share</a></li>
+														<li><a  onclick="getfileid('<?php echo $list->img_id; ?>');" data-toggle="modal" data-target="#defaultModal" >Share</a></li>
 														<li><a  href="<?php echo base_url('assets/files/'.$list->img_name); ?>" download>Download</a></li>
 														<li><a href="javascript:void(0);" onclick="addfavourites('<?php echo $list->img_id; ?>','<?php echo $cnt; ?>');" >Favourite</a></li>
 														<li data-toggle="modal" data-target="#smallModal<?php echo $list->img_id; ?>"><a href="javascript:void(0);" >Rename</a></li>

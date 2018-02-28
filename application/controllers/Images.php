@@ -26,7 +26,7 @@ class Images extends CI_Controller {
 			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
 			$filedata['file_data']=$this->Images_model->get_fileupload_data($loginuser_id['u_id']);
 			$filedata['floder_name_list']=$this->Dashboard_model->get_flodername_list($loginuser_id['u_id']);	
-
+			$data['all_users_list']=$this->Dashboard_model->get_all_users_list();	
 			//echo '<pre>';print_r();exit;
 			$this->load->view('html/header',$data);
 			$this->load->view('html/sidebar',$data);
@@ -160,6 +160,36 @@ class Images extends CI_Controller {
 			 $this->session->set_flashdata('error','Please login to continue');
 			 redirect('');
 		} 
+		
+	}
+	public function filesharing()
+	{
+		if($this->session->userdata('userdetails'))
+		{
+			$post=$this->input->post();
+			echo '<pre>';print_r($post);
+			$loginuser_id=$this->session->userdata('userdetails');
+			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
+			if(isset($post['filesharing']) && $post['filesharing']){
+				foreach($post['filesharing'] as $list){
+					$sharingdata=array(
+					'u_id'=>$list,
+					'img_id'=>$post['sharingfile_id'],
+					's_permission'=>1,
+					's_status'=>1,
+					's_created'=>date('Y-m-d H:i:s'),
+					'file_created_id'=>$loginuser_id['u_id']
+					);
+					echo '<pre>';print_r($sharingdata);
+				}
+				exit;
+			}
+			
+			
+		}else{
+			redirect();
+		}
+		
 		
 	}
 	

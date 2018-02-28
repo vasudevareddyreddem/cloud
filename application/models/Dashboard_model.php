@@ -30,6 +30,11 @@ class Dashboard_model extends CI_Model
 		$this->db->where('f_id', $f_id);
 		return $this->db->get()->row_array();
 	}
+	public function get_all_users_list(){
+		$this->db->select('users.u_id,users.u_name,users.u_email')->from('users');		
+		$this->db->where('u_status', 1);
+		return $this->db->get()->result_array();
+	}
 	public function get_customer_floder_list($u_id){
 		$this->db->select('floder_list.f_name,floder_list.page_id,floder_list.floder_id')->from('floder_list');		
 		$this->db->where('u_id', $u_id);

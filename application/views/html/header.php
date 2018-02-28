@@ -303,9 +303,68 @@
 		</div>
 	</div>
 </div>
+	<!-- sharing--->
+											<div class="modal fade help-class-modal" id="defaultModal" tabindex="-1" role="dialog">
+												<div class="modal-dialog" role="document">
+												<div class="modal-content">
+												 <div class="modal-header bg-site">
+													<h4 class="modal-title" id="defaultModalLabel">Sharing</h4>
+												 </div>
+												 <form action="<?php echo base_url('images/filesharing'); ?>" id="sharingfile" name="sharingfile" method="post">
+												 <?php $csrf = array(
+															'name' => $this->security->get_csrf_token_name(),
+															'hash' => $this->security->get_csrf_hash()
+													); ?>
+												<input type="hidden" name="<?=$csrf['name'];?>" value="<?=$csrf['hash'];?>" />
+												<input type="hidden" id="sharingfile_id" name="sharingfile_id" value="" />
+												 <div class="modal-body pad-cus" style="padding-bottom:0px ;">
+													<div class="form-group ">
+													   <label>Share to another cloud account</label>
+													   <div class="container">
+													   <div class="row">
+													   <div  class=" col-md-8">
+														  <select style="width:100%" id="multiple" name="filesharing[]"  class="form-line select2-multiple" multiple>
+																<?php foreach($all_users_list as $list){ ?>
+																<option value="<?php echo $list['u_id']; ?>"><?php echo $list['u_name']; ?></option>
+																<?php } ?>
+														  </select>
+														  </div>
+														  <div class=" col-md-2">
+														  <select style="width:20%"  name="permissions" id="permissions"  >
+																<option value="">Select</option>
+																<option value="Read">READ</option>
+																<option value="Write">WRITE</option>
+														  </select>
+														  </div>
+														  <div class="clearfix"></div>
+													   </div>
+													   </div>
+													</div>
+													<br>
+													<hr >
+													<h4 class="text-center mart-neg"><span>OR</span></h4>
+													<br>
+													<div class="form-group">
+													   <div class="form-line ">
+														  <label>Enter email address,we will mail to them for you</label>
+														  <input type="email" id="sharingnotification" name="sharingnotification" class="form-control" placeholder="Enter your email" />
+													   </div>
+													   <br>
+													   <div class="modal-footer ">
+														  <button type="submit" class="btn btn-link waves-effect">SHARE</button>
+														  <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
+													   </div>
+													</div>
+												 </div>
+												 </form>
+												</div>
+												</div>
+											</div>
 
 <script>
-
+function getfileid(id){
+	  document.getElementById('sharingfile_id').value=id;
+}
 function file_upload(){
 	 document.getElementById("imageadd").submit();
 	
