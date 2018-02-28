@@ -108,15 +108,22 @@ class Dashboard extends CI_Controller {
 			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
 			
 			$post=$this->input->post();
-			//echo '<pre>';print_r($_FILES);exit;
+			//echo '<pre>';print_r($_FILES);
 			$this->load->helper('file');
 			$this->form_validation->set_rules('file', '', 'callback_file_check');
+
 			if($this->form_validation->run() == FALSE) {
 				$data['validationerrors'] = validation_errors();
 				$filedata['recen_floder_data']=$this->Dashboard_model->recen_get_floder_data($loginuser_id['u_id']);
 				$filedata['file_data']=$this->Dashboard_model->get_fileupload_data($loginuser_id['u_id']);
 				$filedata['floder_data']=$this->Dashboard_model->get_flodername_data($loginuser_id['u_id']);
-				$data['all_users_list']=$this->Dashboard_model->get_all_users_list();	
+				$data['all_users_list']=$this->Dashboard_model->get_all_users_list($loginuser_id['u_id']);
+				$filedata['recen_file_data']=$this->Dashboard_model->recen_get_pagewisefileupload_data($loginuser_id['u_id']);
+				$filedata['recen_floder_data']=$this->Dashboard_model->recen_get_floder_data($loginuser_id['u_id']);
+				$filedata['floder_name_list']=$this->Dashboard_model->get_flodername_list($loginuser_id['u_id']);	
+
+				$data['page_id']='';
+				$data['floder_id']='';
 				$this->load->view('html/header',$data);
 				$this->load->view('html/sidebar',$data);
 				$this->load->view('html/index',$filedata);
@@ -137,7 +144,7 @@ class Dashboard extends CI_Controller {
 					$picname = str_replace(" ", "", $pic);
 					$imagename=microtime().basename($picname);
 					$imgname = str_replace(" ", "", $imagename);
-					move_uploaded_file($_FILES['file']['tmp_name'], "assets/files/" . $imgname);
+					if(move_uploaded_file($_FILES['file']['tmp_name'], "assets/files/" . $imgname)){
 					$filedata=array(
 						'u_id'=>$loginuser_id['u_id'],
 						'img_name'=>$imgname,
@@ -160,6 +167,15 @@ class Dashboard extends CI_Controller {
 						
 					}else{
 						$this->session->set_flashdata('error',"technical problem will occurred. Please try again.");
+						if(isset($post['pageid']) && $post['pageid']!=''){
+							redirect('dashboard/page/'.base64_encode($post['pageid']).'/'.base64_encode($post['floderid']));
+						}else{
+							redirect('dashboard');
+						}
+					}
+					
+					}else{
+						$this->session->set_flashdata('error',"Upload file too Large. please decrease file size");
 						if(isset($post['pageid']) && $post['pageid']!=''){
 							redirect('dashboard/page/'.base64_encode($post['pageid']).'/'.base64_encode($post['floderid']));
 						}else{
@@ -533,7 +549,7 @@ class Dashboard extends CI_Controller {
 						if(in_array($mime, $allowed_mime_type_arr)){
 							return true;
 						}else{
-							$this->form_validation->set_message('file_check', 'Please select only gif/jpg/png file.');
+							$this->form_validation->set_message('file_check', 'Please select only gif/png/jpeg/pjpeg/bmp/pptx/mpeg/tiff/rtf/quicktime/msword/svg+xml/jpg/php/pdf/x-rar-compressed/css/zip/msword/x-zip/doc/docx/html file.');
 							return false;
 						}
 					}else{
@@ -549,13 +565,15 @@ class Dashboard extends CI_Controller {
     }
 	
 	function file_check(){
-        $allowed_mime_type_arr = array('application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/zip', 'application/msword', 'application/x-zip','application/x-download','application/pdf','application/doc','application/docx','text/html','text/plain','image/jpeg','image/gif','image/bmp','image/vnd.microsoft.icon','image/tiff','image/tiff','image/svg+xml','image/svg+xml','application/vnd.ms-cab-compressed','application/x-msdownload','application/x-msdownload','application/x-rar-compressed','audio/mpeg','video/quicktime','video/quicktime','image/vnd.adobe.photoshop','application/postscript', 'application/postscript','application/postscript','application/vnd.ms-powerpoint','application/vnd.ms-excel','application/rtf','application/msword','text/html','text/css','image/php','image/gif','image/jpeg','image/pjpeg','image/png','image/x-png');
+		$allowed_mime_type_arr =array('exe','mp4','mp3','3gpp','gif','png','jpeg','pjpeg','bmp','pptx','mpeg','tiff','rtf','quicktime','msword','svg+xml','jpg','php','pdf','x-rar-compressed','css','zip','msword','x-zip','doc','docx','html');
         $mime = get_mime_by_extension($_FILES['file']['name']);
-        if(isset($_FILES['file']['name']) && $_FILES['file']['name']!=""){
-            if(in_array($mime, $allowed_mime_type_arr)){
+		if(isset($_FILES['file']['name']) && $_FILES['file']['name']!=""){
+			$filename = $_FILES['file']['name'];
+			$ext = pathinfo($filename, PATHINFO_EXTENSION);
+			if(in_array($ext,$allowed_mime_type_arr) ) {
                 return true;
             }else{
-                $this->form_validation->set_message('file_check', 'Please select only gif/jpg/png file.');
+                $this->form_validation->set_message('file_check', 'Please select only gif/png/jpeg/pjpeg/bmp/pptx/mpeg/tiff/rtf/quicktime/msword/svg+xml/jpg/php/pdf/x-rar-compressed/css/zip/msword/x-zip/doc/docx/html file.');
                 return false;
             }
         }else{

@@ -71,6 +71,11 @@
 				<?php echo $this->session->flashdata('error');?> &nbsp; <i class="glyphicon glyphicon-ok text-success ico_bac" aria-hidden="true"></i>
 				</div>
 			<?php endif; ?>
+			<?php if(validation_errors()):?>
+				<div class="alert_msg1 animated slideInUp bg-warn">
+				<?php echo validation_errors(); ?> &nbsp; <i class="glyphicon glyphicon-ok text-success ico_bac" aria-hidden="true"></i>
+				</div>
+			<?php endif; ?>
             <div class="collapse navbar-collapse" id="navbar-collapse">
                 <ul class="nav navbar-nav navbar-left m-l-100">
                     <!-- Call Search -->
