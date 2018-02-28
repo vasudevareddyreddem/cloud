@@ -5,21 +5,7 @@
             </div>
 			<div id="sucessmsg" style="display:none;"></div>
             <!-- Widgets -->
-            <div class="row clearfix">
-			<?php foreach($floder_data as $fnames){ ?>
-                <a href="<?php echo base_url('dashboard/page/'.base64_encode(1).'/'.base64_encode($fnames->f_id)); ?>"><div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <div class="info-box bg-pink hover-expand-effect">
-                        <div class="icon">
-                            <i class="material-icons">folder</i>
-                        </div>
-                        <div class="content">
-                            <div class="text"><h3><?php echo htmlentities($fnames->f_name); ?></h3></div>
-                            
-                        </div>
-                    </div>
-                </div></a>
-				
-			<?php } ?>
+           
                 
                 
                 
@@ -32,33 +18,13 @@
                     <div class="card">
                         <div class="header">
                             <div class="row clearfix">
-                               
-                                    <h2> <?php echo isset($flodername['f_name'])?$flodername['f_name']:''; ?> Floder</h2>
-									<ul class="header-dropdown m-r--5">
-                                <li class="dropdown">
-                                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                        <i class="material-icons">more_vert</i>
-                                    </a>
-                                     <ul class="dropdown-menu pull-right">
-                                        <li><a href="javascript:void(0);">Share</a></li>
-                                        <li><a href="javascript:void(0);">Download</a></li>
-                                        <li><a href="javascript:void(0);">Favourite</a></li>
-                                        <li><a href="javascript:void(0);">Rename</a></li>
-                                        <li><a href="javascript:void(0);">Move</a></li>
-                                        <li><a href="javascript:void(0);">Copy</a></li>
-                                        <li><a href="javascript:void(0);">Delete</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                               
-                                
-                            </div>
-                            
+                               <h2>Shared Data </h2>
+							</div>
                         </div>
                         <div class="body">
 						<div class="row clearfix">
 						<?php //echo '<pre>';print_r($file_data);exit; ?>
-						<?php $cnt=1;foreach($file_data as $list){ ?>
+						<?php $cnt=1;foreach($shared_file as $list){ ?>
 								<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
 									<div class="card">
 									<ul class="header-dropdown m-r--5">
@@ -67,11 +33,10 @@
 														<i class="material-icons pull-right pad20">more_vert</i>
 													</a>
 													 <ul class="dropdown-menu pull-right">
-														<li><a href="javascript:void(0);">Share</a></li>
+														<li><a  onclick="getfileid('<?php echo $list->img_id; ?>');" data-toggle="modal" data-target="#defaultModal" >Share</a></li>
 														<li><a  href="<?php echo base_url('assets/files/'.$list->img_name); ?>" download>Download</a></li>
-														<li><a href="javascript:void(0);" onclick="addfavourite('<?php echo $list->img_id; ?>','<?php echo $cnt; ?>');" >Favourite</a></li>
+														<li><a href="javascript:void(0);" onclick="addfavourites('<?php echo $list->img_id; ?>','<?php echo $cnt; ?>');" >Favourite</a></li>
 														<li data-toggle="modal" data-target="#smallModal<?php echo $list->img_id; ?>"><a href="javascript:void(0);" >Rename</a></li>
-														<li data-toggle="modal" data-target="#smallModalmove<?php echo $list->img_id; ?>"><a href="javascript:void(0);">Move</a></li>
 														<li><a href="<?php echo base_url('dashboard/imgdelte/'.base64_encode($list->img_id).'/'.base64_encode( isset($page_id)?$page_id:'0').'/'.base64_encode(isset($floder_id)?$floder_id:'0')); ?>">Delete</a></li>
 													</ul>
 												</li>
@@ -93,33 +58,42 @@
 												<?php }	?>
 										
 										</div>
+										
 										<!-- moving--->
 										<div class="modal fade" id="smallModalmove<?php echo $list->img_id; ?>" tabindex="-1" role="dialog">
 										   <div class="modal-dialog modal-sm" role="document">
 											  <div class="modal-content">
-												 <form id="filemoving" name="filemoving" action="<?php echo base_url('dashboard/flodername'); ?>" method="post">
+												 <form id="filemoving" name="filemoving" action="<?php echo base_url('images/filemoving'); ?>" method="post">
 													<?php $csrf = array(
 													   'name' => $this->security->get_csrf_token_name(),
 													   'hash' => $this->security->get_csrf_hash()
 													   ); ?>
 													<input type="hidden" name="<?=$csrf['name'];?>" value="<?=$csrf['hash'];?>" />
-													<input type="hidden" name="pageid" value="<?php echo isset($page_id)?$page_id:0; ?>" />
-													<input type="hidden" name="floderid" value="<?php echo isset($floder_id)?$floder_id:0; ?>" />
-													<div class="modal-header">
+													<input type="hidden" name="pageid" id="filemovepageid_id" value="" >
+													<input type="hidden" name="floderid" id="filemovefloderid_id" value="" >
+													<input type="hidden" name="moveimgid" id="filemoveimgid_id" value="" >
+													<div class="modal-header bg-site">
 															<h4 class="modal-title" id="smallModalLabel">Select</h4>
 													</div>
-													<ul>
-													<li><i class="material-icons">folder</i><span>Folder Upload </span></li>
-													<li><i class="material-icons">folder</i><span>Folder Upload </span></li>
-													<li><i class="material-icons">folder</i><span>Folder Upload </span></li>
-													<li><i class="material-icons">folder</i><span>Folder Upload </span></li>
-													<li><i class="material-icons">folder</i><span>Folder Upload </span></li>
-													<li><i class="material-icons">folder</i><span>Folder Upload </span></li>
-													<li><i class="material-icons">folder</i><span>Folder Upload </span></li>
-													<li><i class="material-icons">folder</i><span>Folder Upload </span></li>
-													</ul>
+													<div class="pad-15lr">
+														<div class="row max-height-scroll"><br>
+														<div class="col-lg-12 ">
+														<ul class="demo-choose-skin">
+														<?php $c=1;foreach($floder_name_list as $li){ ?>
+															<a href="javascript:void(0);"  onclick="imggetmoveid('<?php echo $li->page_id; ?>','<?php echo $li->f_id; ?>','<?php echo $list->img_id; ?>','<?php echo $c; ?>');addtabactive('<?php echo $list->img_id; ?>','<?php echo $c; ?>');">
+															<li id="movingtab<?php echo $c;?><?php echo $list->img_id;?>">
+																<div class=""><i class="material-icons">folder</i></div>
+																<span><?php echo htmlentities($li->f_name); ?></span>
+															</li></a>
+														<?php $c++;} ?>
+																
+															</ul>
+														
+														</div>
+														</div>
+													</div>
 													<div class="modal-footer">
-													   <button type="submit" class="btn btn-link waves-effect">SAVE </button>
+													   <button type="submit" class="btn btn-link waves-effect">Move </button>
 													   <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
 													</div>
 												 </form>

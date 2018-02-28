@@ -46,30 +46,6 @@
                             <span>My Devices</span>
                         </a>
                         
-                    </li> 
-					<li>
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons"> insert_drive_file</i>
-                            <span>Files</span>
-                        </a>
-                        <ul class="ml-menu">
-                            <li>
-                                <a href="javascript:void(0);" class="menu-toggle">
-                                    <span>Cards</span>
-                                </a>
-                                <ul class="ml-menu">
-                                    <li>
-                                        <a href="pages/widgets/cards/basic.html">Basic</a>
-                                    </li>
-                                    <li>
-                                        <a href="pages/widgets/cards/colored.html">Colored</a>
-                                    </li>
-                                    <li>
-                                        <a href="pages/widgets/cards/no-header.html">No Header</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
                     </li>
 					 <li class="">
                         <a href="<?php echo base_url('images'); ?>">

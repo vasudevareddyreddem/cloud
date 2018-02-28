@@ -34,6 +34,16 @@ class Images_model extends CI_Model
 		return $this->db->update('floder_list', $data);
 	}
 	
-
-
+/*filesharing*/
+public function save_file_sharing($data){
+		$this->db->insert('shared_files', $data);
+		return $insert_id = $this->db->insert_id();
+	}
+	public function get_shared_file($u_id){
+		$this->db->select('images.img_id,images.img_name,images.imag_org_name')->from('shared_files');
+		$this->db->join('images', 'images.img_id = shared_files.img_id', 'left');
+		$this->db->where('shared_files.u_id', $u_id);
+		return $this->db->get()->result();
+	}
+/*filesharing*/
 }
