@@ -7,25 +7,18 @@
             </div>
 
             <!-- Widgets -->
+			<?php if(count($recen_file_data)>0 || count($recen_floder_data)>0 ){ ?>
             <div class="row clearfix">
 				
-			 <div class="row clearfix">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="card">
                         <div class="header">
                             <div class="row clearfix">
-                               
-                                    <h2>Recently opened</h2>
-									
-                               
-                                
-                            </div>
-                            
-                        </div>
+                               <h2>Recently opened</h2>
+							 </div>
+                          </div>
                         <div class="body">
 						<div class="row clearfix">
-								
-						
 						<?php $cnt=5;foreach($recen_file_data as $list){ ?>
 								<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
 									<div class="card">
@@ -209,6 +202,8 @@
             </div>
             </div>
             </div>
+			
+			<?php } ?>
 			<!--floder-->
 			<?php if(isset($floder_data) && count($floder_data)>0){?>
 			 <div class="row clearfix">

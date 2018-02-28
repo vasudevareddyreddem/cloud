@@ -30,8 +30,9 @@ class Dashboard_model extends CI_Model
 		$this->db->where('f_id', $f_id);
 		return $this->db->get()->row_array();
 	}
-	public function get_all_users_list(){
-		$this->db->select('users.u_id,users.u_name,users.u_email')->from('users');		
+	public function get_all_users_list($u_id){
+		$this->db->select('users.u_id,users.u_name,users.u_email')->from('users');
+		$this->db->where('u_id !=', $u_id);		
 		$this->db->where('u_status', 1);
 		return $this->db->get()->result_array();
 	}
@@ -51,6 +52,7 @@ class Dashboard_model extends CI_Model
 		$this->db->join('images', 'images.img_id = recently_file_open.file_id', 'left');
 		$this->db->where('images.u_id', $u_id);
 		$this->db->where('images.img_undo', 0);
+		$this->db->group_by('images.img_id', 0);
 		$this->db->limit(4);
 		$this->db->order_by("recently_file_open.r_file_updated_at", "DESC");
 		return $this->db->get()->result();

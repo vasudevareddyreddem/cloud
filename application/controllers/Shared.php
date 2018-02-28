@@ -25,7 +25,7 @@ class Shared extends CI_Controller {
 		{
 			$loginuser_id=$this->session->userdata('userdetails');
 			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
-			$data['all_users_list']=$this->Dashboard_model->get_all_users_list();	
+			$data['all_users_list']=$this->Dashboard_model->get_all_users_list($loginuser_id['u_id']);	
 			$shared['shared_file']=$this->Images_model->get_shared_file($loginuser_id['u_id']);	
 
 			//echo '<pre>';print_r($shared);exit;
