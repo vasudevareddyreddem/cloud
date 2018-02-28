@@ -34,7 +34,8 @@ class Dashboard extends CI_Controller {
 			$filedata['floder_data']=$this->Dashboard_model->get_flodername_data($loginuser_id['u_id']);
 			$filedata['floder_name_list']=$this->Dashboard_model->get_flodername_list($loginuser_id['u_id']);	
 			$data['all_users_list']=$this->Dashboard_model->get_all_users_list($loginuser_id['u_id']);		
-			//echo '<pre>';print_r($filedata);exit;
+			//echo $this->db->last_query();
+			//echo '<pre>';print_r($data);exit;
 			$this->load->view('html/header',$data);
 			$this->load->view('html/sidebar',$data);
 			$this->load->view('html/index',$filedata);

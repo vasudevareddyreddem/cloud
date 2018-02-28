@@ -322,6 +322,7 @@
 													); ?>
 												<input type="hidden" name="<?=$csrf['name'];?>" value="<?=$csrf['hash'];?>" />
 												<input type="hidden" id="sharingfile_id" name="sharingfile_id" value="" />
+												<input type="hidden" id="yes" name="yes" value="0" />
 												 <div class="modal-body pad-cus" style="padding-bottom:0px ;">
 													<div class="row ">
 													<div class="col-md-8 ">
@@ -372,9 +373,13 @@
 												</div>
 											</div>
 
+
 <script>
 function getfileid(id){
 	  document.getElementById('sharingfile_id').value=id;
+}function getfloderid(id){
+	  document.getElementById('sharingfile_id').value=id;
+	  document.getElementById('yes').value=1;
 }
 function file_upload(){
 	 document.getElementById("imageadd").submit();

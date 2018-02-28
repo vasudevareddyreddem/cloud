@@ -167,35 +167,68 @@ class Images extends CI_Controller {
 		if($this->session->userdata('userdetails'))
 		{
 			$post=$this->input->post();
-			echo '<pre>';print_r($post);
+			//echo '<pre>';print_r($post);exit;
 			$loginuser_id=$this->session->userdata('userdetails');
 			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
-			if(isset($post['filesharing']) && $post['filesharing']!=''){
-				foreach($post['filesharing'] as $list){
-					$sharingdata=array(
-					'u_id'=>$list,
-					'img_id'=>$post['sharingfile_id'],
-					's_permission'=>$post['permissions'],
-					's_status'=>1,
-					's_created'=>date('Y-m-d H:i:s'),
-					'file_created_id'=>$loginuser_id['u_id']
-					);
-					$sharedfile=$this->Images_model->save_file_sharing($sharingdata);
-					//echo '<pre>';print_r($sharingdata);
-				}
+			if(isset($post['yes']) && $post['yes']==0){
+					if(isset($post['filesharing']) && $post['filesharing']!=''){
+						foreach($post['filesharing'] as $list){
+							$sharingdata=array(
+							'u_id'=>$list,
+							'img_id'=>$post['sharingfile_id'],
+							's_permission'=>$post['permissions'],
+							's_status'=>1,
+							's_created'=>date('Y-m-d H:i:s'),
+							'file_created_id'=>$loginuser_id['u_id']
+							);
+							$sharedfile=$this->Images_model->save_file_sharing($sharingdata);
+							//echo '<pre>';print_r($sharingdata);
+						}
+						//exit;
+					}
+					if(isset($post['sharingnotification']) && $post['sharingnotification']!=''){
+						$sharingdata=array(
+							'u_email'=>$post['sharingnotification'],
+							'img_id'=>$post['sharingfile_id'],
+							's_permission'=>$post['permissions'],
+							's_status'=>1,
+							's_created'=>date('Y-m-d H:i:s'),
+							'file_created_id'=>$loginuser_id['u_id']
+							);
+							$sharedfile=$this->Images_model->save_file_sharing($sharingdata);
+					}
+			}else{
+				//echo '<pre>';print_r($post);exit;
 				//exit;
+					if(isset($post['filesharing']) && $post['filesharing']!=''){
+						foreach($post['filesharing'] as $list){
+							$sharingdata=array(
+							'u_id'=>$list,
+							'f_id'=>$post['sharingfile_id'],
+							's_permission'=>$post['permissions'],
+							's_status'=>1,
+							's_created'=>date('Y-m-d H:i:s'),
+							'file_created_id'=>$loginuser_id['u_id']
+							);
+							$sharedfile=$this->Images_model->save_folder_sharing($sharingdata);
+							//echo '<pre>';print_r($sharingdata);
+						}
+						//exit;
+					}
+					if(isset($post['sharingnotification']) && $post['sharingnotification']!=''){
+						$sharingdata=array(
+							'u_email'=>$post['sharingnotification'],
+							'f_id'=>$post['sharingfile_id'],
+							's_permission'=>$post['permissions'],
+							's_status'=>1,
+							's_created'=>date('Y-m-d H:i:s'),
+							'file_created_id'=>$loginuser_id['u_id']
+							);
+							$sharedfile=$this->Images_model->save_folder_sharing($sharingdata);
+					}
+				
 			}
-			if(isset($post['sharingnotification']) && $post['sharingnotification']!=''){
-				$sharingdata=array(
-					'u_email'=>$post['sharingnotification'],
-					'img_id'=>$post['sharingfile_id'],
-					's_permission'=>$post['permissions'],
-					's_status'=>1,
-					's_created'=>date('Y-m-d H:i:s'),
-					'file_created_id'=>$loginuser_id['u_id']
-					);
-					$sharedfile=$this->Images_model->save_file_sharing($sharingdata);
-			}
+			
 			if(count($sharedfile)>0){
 				$this->session->set_flashdata('success',"File successfully shared");
 				redirect();
