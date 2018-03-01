@@ -9,23 +9,7 @@
                                     <h2>Change Password</h2>
                             </div>
                         </div>
-						<?php if($this->session->flashdata('success')): ?>
-						<div class="alert alert-success alert-dismissable">
-						<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-						<?php echo $this->session->flashdata('success');?>
-						</div>
-					<?php endif; ?>
-					<?php if($this->session->flashdata('error')): ?>
-						<div class="alert alert-warning alert-dismissable">
-						<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-						<?php echo $this->session->flashdata('error');?>
-						</div>
-					<?php endif; ?>
-					<?php if(validation_errors()):?>
-					<div class="alert alert-warning alert-dismissable">
-						<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-						<?php echo validation_errors(); ?></div>
-					<?php  endif;?>
+						
                         <div class="body">
 						<div class="row clearfix">
 							<div class="col-md-2">
