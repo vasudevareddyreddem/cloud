@@ -25,6 +25,7 @@ class Shared extends CI_Controller {
 	{
 		if($this->session->userdata('userdetails'))
 		{
+			unset($_SESSION['shared_bread']);
 			$loginuser_id=$this->session->userdata('userdetails');
 			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
 			$data['all_users_list']=$this->Dashboard_model->get_all_users_list($loginuser_id['u_id']);	
@@ -51,24 +52,24 @@ class Shared extends CI_Controller {
 			$filedata['permissions']=base64_decode($this->uri->segment(5));
 			$loginuser_id=$this->session->userdata('userdetails');
 			$userfloder_list=$this->Images_model->get_customer_floder_list($loginuser_id['u_id']);
-			$folder_details = $this->Images_model->delete_for_all_data($fid);
-			foreach($folder_details as $list){
-				if($list['floder_id']!='' && $list['floder_id']!=0){
-				$lids[]=$list['floder_id'];
+			if(is_numeric($fid)){
+				$_SESSION['shared_bread'][] = $fid;
+				foreach($_SESSION['shared_bread'] as $list){
+					if(is_numeric($list)){
+						$li[]=$list;
+					}
 				}
-			}
-			if(isset($lids) && count($lids)>0){
-				$this->make_bread->add('shared','Shared');
-			foreach(array_unique($lids) as $li){
-				if($li < $fid){
-					$name=$this->Dashboard_model->get_customer_floder_name($li);
-					$this->make_bread->add($name['f_name'], 'Shared/folder/'.base64_encode($name["page_id"]).'/'.base64_encode($name["floder_id"]));
-				}
-				
-			}
-			$filedata['breadcoums'] = $this->make_bread->output();
-			}else{
-				$filedata['breadcoums']='';
+				$bread=implode(',',array_unique($li));
+				$len =  strpos($bread,$fid);
+				$idds=substr($bread,0,$len);
+					$this->make_bread->add('Shared','shared');
+					foreach(explode(",",$idds) as $li){
+						if($li!=0){
+						$name=$this->Dashboard_model->get_customer_floder_name($li);
+						$this->make_bread->add($name['f_name'], 'dashboard/page/'.base64_encode($name["page_id"]).'/'.base64_encode($name["floder_id"]));
+						}
+					}
+				$filedata['breadcoums'] = $this->make_bread->output();
 			}
 			//echo '<pre>';print_r($lids);exit;			
 			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);

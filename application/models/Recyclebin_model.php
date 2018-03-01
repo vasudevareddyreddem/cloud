@@ -94,6 +94,11 @@ class Recyclebin_model extends CI_Model
 		$sql1="DELETE FROM images WHERE img_id = '".$img_id."' ";
 		return $this->db->query($sql1);
 	}
+	public function permenent_shared_delte_folder($f_id)
+	{
+		$sql1="DELETE FROM shared_folder WHERE f_id = '".$f_id."' ";
+		return $this->db->query($sql1);
+	}
 	public function permenentdelte_folder($f_id)
 	{
 		$sql1="DELETE FROM floder_list WHERE f_id = '".$f_id."' ";

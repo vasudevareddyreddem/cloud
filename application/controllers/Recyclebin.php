@@ -165,20 +165,24 @@ class Recyclebin extends CI_Controller {
 				if(count($folder_details)>0){
 					foreach($folder_details as $m_links){
 						$delete_folder_imgs = $this->Recyclebin_model->permedelte_folder_images_list($m_links['f_id']);
+						$this->Recyclebin_model->permenent_shared_delte_folder($m_links['f_id']);
 						foreach($delete_folder_imgs as $list){
 							$this->Recyclebin_model->permenentdelte_image($list['img_id']);
 							unlink("assets/files/".$list['img_name']);
 						}
 						$delete_folder = $this->Recyclebin_model->permenentdelte_folder($m_links['f_id']);
+						$this->Recyclebin_model->permenent_shared_delte_folder($m_links['f_id']);
 
 					}
 				}
 				$folder = $this->Recyclebin_model->permedelte_folder_images_list($folder_id);
+				$this->Recyclebin_model->permenent_shared_delte_folder($folder_id);
 				foreach($folder as $list){
 							$this->Recyclebin_model->permenentdelte_image($list['img_id']);
 							unlink("assets/files/".$list['img_name']);
 						}
 				$delete_folder = $this->Recyclebin_model->permenentdelte_folder($folder_id);
+				$this->Recyclebin_model->permenent_shared_delte_folder($folder_id);
 			
 					if(count($delete_folder)>0){
 						$this->session->set_flashdata('success',"Folder successfully Deleted");
