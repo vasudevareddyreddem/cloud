@@ -60,6 +60,45 @@ class Recyclebin_model extends CI_Model
 		$this->db->where('images.floder_id', $f_id);
 		return $this->db->get()->result();
 	}
+	public function get_pagewiseflodername_data($f_id){
+		$this->db->select('floder_list.f_id,floder_list.f_name')->from('floder_list');		
+		//$this->db->where('f_undo', 0);
+		$this->db->where('floder_id',$f_id);
+		$this->db->order_by("floder_list.f_create_at", "DESC");
+		return $this->db->get()->result();
+	}
+		public function delete_for_all_data($f_id,$u_id){
+		$this->db->select('floder_id,floder_id,( SELECT  COUNT(*)FROM    floder_list WHERE   floder_id = f_id ) + ( SELECT  COUNT(*) FROM    floder_list WHERE   floder_id = f_id ) - ( SELECT  COUNT(*) FROM    floder_list WHERE   floder_id = f_id AND floder_id = f_id )  COUNT')->from('floder_list');		
+		$this->db->where('floder_list.floder_id <=', $f_id);
+		$this->db->where('floder_list.u_id', $u_id);
+		$this->db->group_by('floder_list.f_id');
+		return $this->db->get()->result_array();
+	}
+	
+	public function perment_delete_for_all_data($f_id,$u_id){
+		$this->db->select('floder_id,f_id,( SELECT  COUNT(*)FROM    floder_list WHERE   floder_id = f_id ) + ( SELECT  COUNT(*) FROM    floder_list WHERE   floder_id = f_id ) - ( SELECT  COUNT(*) FROM    floder_list WHERE   floder_id = f_id AND floder_id = f_id )  COUNT')->from('floder_list');		
+		$this->db->where('floder_id >=', $f_id);
+		$this->db->where('u_id', $u_id);
+		$this->db->where('f_undo', 0);
+		$this->db->order_by("floder_list.f_id", "DESC");
+		return $this->db->get()->result_array();
+	}
+	public function permedelte_folder_images_list($f_id)
+	{
+		$this->db->select('images.img_id,images.img_name,images.imag_org_name,images.floder_id')->from('images');		
+		$this->db->where('images.floder_id', $f_id);
+		return $this->db->get()->result_array();
+	}
+	public function permenentdelte_image($img_id)
+	{
+		$sql1="DELETE FROM images WHERE img_id = '".$img_id."' ";
+		return $this->db->query($sql1);
+	}
+	public function permenentdelte_folder($f_id)
+	{
+		$sql1="DELETE FROM floder_list WHERE f_id = '".$f_id."' ";
+		return $this->db->query($sql1);
+	}
 	
 	
 }

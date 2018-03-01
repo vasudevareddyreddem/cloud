@@ -167,7 +167,7 @@ class Images extends CI_Controller {
 		if($this->session->userdata('userdetails'))
 		{
 			$post=$this->input->post();
-			//echo '<pre>';print_r($post);exit;
+			$redirection_url=$this->agent->referrer();
 			$loginuser_id=$this->session->userdata('userdetails');
 			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
 			if(isset($post['yes']) && $post['yes']==0){
@@ -231,10 +231,14 @@ class Images extends CI_Controller {
 			
 			if(count($sharedfile)>0){
 				$this->session->set_flashdata('success',"File successfully shared");
-				redirect();
+				
+					redirect($redirection_url);
+			
 			}else{
 				$this->session->set_flashdata('error',"technical problem will occurred. Please try again.");
-				redirect();
+					
+							redirect($redirection_url);
+					
 			}
 			
 			

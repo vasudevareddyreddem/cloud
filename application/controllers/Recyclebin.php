@@ -16,7 +16,10 @@ class Recyclebin extends CI_Controller {
 		$this->load->helper("file");
 		$this->load->model('User_model');
 		$this->load->model('Recyclebin_model');
+		$this->load->model('Images_model');
+		$this->load->model('Dashboard_model');
 		$this->load->library('zend');
+		$this->load->library('make_bread');
 		}
 	public function index()
 	{
@@ -26,6 +29,12 @@ class Recyclebin extends CI_Controller {
 			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
 			$filedata['floder_data']=$this->Recyclebin_model->get_undo_floder_data($loginuser_id['u_id']);
 			$filedata['file_data']=$this->Recyclebin_model->get_undo_file_data($loginuser_id['u_id']);
+			/*$folder_details = $this->Dashboard_model->delete_for_all_data($floder_id,$loginuser_id['u_id']);
+				if(count($folder_details)>0){
+					foreach($folder_details as $m_links){
+						$this->Dashboard_model->update_folder_todelte($m_links['f_id'],array('f_undo'=>1));
+					}
+				}*/
 			//echo '<pre>';print_r($filedata);exit;
 			$this->load->view('html/header',$data);
 			$this->load->view('html/sidebar',$data);
@@ -43,7 +52,31 @@ class Recyclebin extends CI_Controller {
 			$loginuser_id=$this->session->userdata('userdetails');
 			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
 			$f_id=base64_decode($this->uri->segment(3));
-			$filedata['file_data']=$this->Recyclebin_model->get_delete_floder_data($loginuser_id['u_id'],$f_id);	
+
+			$folder_details = $this->Recyclebin_model->delete_for_all_data($f_id,$loginuser_id['u_id']);
+			//echo '<pre>';print_r($folder_details);exit;
+			foreach($folder_details as $list){
+				if($list['floder_id']!='' && $list['floder_id']!=0){
+				$lids[]=$list['floder_id'];
+				}
+			}
+			if(isset($lids) && count($lids)>0){
+				$this->make_bread->add('Recycle Bin','recyclebin');
+			foreach(array_unique($lids) as $li){
+				if($li < $f_id){
+					$name=$this->Dashboard_model->get_customer_floder_name($li);
+					$this->make_bread->add($name['f_name'], 'recyclebin/folder/'.base64_encode($name["floder_id"]));
+				}
+				
+			}
+			$filedata['breadcoums'] = $this->make_bread->output();
+			}else{
+				$filedata['breadcoums']='';
+			}
+			$filedata['file_data']=$this->Recyclebin_model->get_delete_floder_data($loginuser_id['u_id'],$f_id);
+			$filedata['floder_data']=$this->Recyclebin_model->get_pagewiseflodername_data($f_id);	
+			//echo $this->db->last_query();exit;
+			
 			//echo '<pre>';print_r($filedata);exit;
 			$this->load->view('html/header',$data);
 			$this->load->view('html/sidebar',$data);
@@ -125,15 +158,28 @@ class Recyclebin extends CI_Controller {
 			$post=$this->input->post();
 			$folder_id=base64_decode($this->uri->segment(3));
 			$u_id=base64_decode($this->uri->segment(4));
-			if($u_id==$loginuser_id['u_id']){
-				$floderdetails = $this->Recyclebin_model->get_delte_folder_details($loginuser_id['u_id'],$folder_id);
-					$delete_folder_imgs = $this->Recyclebin_model->delte_folder_images_list($loginuser_id['u_id'],$folder_id);
+				
+				$folder_details = $this->Recyclebin_model->perment_delete_for_all_data($folder_id,$loginuser_id['u_id']);
+				//echo $this->db->last_query();exit
+				//echo '<pre>';print_r($folder_details);exit;
+				if(count($folder_details)>0){
+					foreach($folder_details as $m_links){
+						$delete_folder_imgs = $this->Recyclebin_model->permedelte_folder_images_list($m_links['f_id']);
 						foreach($delete_folder_imgs as $list){
-							$this->Recyclebin_model->delte_image($loginuser_id['u_id'],$list['img_id']);
+							$this->Recyclebin_model->permenentdelte_image($list['img_id']);
 							unlink("assets/files/".$list['img_name']);
 						}
-					$delete_folder = $this->Recyclebin_model->delte_folder($loginuser_id['u_id'],$folder_id);
+						$delete_folder = $this->Recyclebin_model->permenentdelte_folder($m_links['f_id']);
 
+					}
+				}
+				$folder = $this->Recyclebin_model->permedelte_folder_images_list($folder_id);
+				foreach($folder as $list){
+							$this->Recyclebin_model->permenentdelte_image($list['img_id']);
+							unlink("assets/files/".$list['img_name']);
+						}
+				$delete_folder = $this->Recyclebin_model->permenentdelte_folder($folder_id);
+			
 					if(count($delete_folder)>0){
 						$this->session->set_flashdata('success',"Folder successfully Deleted");
 						redirect('recyclebin');
@@ -144,10 +190,7 @@ class Recyclebin extends CI_Controller {
 					
 					}
 				
-			}else{
-				$this->session->set_flashdata('error',"No have no permissions to access that page");
-				redirect('recyclebin');
-			}
+			
 		
 		}else{
 			 $this->session->set_flashdata('error','Please login to continue');

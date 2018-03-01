@@ -74,5 +74,20 @@ class Images_model extends CI_Model
 		$this->db->order_by("floder_list.f_create_at", "DESC");
 		return $this->db->get()->result();
 	}
+	public function get_customer_floder_list($u_id){
+		$this->db->select('floder_list.f_id,floder_list.f_name,shared_folder.s_permission')->from('shared_folder');
+		$this->db->join('floder_list', 'floder_list.f_id = shared_folder.f_id', 'left');
+		$this->db->where('shared_folder.u_id', $u_id);
+		$this->db->group_by('shared_folder.f_id');
+		return $this->db->get()->result();
+	}
+	public function delete_for_all_data($f_id){
+		$this->db->select('floder_id,floder_id,( SELECT  COUNT(*)FROM    floder_list WHERE   floder_id = f_id ) + ( SELECT  COUNT(*) FROM    floder_list WHERE   floder_id = f_id ) - ( SELECT  COUNT(*) FROM    floder_list WHERE   floder_id = f_id AND floder_id = f_id )  COUNT')->from('floder_list');		
+		$this->db->join('shared_folder', 'shared_folder.f_id = floder_list.f_id', 'left');
+		$this->db->where('floder_list.floder_id <=', $f_id);
+		//$this->db->where('floder_list.u_id', $u_id);
+		//$this->db->where('floder_list.f_undo', 0);
+		return $this->db->get()->result_array();
+	}
 /*filesharing*/
 }

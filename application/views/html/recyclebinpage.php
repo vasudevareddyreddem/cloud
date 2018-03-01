@@ -8,7 +8,46 @@
            
             <!-- #END# Widgets -->
             <!-- CPU Usage -->
-			
+			           <div class="row clearfix">
+			<?php if(isset($floder_data) && count($floder_data)>0){ ?>
+            <div class="row clearfix">
+			<?php //echo '<pre>';print_r($floder_data); exit; ?>
+			<?php $count=1;foreach($floder_data as $fnames){ ?>
+                <a href="<?php echo base_url('recyclebin/folder/'.base64_encode($fnames->f_id)); ?>">
+				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box bg-pink hover-expand-effect">
+                        <div class="icon">
+                            <i class="material-icons">folder</i>
+                        </div>
+                        <div class="content">
+                            <div class="text"><h3><?php echo htmlentities($fnames->f_name); ?></h3></div>
+                            
+                        </div>
+							
+                    </div>
+						<ul class="header-dropdown m-r--5">
+                                <li class="dropdown drop-fold" >
+                                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                        <i class="material-icons ">more_vert</i>
+                                    </a>
+                                     <ul class="dropdown-menu pull-right">
+                                        <li><a href="<?php echo base_url('recyclebin/deletefolder/'.base64_encode($fnames->f_id)); ?>">Delete</a></li>
+                                    </ul>
+                                </li>
+						</ul>
+				</div>
+				</a>
+					
+					<!-- floderrename-->
+					<!-- flodermoving-->
+					
+				
+			<?php $count++;} ?>
+                
+                
+                
+            </div>
+			<?php } ?>
             <div class="row clearfix">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="card">

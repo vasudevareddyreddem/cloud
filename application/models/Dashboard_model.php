@@ -47,6 +47,12 @@ class Dashboard_model extends CI_Model
 		$this->db->where('floder_id', $floder_id);
 		return $this->db->get()->row_array();
 	}
+	public function get_dashbaord_customer_floder_name($floder_id){
+		$this->db->select('floder_list.f_id,floder_list.f_name,floder_list.page_id,floder_list.floder_id')->from('floder_list');		
+		$this->db->where('floder_id', $floder_id);
+		$this->db->where('floder_list.floder_id !=', 0);
+		return $this->db->get()->row_array();
+	}
 	public function recen_get_pagewisefileupload_data($u_id){
 		$this->db->select('images.img_id,images.img_name,images.imag_org_name')->from('recently_file_open');		
 		$this->db->join('images', 'images.img_id = recently_file_open.file_id', 'left');
@@ -185,6 +191,16 @@ class Dashboard_model extends CI_Model
 	}
 	
 	/*floderDeleteing*/
+	/*breadcoum*/
+	public function breadcoum_for_all_data($f_id,$u_id){
+		$this->db->select('floder_id,f_id,( SELECT  COUNT(*)FROM    floder_list WHERE   floder_id = f_id ) + ( SELECT  COUNT(*) FROM    floder_list WHERE   floder_id = f_id ) - ( SELECT  COUNT(*) FROM    floder_list WHERE   floder_id = f_id AND floder_id = f_id )  COUNT')->from('floder_list');		
+		$this->db->where('floder_list.floder_id <=', $f_id);
+		$this->db->where('floder_list.u_id', $u_id);
+		//$this->db->group_by('floder_list.f_id');
+		$this->db->where('floder_list.f_undo', 0);
+		return $this->db->get()->result_array();
+	}
+	/*breadcoum*/
 /* testing*/
 public function delete_for_all_datasss($f_id,$u_id){
 		$this->db->select('floder_list.f_id,floder_list.page_id,floder_list.floder_id')->from('floder_list');		
@@ -199,7 +215,15 @@ public function delete_for_all_data($f_id,$u_id){
 		$this->db->where('f_undo', 0);
 		return $this->db->get()->result_array();
 }
+
 	
 /* testing*/
+
+/*testing breadcoumns*/
+public function save_folder_ids($f_id){
+$_SESSION['cart'][] = $f_id;
+//echo '<pre>';print_r($_SESSION['cart']);	
+}
+/*testing breadcoumns*/
 
 }

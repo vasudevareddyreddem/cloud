@@ -16,6 +16,8 @@ class Shared extends CI_Controller {
 		$this->load->model('User_model');
 		$this->load->model('Images_model');
 		$this->load->model('Dashboard_model');
+		$this->load->library('make_bread');
+
 
 		$this->load->library('zend');
 		}
@@ -48,9 +50,27 @@ class Shared extends CI_Controller {
 			$fid=base64_decode($this->uri->segment(4));
 			$filedata['permissions']=base64_decode($this->uri->segment(5));
 			$loginuser_id=$this->session->userdata('userdetails');
-			
-			
-			//echo '<pre>';print_r($filedata);exit;			
+			$userfloder_list=$this->Images_model->get_customer_floder_list($loginuser_id['u_id']);
+			$folder_details = $this->Images_model->delete_for_all_data($fid);
+			foreach($folder_details as $list){
+				if($list['floder_id']!='' && $list['floder_id']!=0){
+				$lids[]=$list['floder_id'];
+				}
+			}
+			if(isset($lids) && count($lids)>0){
+				$this->make_bread->add('shared','Shared');
+			foreach(array_unique($lids) as $li){
+				if($li < $fid){
+					$name=$this->Dashboard_model->get_customer_floder_name($li);
+					$this->make_bread->add($name['f_name'], 'Shared/folder/'.base64_encode($name["page_id"]).'/'.base64_encode($name["floder_id"]));
+				}
+				
+			}
+			$filedata['breadcoums'] = $this->make_bread->output();
+			}else{
+				$filedata['breadcoums']='';
+			}
+			//echo '<pre>';print_r($lids);exit;			
 			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
 			$filedata['flodername']=$this->Dashboard_model->get_flodername($fid);
 			$data['page_id']=isset($pid)?$pid:'';

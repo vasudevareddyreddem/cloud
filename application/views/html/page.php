@@ -2,12 +2,13 @@
         <div class="container-fluid">
             <div class="block-header">
                 <?php echo isset($breadcoums)?$breadcoums:''; ?>
+				<div id="Result"></div> 
             </div>
 			<div id="sucessmsg" style="display:none;"></div>
             <!-- Widgets -->
             <div class="row clearfix">
 			<?php $count=1;foreach($floder_data as $fnames){ ?>
-                <a href="<?php echo base_url('dashboard/page/'.base64_encode(1).'/'.base64_encode($fnames->f_id)); ?>">
+                <a onclick="display_array('<?php echo $fnames->f_id; ?>');" href="<?php echo base_url('dashboard/page/'.base64_encode(1).'/'.base64_encode($fnames->f_id)); ?>">
 				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <div class="info-box bg-pink hover-expand-effect">
                         <div class="icon">
@@ -257,7 +258,29 @@
 			
             
     </section>
-	
+	<script>
+var x = 0;
+var array = Array();
+
+function add_element_to_array()
+{
+ array[x] = document.getElementById("text1").value;
+ alert("Element: " + array[x] + " Added at index " + x);
+ x++;
+ document.getElementById("text1").value = "";
+}
+
+function display_array()
+{
+   var e = "<hr/>";   
+    
+   for (var y=0; y<array.length; y++)
+   {
+     e += "Element " + y + " = " + array[y] + "<br/>";
+   }
+   document.getElementById("Result").innerHTML = e;
+}
+</script>
 	<script>
 
 function imggetmoveid(pid,fid,imgid,id){

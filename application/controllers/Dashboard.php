@@ -23,6 +23,7 @@ class Dashboard extends CI_Controller {
 	{
 		if($this->session->userdata('userdetails'))
 		{
+			unset($_SESSION['make_bread']);
 			$loginuser_id=$this->session->userdata('userdetails');
 			$data['page_id']='';
 			$data['floder_id']='';
@@ -62,26 +63,26 @@ class Dashboard extends CI_Controller {
 			if($fid!=0){
 				$this->Dashboard_model->recently_view_data($rencently);
 			}
-			$filedata['breadcoums']=array();
+			
 			$userfloder_list=$this->Dashboard_model->get_customer_floder_list($loginuser_id['u_id']);
-			//$folder_details = $this->Dashboard_model->get_folder_details($fid);
-			foreach($userfloder_list as $list){
-				if($list['floder_id']!='' && $list['floder_id']!=0){
-				$lids[]=$list['floder_id'];
+			if(is_numeric($fid)){
+			$_SESSION['make_bread'][] = $fid;
+			foreach($_SESSION['make_bread'] as $list){
+				if(is_numeric($list)){
+					$li[]=$list;
 				}
 			}
-			if(isset($lids) && count($lids)>0){
+			$bread=implode(',',array_unique($li));
+			$len =  strpos($bread,$fid);
+			$idds=substr($bread,0,$len);
 				$this->make_bread->add('Dashboard','dashboard');
-			foreach(array_unique($lids) as $li){
-				if($li < $fid){
+				foreach(explode(",",$idds) as $li){
+					if($li!=0){
 					$name=$this->Dashboard_model->get_customer_floder_name($li);
 					$this->make_bread->add($name['f_name'], 'dashboard/page/'.base64_encode($name["page_id"]).'/'.base64_encode($name["floder_id"]));
+					}
 				}
-				
-			}
-			$filedata['breadcoums'] = $this->make_bread->output();
-			}else{
-				$filedata['breadcoums']='';
+				$filedata['breadcoums'] = $this->make_bread->output();
 			}
 			//echo '<pre>';print_r($filedata);exit;			
 			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
@@ -501,12 +502,12 @@ class Dashboard extends CI_Controller {
 			$floder_id=base64_decode($this->uri->segment(3));
 			$pid=base64_decode($this->uri->segment(4));
 			$fid=base64_decode($this->uri->segment(5));
-			$folder_details = $this->Dashboard_model->delete_for_all_data($floder_id,$loginuser_id['u_id']);
+			/*$folder_details = $this->Dashboard_model->delete_for_all_data($floder_id,$loginuser_id['u_id']);
 				if(count($folder_details)>0){
 					foreach($folder_details as $m_links){
 						$this->Dashboard_model->update_folder_todelte($m_links['f_id'],array('f_undo'=>1));
 					}
-				}
+				}*/
 			$del=$this->Dashboard_model->update_folder_todelte($floder_id,array('f_undo'=>1));
 			if(count($del)>0){
 				$this->session->set_flashdata('success',"Folder successfully Deleted");

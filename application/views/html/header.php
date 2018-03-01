@@ -323,6 +323,8 @@
 												<input type="hidden" name="<?=$csrf['name'];?>" value="<?=$csrf['hash'];?>" />
 												<input type="hidden" id="sharingfile_id" name="sharingfile_id" value="" />
 												<input type="hidden" id="yes" name="yes" value="0" />
+												<input type="hidden" name="pageid" value="<?php echo isset($page_id)?$page_id:0; ?>" />
+												<input type="hidden" name="floderid" value="<?php echo isset($floder_id)?$floder_id:0; ?>" />
 												 <div class="modal-body pad-cus" style="padding-bottom:0px ;">
 													<div class="row ">
 													<div class="col-md-8 ">
