@@ -5,6 +5,7 @@
             </div>
 			<div id="sucessmsg" style="display:none;"></div>
             <!-- Widgets -->
+			<?php if(isset($floder_data) && count($floder_data)>0){ ?>
             <div class="row clearfix">
 			<?php $count=1;foreach($floder_data as $fnames){ ?>
                 <a href="<?php echo base_url('dashboard/page/'.base64_encode(1).'/'.base64_encode($fnames->f_id)); ?>">
@@ -76,6 +77,9 @@
                 
                 
             </div>
+			
+			
+			<?php } ?>
             <!-- #END# Widgets -->
             <!-- CPU Usage -->
 			
@@ -84,7 +88,7 @@
                     <div class="card">
                         <div class="header">
                             <div class="row clearfix">
-                               <h2> <?php echo isset($flodername['f_name'])?$flodername['f_name']:''; ?> Floder</h2>
+                               <h2> Recent Open Data</h2>
 							</div>
                          </div>
                         <div class="body">

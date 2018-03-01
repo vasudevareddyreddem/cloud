@@ -447,22 +447,14 @@ class Dashboard extends CI_Controller {
 			$pid=base64_decode($this->uri->segment(4));
 			$fid=base64_decode($this->uri->segment(5));
 				$deletedata=array(
-						'u_id'=>$loginuser_id['u_id'],
+						//'u_id'=>$loginuser_id['u_id'],
 						'img_undo'=>1,
 						'f_update_at'=>date('Y-m-d H:i:s'),				
 						);
-					//echo '<pre>';print_r($renamedata);exit;
+					//echo '<pre>';print_r($deletedata);
 					$delete_image = $this->Dashboard_model->update_filename_changes($image_id,$deletedata);
 					//echo $this->db->last_query();exit;
 					if(count($delete_image)>0){
-						$recentlyopen_file=array(
-						'u_id'=>$loginuser_id['u_id'],
-						'file_id'=>$image_id,
-						'r_file_status'=>1,
-						'r_file_create_at'=>date('Y-m-d H:i:s'),
-						'r_file_updated_at'=>date('Y-m-d H:i:s'),
-						);
-						$this->Dashboard_model->save_recently_file_open($recentlyopen_file);
 						
 						$this->session->set_flashdata('success',"FIle successfully Deleted");
 						if(isset($pid) && $pid =='recent'){

@@ -13,7 +13,7 @@ class Recent_model extends CI_Model
 		$this->db->select('images.img_id,images.img_name,images.imag_org_name')->from('recently_file_open');		
 		$this->db->join('images', 'images.img_id = recently_file_open.file_id', 'left');		
 		$this->db->where('recently_file_open.u_id', $u_id);
-		//$this->db->where('images.img_undo', 0);
+		$this->db->where('images.img_undo', 0);
 		$this->db->where('images.img_id !=','');
 		$this->db->group_by('images.img_id');
 		$this->db->order_by("recently_file_open.r_file_create_at", "DESC");

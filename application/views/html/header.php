@@ -264,11 +264,8 @@
                        
                         <ul class="dropdown-menu pull-right">
                             <li><a href="<?php echo base_url('profile'); ?>"><i class="material-icons">person</i>Personal Account</a></li>
-                            <li role="seperator" class="divider"></li>
-                            <li><a href="javascript:void(0);"><i class="material-icons">settings</i>Settings</a></li>
-                            <li><a href="javascript:void(0);"><i class="material-icons">open_in_browser</i>Upgrade</a></li>
-                            <li><a href="javascript:void(0);"><i class="material-icons">live_help</i>Help</a></li>
-                            <li role="seperator" class="divider"></li>
+                            <li><a href="<?php echo base_url('profile/changepassword'); ?>"><i class="material-icons">person</i>Change Password</a></li>
+                           
                             <li><a href="<?php echo base_url('cloud/logout'); ?>"><i class="material-icons">input</i>Sign Out</a></li>
                         </ul>
                     </li>
