@@ -536,15 +536,15 @@ class Dashboard extends CI_Controller {
 		
 	}
 	function files_check(){
-        $allowed_mime_type_arr = array('application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/zip', 'application/msword', 'application/x-zip','application/x-download','application/pdf','image/gif','image/jpeg','image/pjpeg','image/png','image/x-png');
+		$allowed_mime_type_arr =array('csv','exe','mp4','mp3','3gpp','gif','png','jpeg','pjpeg','bmp','pptx','mpeg','tiff','rtf','quicktime','msword','svg+xml','jpg','php','pdf','x-rar-compressed','css','zip','msword','x-zip','doc','docx','html');
 		
 		$count = 0;
 				foreach ($_FILES['file']['name'] as $i => $name) {
 					if (strlen($_FILES['file']['name'][$i]) > 1) {
-						
 					$mime = get_mime_by_extension($_FILES['file']['name'][$i]);
 					if(isset($_FILES['file']['name'][$i]) && $_FILES['file']['name'][$i]!=""){
-						if(in_array($mime, $allowed_mime_type_arr)){
+						$ext = pathinfo($_FILES['file']['name'][$i], PATHINFO_EXTENSION);
+						if(in_array($ext,$allowed_mime_type_arr) ) {
 							return true;
 						}else{
 							$this->form_validation->set_message('file_check', 'Please select only gif/png/jpeg/pjpeg/bmp/pptx/mpeg/tiff/rtf/quicktime/msword/svg+xml/jpg/php/pdf/x-rar-compressed/css/zip/msword/x-zip/doc/docx/html file.');
@@ -563,7 +563,7 @@ class Dashboard extends CI_Controller {
     }
 	
 	function file_check(){
-		$allowed_mime_type_arr =array('exe','mp4','mp3','3gpp','gif','png','jpeg','pjpeg','bmp','pptx','mpeg','tiff','rtf','quicktime','msword','svg+xml','jpg','php','pdf','x-rar-compressed','css','zip','msword','x-zip','doc','docx','html');
+		$allowed_mime_type_arr =array('csv','exe','mp4','mp3','3gpp','gif','png','jpeg','pjpeg','bmp','pptx','mpeg','tiff','rtf','quicktime','msword','svg+xml','jpg','php','pdf','x-rar-compressed','css','zip','msword','x-zip','doc','docx','html');
         $mime = get_mime_by_extension($_FILES['file']['name']);
 		if(isset($_FILES['file']['name']) && $_FILES['file']['name']!=""){
 			$filename = $_FILES['file']['name'];

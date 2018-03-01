@@ -148,6 +148,36 @@ class Recyclebin extends CI_Controller {
 		} 
 		
 	}
+	public function folderrestore()
+	{
+		if($this->session->userdata('userdetails'))
+		{
+			$loginuser_id=$this->session->userdata('userdetails');
+			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
+			
+			$folder_id=base64_decode($this->uri->segment(3));
+				$deletedata=array(
+						'f_undo'=>0,
+						'f_updated_at'=>date('Y-m-d H:i:s'),				
+						);
+					//echo '<pre>';print_r($renamedata);exit;
+					$delete_folder= $this->Recyclebin_model->update_folder_changes($folder_id,$deletedata);
+					//echo $this->db->last_query();exit;
+					if(count($delete_folder)>0){
+						$this->session->set_flashdata('success',"Folder successfully Restored");
+						redirect('recyclebin');
+						
+					}else{
+						$this->session->set_flashdata('error',"technical problem will occurred. Please try again.");
+						redirect('recyclebin');
+					}
+				
+		}else{
+			 $this->session->set_flashdata('error','Please login to continue');
+			 redirect('');
+		} 
+		
+	}
 	public function deletefolder()
 	{
 		if($this->session->userdata('userdetails'))

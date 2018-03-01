@@ -32,6 +32,7 @@
                                         <i class="material-icons ">more_vert</i>
                                     </a>
                                      <ul class="dropdown-menu pull-right">
+                                        <li><a href="<?php echo base_url('recyclebin/folderrestore/'.base64_encode($fnames->f_id)); ?>">Restore</a></li>
                                         <li><a href="<?php echo base_url('recyclebin/deletefolder/'.base64_encode($fnames->f_id)); ?>">Delete</a></li>
                                     </ul>
                                 </li>

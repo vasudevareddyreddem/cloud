@@ -37,6 +37,10 @@ class Recyclebin_model extends CI_Model
 		$this->db->where('img_id', $img_id);
 		return $this->db->update('images', $data);
 	}
+	public function update_folder_changes($f_id,$data){
+		$this->db->where('f_id', $f_id);
+		return $this->db->update('floder_list', $data);
+	}
 	public function delte_image($u_id,$img_id)
 	{
 		$sql1="DELETE FROM images WHERE u_id = '".$u_id."'  AND img_id = '".$img_id."' ";
