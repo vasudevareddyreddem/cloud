@@ -29,6 +29,7 @@ class Recyclebin extends CI_Controller {
 			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
 			$filedata['floder_data']=$this->Recyclebin_model->get_undo_floder_data($loginuser_id['u_id']);
 			$filedata['file_data']=$this->Recyclebin_model->get_undo_file_data($loginuser_id['u_id']);
+			$filedata['link_data']=$this->Recyclebin_model->get_undo_link_data($loginuser_id['u_id']);
 			/*$folder_details = $this->Dashboard_model->delete_for_all_data($floder_id,$loginuser_id['u_id']);
 				if(count($folder_details)>0){
 					foreach($folder_details as $m_links){
@@ -142,6 +143,66 @@ class Recyclebin extends CI_Controller {
 						redirect('recyclebin');
 					}
 				
+		}else{
+			 $this->session->set_flashdata('error','Please login to continue');
+			 redirect('');
+		} 
+		
+	}
+	public function linkrestore()
+	{
+		if($this->session->userdata('userdetails'))
+		{
+			$loginuser_id=$this->session->userdata('userdetails');
+			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
+			
+			$link_id=base64_decode($this->uri->segment(3));
+				$deletedata=array(
+						'u_id'=>$loginuser_id['u_id'],
+						'l_undo'=>0,
+						'l_updated_at'=>date('Y-m-d H:i:s'),				
+						);
+					//echo '<pre>';print_r($renamedata);exit;
+					$delete_image = $this->Recyclebin_model->update_link_details($link_id,$deletedata);
+					//echo $this->db->last_query();exit;
+					if(count($delete_image)>0){
+						$this->session->set_flashdata('success',"Link successfully Restore");
+						redirect('recyclebin');
+						
+					}else{
+						$this->session->set_flashdata('error',"technical problem will occurred. Please try again.");
+						redirect('recyclebin');
+					}
+				
+		}else{
+			 $this->session->set_flashdata('error','Please login to continue');
+			 redirect('');
+		} 
+		
+	}
+	public function linkdelte()
+	{
+		if($this->session->userdata('userdetails'))
+		{
+			$loginuser_id=$this->session->userdata('userdetails');
+			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
+			
+			$post=$this->input->post();
+			$link_id=base64_decode($this->uri->segment(3));
+				$delete_image = $this->Recyclebin_model->delte_link($loginuser_id['u_id'],$link_id);
+				$this->Recyclebin_model->share_delte_link($link_id);
+					if(count($delete_image)>0){
+						$this->session->set_flashdata('success',"LInk successfully Deleted");
+						redirect('recyclebin');
+					
+					}else{
+						$this->session->set_flashdata('error',"technical problem will occurred. Please try again.");
+						redirect('recyclebin');
+					
+					}
+				
+			
+		
 		}else{
 			 $this->session->set_flashdata('error','Please login to continue');
 			 redirect('');

@@ -167,6 +167,7 @@ class Images extends CI_Controller {
 		if($this->session->userdata('userdetails'))
 		{
 			$post=$this->input->post();
+			//echo '<pre>';print_r($post);exit;
 			$redirection_url=$this->agent->referrer();
 			$loginuser_id=$this->session->userdata('userdetails');
 			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
@@ -197,9 +198,35 @@ class Images extends CI_Controller {
 							);
 							$sharedfile=$this->Images_model->save_file_sharing($sharingdata);
 					}
+			}else if(isset($post['yes']) && $post['yes']==2){
+				
+				if(isset($post['filesharing']) && $post['filesharing']!=''){
+						foreach($post['filesharing'] as $list){
+							$sharingdata=array(
+							'u_id'=>$list,
+							'link_id'=>$post['sharingfile_id'],
+							's_permission'=>$post['permissions'],
+							's_status'=>1,
+							's_created'=>date('Y-m-d H:i:s'),
+							'file_created_id'=>$loginuser_id['u_id']
+							);
+							$sharedfile=$this->Images_model->save_link_sharing($sharingdata);
+							//echo '<pre>';print_r($sharingdata);
+						}
+						//exit;
+					}
+					if(isset($post['sharingnotification']) && $post['sharingnotification']!=''){
+						$sharingdata=array(
+							'u_email'=>$post['sharingnotification'],
+							'f_id'=>$post['sharingfile_id'],
+							's_permission'=>$post['permissions'],
+							's_status'=>1,
+							's_created'=>date('Y-m-d H:i:s'),
+							'file_created_id'=>$loginuser_id['u_id']
+							);
+							$sharedfile=$this->Images_model->save_link_sharing($sharingdata);
+					}
 			}else{
-				//echo '<pre>';print_r($post);exit;
-				//exit;
 					if(isset($post['filesharing']) && $post['filesharing']!=''){
 						foreach($post['filesharing'] as $list){
 							$sharingdata=array(
@@ -228,7 +255,6 @@ class Images extends CI_Controller {
 					}
 				
 			}
-			
 			if(count($sharedfile)>0){
 				$this->session->set_flashdata('success',"File successfully shared");
 				

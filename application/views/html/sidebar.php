@@ -46,9 +46,16 @@
 					 <li class="">
                         <a href="<?php echo base_url('images'); ?>">
                             <i class="material-icons">dashboard</i>
-                            <span>Images</span>
+                            <span>My Files</span>
                         </a>
                     </li>
+					<li class="">
+                        <a href="<?php echo base_url('links'); ?>">
+                            <i class="material-icons">dashboard</i>
+                            <span>Links</span>
+                        </a>
+                    </li>
+					
 				
 					 <li class="">
                         <a href="<?php echo base_url('recent'); ?>">

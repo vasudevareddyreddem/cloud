@@ -343,7 +343,6 @@
 													<div class="form-group " style="width:100px;">
 													   <label>&nbsp;</label>
 														  <select  name="permissions" id="permissions" style="width:100px;" >
-																<option value="">Select</option>
 																<option value="Read">READ</option>
 																<option value="Write">WRITE</option>
 														  </select>
@@ -379,6 +378,9 @@ function getfileid(id){
 }function getfloderid(id){
 	  document.getElementById('sharingfile_id').value=id;
 	  document.getElementById('yes').value=1;
+}function getlinkid(id){
+	  document.getElementById('sharingfile_id').value=id;
+	  document.getElementById('yes').value=2;
 }
 function file_upload(){
 	 document.getElementById("imageadd").submit();

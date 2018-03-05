@@ -15,6 +15,17 @@ class Recyclebin_model extends CI_Model
 		$this->db->where('images.img_undo', 1);
 		return $this->db->get()->result();
 	}
+	public function get_undo_link_data($u_id){
+		$this->db->select('links.l_id,links.l_name,links.l_created_at')->from('links');		
+		$this->db->where('links.u_id', $u_id);
+		$this->db->where('links.l_undo', 1);
+		return $this->db->get()->result();
+	}
+	public function update_link_details($l_id,$data){
+		$this->db->where('l_id',$l_id);
+		return $this->db->update('links',$data);
+		
+	}
 	public function get_undo_floder_data($u_id){
 		$this->db->select('floder_list.f_id,floder_list.f_name,floder_list.u_id')->from('floder_list');		
 		$this->db->where('floder_list.u_id', $u_id);
@@ -44,6 +55,16 @@ class Recyclebin_model extends CI_Model
 	public function delte_image($u_id,$img_id)
 	{
 		$sql1="DELETE FROM images WHERE u_id = '".$u_id."'  AND img_id = '".$img_id."' ";
+		return $this->db->query($sql1);
+	}
+	public function delte_link($u_id,$l_id)
+	{
+		$sql1="DELETE FROM links WHERE u_id = '".$u_id."'  AND l_id = '".$l_id."' ";
+		return $this->db->query($sql1);
+	}
+	public function share_delte_link($l_id)
+	{
+		$sql1="DELETE FROM shared_links WHERE link_id = '".$l_id."' ";
 		return $this->db->query($sql1);
 	}
 	public function delte_folder($u_id,$f_id)

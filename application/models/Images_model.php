@@ -43,6 +43,10 @@ class Images_model extends CI_Model
 		$this->db->insert('shared_folder', $data);
 		return $insert_id = $this->db->insert_id();
 	}
+	public function save_link_sharing($data){
+		$this->db->insert('shared_links', $data);
+		return $insert_id = $this->db->insert_id();
+	}
 	public function get_shared_file($u_id){
 		$this->db->select('images.img_id,images.img_name,images.imag_org_name,shared_files.s_permission')->from('shared_files');
 		$this->db->join('images', 'images.img_id = shared_files.img_id', 'left');
