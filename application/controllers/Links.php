@@ -56,10 +56,10 @@ class Links extends CI_Controller {
 			$addlink = $this->Links_model->save_links($addlink);
 			if(count($addlink)>0){
 				$this->session->set_flashdata('success',"link successfully added");
-				redirect('links');
+				redirect($this->agent->referrer());
 			}else{
 						$this->session->set_flashdata('error',"technical problem will occurred. Please try again.");
-				redirect('links');
+				redirect($this->agent->referrer());
 			}
 		}else{
 			 $this->session->set_flashdata('error','Please login to continue');
@@ -86,10 +86,10 @@ class Links extends CI_Controller {
 					//echo $this->db->last_query();exit;
 					if(count($delete_link)>0){
 						$this->session->set_flashdata('success',"Link successfully Deleted");
-						redirect('links');
+						redirect($this->agent->referrer());
 					}else{
 						$this->session->set_flashdata('error',"technical problem will occurred. Please try again.");
-						redirect('links');
+						redirect($this->agent->referrer());
 					}
 				
 			
@@ -117,10 +117,10 @@ class Links extends CI_Controller {
 						$renamechanges = $this->Links_model->update_link_details($post['linkid'],$renamedata);
 						if(count($renamechanges)>0){
 								$this->session->set_flashdata('success',"Relink successfully changed");
-								redirect('links');
+							redirect($this->agent->referrer());
 						}else{
 							$this->session->set_flashdata('error',"technical problem will occurred. Please try again.");
-							redirect('links');
+							redirect($this->agent->referrer());
 						}
 			}else{
 				 $this->session->set_flashdata('error','Please login to continue');

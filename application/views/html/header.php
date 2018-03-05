@@ -168,10 +168,11 @@
 													
 														<div class="menu-info">
 															<h4><?php echo htmlentities($list['u_name']).' request for File calling  name is '. htmlentities($list['f_c_calling']); ?></h4>
+															<?php if($list['u_id']!= $userdetails['u_id']){ ?>
 															<?php if($list['f_c_request']==0){ ?>
-															<a href="<?php echo base_url('filecall/requestaccept/'.base64_encode($list['filecall_id']).'/'.base64_encode(1)); ?>">proceed</a>
+															<a href="<?php echo base_url('filecall/index/'.base64_encode(3)); ?>">proceed</a>
 															<a href="<?php echo base_url('filecall/requestaccept/'.base64_encode($list['filecall_id']).'/'.base64_encode(2)); ?>">decline</a>
-															<?php }else{ ?>
+															<?php }  }else{ ?>
 															<p><?php if($list['f_c_request']==1){ echo "Accepted";}else if($list['f_c_request']==2){ echo "declined"; } ?></p>
 															<?php } ?>
 															<p>
@@ -186,7 +187,7 @@
 											</ul>
 										</li>
 										<li class="footer">
-											<a href="javascript:void(0);">View All Notifications</a>
+											<a href="<?php echo base_url('filecall/index/'.base64_encode(3)); ?>">View All Notifications</a>
 										</li>
 									</ul>
 								</li>
