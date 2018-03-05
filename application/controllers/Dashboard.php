@@ -34,7 +34,9 @@ class Dashboard extends CI_Controller {
 			$filedata['file_data']=$this->Dashboard_model->get_fileupload_data($loginuser_id['u_id']);
 			$filedata['floder_data']=$this->Dashboard_model->get_flodername_data($loginuser_id['u_id']);
 			$filedata['floder_name_list']=$this->Dashboard_model->get_flodername_list($loginuser_id['u_id']);	
-			$data['all_users_list']=$this->Dashboard_model->get_all_users_list($loginuser_id['u_id']);		
+			$data['all_users_list']=$this->Dashboard_model->get_all_users_list($loginuser_id['u_id']);
+			$data['notofication_list']=$this->Dashboard_model->get_user_notification_list($loginuser_id['u_id']);	
+			$data['notofication_uread_count']=$this->Dashboard_model->get_user_notification_unreadcount($loginuser_id['u_id']);				
 			//echo $this->db->last_query();
 			//echo '<pre>';print_r($data);exit;
 			$this->load->view('html/header',$data);
@@ -94,6 +96,8 @@ class Dashboard extends CI_Controller {
 			$filedata['floder_name_list']=$this->Dashboard_model->get_flodername_list($loginuser_id['u_id']);	
 			$filedata['floder_moving_list']=$this->Dashboard_model->get_floder_movingname_list($loginuser_id['u_id'],$fid);	
 			$data['all_users_list']=$this->Dashboard_model->get_all_users_list($loginuser_id['u_id']);		
+			$data['notofication_list']=$this->Dashboard_model->get_user_notification_list($loginuser_id['u_id']);	
+			$data['notofication_uread_count']=$this->Dashboard_model->get_user_notification_unreadcount($loginuser_id['u_id']);	
 			//$filedata['users_list']=$this->Dashboard_model->get_all_users_list();	
 			//echo '<pre>';print_r($data);exit;
 			$this->load->view('html/header',$data);
@@ -126,7 +130,8 @@ class Dashboard extends CI_Controller {
 				$filedata['recen_file_data']=$this->Dashboard_model->recen_get_pagewisefileupload_data($loginuser_id['u_id']);
 				$filedata['recen_floder_data']=$this->Dashboard_model->recen_get_floder_data($loginuser_id['u_id']);
 				$filedata['floder_name_list']=$this->Dashboard_model->get_flodername_list($loginuser_id['u_id']);	
-
+				$data['notofication_list']=$this->Dashboard_model->get_user_notification_list($loginuser_id['u_id']);	
+				$data['notofication_uread_count']=$this->Dashboard_model->get_user_notification_unreadcount($loginuser_id['u_id']);	
 				$data['page_id']='';
 				$data['floder_id']='';
 				$this->load->view('html/header',$data);

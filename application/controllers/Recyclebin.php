@@ -30,6 +30,8 @@ class Recyclebin extends CI_Controller {
 			$filedata['floder_data']=$this->Recyclebin_model->get_undo_floder_data($loginuser_id['u_id']);
 			$filedata['file_data']=$this->Recyclebin_model->get_undo_file_data($loginuser_id['u_id']);
 			$filedata['link_data']=$this->Recyclebin_model->get_undo_link_data($loginuser_id['u_id']);
+			$data['notofication_list']=$this->Dashboard_model->get_user_notification_list($loginuser_id['u_id']);	
+			$data['notofication_uread_count']=$this->Dashboard_model->get_user_notification_unreadcount($loginuser_id['u_id']);	
 			/*$folder_details = $this->Dashboard_model->delete_for_all_data($floder_id,$loginuser_id['u_id']);
 				if(count($folder_details)>0){
 					foreach($folder_details as $m_links){
@@ -76,6 +78,8 @@ class Recyclebin extends CI_Controller {
 			}
 			$filedata['file_data']=$this->Recyclebin_model->get_delete_floder_data($loginuser_id['u_id'],$f_id);
 			$filedata['floder_data']=$this->Recyclebin_model->get_pagewiseflodername_data($f_id);	
+			$data['notofication_list']=$this->Dashboard_model->get_user_notification_list($loginuser_id['u_id']);	
+			$data['notofication_uread_count']=$this->Dashboard_model->get_user_notification_unreadcount($loginuser_id['u_id']);	
 			//echo $this->db->last_query();exit;
 			
 			//echo '<pre>';print_r($filedata);exit;

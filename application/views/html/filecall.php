@@ -1,9 +1,7 @@
-<?php include('header.php'); ?>
 <head>
  <script src="plugins/jquery/jquery.min.js"></script>
 
 </head>
-<?php include('sidebar.php'); ?>
 <section class="content">
         <div class="container-fluid">
             <div class="row clearfix">
@@ -29,12 +27,13 @@
                             <!-- Tab panes -->
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane fade in active" id="home">
+								<form id="filecall" name="filecall" action="<?php echo base_url('filecall/addrequest'); ?>" method="post" >
 										<div class="col-md-6 col-md-offset-3 mart-20">
 											<div class="form-group">
 												<div class="form-group">
 													<div class="form-line">
 														<label>What are you calling?</label>
-														<input type="text" class="form-control" placeholder="Username" />
+														<input type="text" id="calling" name="calling" class="form-control" placeholder=" Like File name or Folder name" />
 													</div>
 												</div>
 												
@@ -43,7 +42,7 @@
 												<div class="form-group">
 													<div class="form-line">
 														<label>Where do you want to store? (By default File Calls folder in my files)</label>
-														<input type="text" class="form-control" placeholder="Username" />
+														<input type="text" class="form-control" placeholder="File Call" readonly="true"/>
 													</div>
 												</div>
 												
@@ -52,8 +51,12 @@
 												<div class="form-group">
 												<div class="form-group">
 													<div class="form-line">
-														<label>What are you calling?</label>
-														<input type="text" class="form-control" placeholder="Username" />
+														<label>Share to another cloud account</label>
+														  <select style="width:100%" id="multiple" name="filecalling[]"  class="form-line select2-multiple" multiple>
+																<?php foreach($all_users_list as $list){ ?>
+																<option value="<?php echo $list['u_id']; ?>"><?php echo $list['u_name']; ?></option>
+																<?php } ?>
+														  </select>
 													</div>
 												</div>
 												
@@ -61,15 +64,21 @@
 											<div class="form-group">
 												<div class="form-group">
 													<div class="form-line">
-														<label>Where do you want to store? (By default File Calls folder in my files)</label>
-														<input type="text" class="form-control" placeholder="Username" />
+														<label>Enter email address,we will mail to them for you</label>
+														<input type="email" id="calling_email_id" name="calling_email_id" class="form-control" placeholder="Email Address"/>
 													</div>
 												</div>
 												
 											</div>
+											<button type="submit" class="btn btn-primary btn-sm">Submit</button>
 											</div>
-											<button id="nextbtn" class="btn btn-primary btn-sm">Next</button>
+											<div>
+											<br><br>
+											<a id="nextbtn" class="btn btn-primary btn-sm">See more</a>
+											</div>
+											
 										</div>
+										</form>
                                     
                                 </div>
                                 <div role="tabpanel" class="tab-pane fade" id="profile">
@@ -109,5 +118,30 @@ $(document).ready(function(){
         $("#nextcon").toggle();
     });
 });
+$(document).ready(function() {
+    $('#filecall').bootstrapValidator({
+        
+        fields: {
+            calling: {
+               validators: {
+					notEmpty: {
+						message: 'Calling Name is required'
+					},
+					regexp: {
+					regexp: /^[a-zA-Z0-9. ]+$/,
+					message: 'Name can only consist of alphanumaric, space and dot'
+					}
+				}
+            },
+			multiple: {
+               validators: {
+					notEmpty: {
+						message: 'Select share acount is required'
+					}
+				}
+            }
+            }
+        })
+     
+	});
 </script>
-<?php include('footer.php'); ?>

@@ -1,5 +1,3 @@
-<?php include('header.php'); ?>
-<?php include('sidebar.php'); ?>
 <section class="content">
         <div class="container-fluid">
            
@@ -30,4 +28,3 @@
 			</div>
 		</div>
 </section>
-<?php include('footer.php'); ?>

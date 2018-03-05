@@ -31,7 +31,8 @@ class Shared extends CI_Controller {
 			$data['all_users_list']=$this->Dashboard_model->get_all_users_list($loginuser_id['u_id']);	
 			$shared['shared_file']=$this->Images_model->get_shared_file($loginuser_id['u_id']);	
 			$shared['shared_folder']=$this->Images_model->get_shared_folder($loginuser_id['u_id']);	
-
+			$data['notofication_list']=$this->Dashboard_model->get_user_notification_list($loginuser_id['u_id']);	
+			$data['notofication_uread_count']=$this->Dashboard_model->get_user_notification_unreadcount($loginuser_id['u_id']);	
 			//echo '<pre>';print_r($shared);exit;
 			$this->load->view('html/header',$data);
 			$this->load->view('html/sidebar',$data);
@@ -80,7 +81,8 @@ class Shared extends CI_Controller {
 			$filedata['floder_data']=$this->Images_model->get_pagewiseflodername_data($pid,$fid);	
 			$data['all_users_list']=$this->Dashboard_model->get_all_users_list($loginuser_id['u_id']);
 			$filedata['shared_folder']=$this->Images_model->get_shared_folder($loginuser_id['u_id']);				
-			//$filedata['users_list']=$this->Dashboard_model->get_all_users_list();	
+			$data['notofication_list']=$this->Dashboard_model->get_user_notification_list($loginuser_id['u_id']);	
+			$data['notofication_uread_count']=$this->Dashboard_model->get_user_notification_unreadcount($loginuser_id['u_id']);	
 			//echo '<pre>';print_r($filedata);exit;
 			$this->load->view('html/header',$data);
 			$this->load->view('html/sidebar',$data);

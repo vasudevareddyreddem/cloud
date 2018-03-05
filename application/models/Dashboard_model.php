@@ -191,6 +191,23 @@ class Dashboard_model extends CI_Model
 	}
 	
 	/*floderDeleteing*/
+	
+	/* notification*/
+	public function get_user_notification_list($u_id){
+		$this->db->select('filecaal_notification_list.n_id,filecaal_notification_list.filecall_id,filecaal_notification_list.filecall_created_at,filecall_list.f_c_calling,users.u_name,filecaal_notification_list.filecall_status,filecall_list.f_c_request')->from('filecaal_notification_list');	
+		$this->db->join('filecall_list', 'filecall_list.f_c_id = filecaal_notification_list.filecall_id', 'left');		
+		$this->db->join('users', 'users.u_id = filecaal_notification_list.sent_u_id', 'left');		
+		$this->db->where('filecall_list.f_c_u_id', $u_id);
+		$this->db->limit(4);
+		return $this->db->get()->result_array();
+	}
+	public function get_user_notification_unreadcount($u_id){
+		$this->db->select('COUNT(filecall_list.f_c_id) as unreadcount')->from('filecall_list');	
+		$this->db->where('filecall_list.f_c_u_id', $u_id);
+		$this->db->where('filecall_list.f_c_request', 0);
+		return $this->db->get()->row_array();
+	}
+	/* notification*/
 	/*breadcoum*/
 	public function breadcoum_for_all_data($f_id,$u_id){
 		$this->db->select('floder_id,f_id,( SELECT  COUNT(*)FROM    floder_list WHERE   floder_id = f_id ) + ( SELECT  COUNT(*) FROM    floder_list WHERE   floder_id = f_id ) - ( SELECT  COUNT(*) FROM    floder_list WHERE   floder_id = f_id AND floder_id = f_id )  COUNT')->from('floder_list');		

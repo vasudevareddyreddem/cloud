@@ -14,6 +14,7 @@ class Profile extends CI_Controller {
 		$this->load->helper('security');
 		$this->load->library('zend');
 		$this->load->model('User_model');
+		$this->load->model('Dashboard_model');
 		$this->load->library('zend');
 		}
 	public function index()
@@ -22,6 +23,8 @@ class Profile extends CI_Controller {
 		{
 			$loginuser_id=$this->session->userdata('userdetails');
 			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
+			$data['notofication_list']=$this->Dashboard_model->get_user_notification_list($loginuser_id['u_id']);	
+			$data['notofication_uread_count']=$this->Dashboard_model->get_user_notification_unreadcount($loginuser_id['u_id']);	
 			$this->load->view('html/header',$data);
 			$this->load->view('html/sidebar',$data);
 			$this->load->view('html/profile');
@@ -37,6 +40,8 @@ class Profile extends CI_Controller {
 		{
 			$loginuser_id=$this->session->userdata('userdetails');
 			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
+			$data['notofication_list']=$this->Dashboard_model->get_user_notification_list($loginuser_id['u_id']);	
+			$data['notofication_uread_count']=$this->Dashboard_model->get_user_notification_unreadcount($loginuser_id['u_id']);	
 			$this->load->view('html/header',$data);
 			$this->load->view('html/sidebar',$data);
 			$this->load->view('html/editprofile',$data);
@@ -71,6 +76,8 @@ class Profile extends CI_Controller {
 				$this->form_validation->set_rules('file', '', 'callback_file_check');
 			}
 			if ($this->form_validation->run() == FALSE) {
+				$data['notofication_list']=$this->Dashboard_model->get_user_notification_list($loginuser_id['u_id']);	
+				$data['notofication_uread_count']=$this->Dashboard_model->get_user_notification_unreadcount($loginuser_id['u_id']);	
 				$data['validationerrors'] = validation_errors();
 				//echo '<pre>';print_r($data);exit;
 				$this->load->view('html/header',$data);
@@ -121,6 +128,8 @@ class Profile extends CI_Controller {
 		{
 			$loginuser_id=$this->session->userdata('userdetails');
 			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
+			$data['notofication_list']=$this->Dashboard_model->get_user_notification_list($loginuser_id['u_id']);	
+			$data['notofication_uread_count']=$this->Dashboard_model->get_user_notification_unreadcount($loginuser_id['u_id']);	
 			$this->load->view('html/header',$data);
 			$this->load->view('html/sidebar',$data);
 			$this->load->view('html/changepassword',$data);
