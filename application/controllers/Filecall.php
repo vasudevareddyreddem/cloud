@@ -138,11 +138,11 @@ class Filecall extends CI_Controller {
 						}else{
 							$this->session->set_flashdata('error',"Request declined");
 						}
-						redirect('filecall');
+						redirect('filecall/index/'.base64_encode(3));
 						
 					}else{
 						$this->session->set_flashdata('error',"technical problem will occurred. Please try again.");
-						redirect('filecall');
+						redirect('filecall/index/'.base64_encode(3));
 					}
 		}else{
 			$this->load->view('html/login');
