@@ -35,6 +35,7 @@ class Mobile extends REST_Controller {
 		$this->load->helper('security');
 		$this->load->model('Mobile_model');
 		$this->load->library('zend');
+		$this->load->library('zip');
     }
 
   
@@ -307,6 +308,197 @@ class Mobile extends REST_Controller {
 					$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
 					$this->response($message, REST_Controller::HTTP_OK);
 				}
+	}
+	public function folderrename_post(){
+		$folder_id=$this->post('folder_id');
+		$foldername=$this->post('foldername');
+		if($folder_id ==''){
+		$message = array('status'=>0,'message'=>'Folder Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		if($foldername ==''){
+		$message = array('status'=>0,'message'=>'Folder Name is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$folderdata=array(
+		'f_name'=>$foldername,
+		'f_updated_at'=>date('Y-m-d H:i:s')
+		);
+		$details=$this->Mobile_model->get_folder_details($folder_id);
+		if(count($details)>0){
+			$folder_rename=$this->Mobile_model->folder_details_update($folder_id,$folderdata);
+			if(count($folder_rename)>0){
+						$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'Successfully folder Renamed');
+						$this->response($message, REST_Controller::HTTP_OK);
+					}else{
+						$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+						$this->response($message, REST_Controller::HTTP_OK);
+					}
+		}else{
+			$message = array('status'=>0,'message'=>'Folder Id not available .Please try again');
+			$this->response($message, REST_Controller::HTTP_OK);
+		}
+	}
+	
+	public function folderfavourite_post(){
+		$user_id=$this->post('user_id');
+		$folder_id=$this->post('folder_id');
+		if($user_id ==''){
+		$message = array('status'=>0,'message'=>'User Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}if($folder_id ==''){
+		$message = array('status'=>0,'message'=>'Folder Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		
+		$folderdata=array(
+		'u_id'=>$user_id,
+		'f_id'=>$folder_id,
+		'yes'=>1,
+		'status'=>1,
+		'create_at'=>date('Y-m-d H:i:s')
+		);
+		$check=$this->Mobile_model->check_folderfavorites($user_id,$folder_id);
+		if(count($check)>0){
+			$details=$this->Mobile_model->remove_folderfavorites($check['id']);
+				if(count($details)>0){
+							$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'Folder Successfully removed to Favourite ');
+							$this->response($message, REST_Controller::HTTP_OK);
+						}else{
+							$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+							$this->response($message, REST_Controller::HTTP_OK);
+						}
+		}else{
+			$details=$this->Mobile_model->add_folderfavorites($folderdata);
+				if(count($details)>0){
+							$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'Folder Successfully added to Favourite ');
+							$this->response($message, REST_Controller::HTTP_OK);
+						}else{
+							$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+							$this->response($message, REST_Controller::HTTP_OK);
+						}
+		}
+		
+	}
+	public function folderdelete_post(){
+		$folder_id=$this->post('folder_id');
+		$type=$this->post('type');
+		if($folder_id ==''){
+		$message = array('status'=>0,'message'=>'Folder Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}if($type ==''){
+		$message = array('status'=>0,'message'=>'Folder Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$details=$this->Mobile_model->get_folder_details($folder_id);
+			if(count($details)>0){
+					if($type==1){
+						$folder_delete=$this->Mobile_model->delete_folder($folder_id);
+							if(count($folder_delete)>0){
+										$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'Folder Successfully removed');
+										$this->response($message, REST_Controller::HTTP_OK);
+									}else{
+										$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+										$this->response($message, REST_Controller::HTTP_OK);
+									}
+					}else{
+						$folderdata=array(
+						'f_undo'=>1,
+						'f_updated_at'=>date('Y-m-d H:i:s')
+						);
+						$folder_delete=$this->Mobile_model->folder_details_update($folder_id,$folderdata);
+							if(count($folder_delete)>0){
+										$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'Folder moved to trash');
+										$this->response($message, REST_Controller::HTTP_OK);
+									}else{
+										$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+										$this->response($message, REST_Controller::HTTP_OK);
+									}
+					}
+			}else{
+				$message = array('status'=>0,'message'=>'Folder Id not available .Please try again');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}
+		
+	}
+	public function folderrestore_post(){
+		$folder_id=$this->post('folder_id');
+		$type=$this->post('type');
+		if($folder_id ==''){
+		$message = array('status'=>0,'message'=>'Folder Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$details=$this->Mobile_model->get_folder_details($folder_id);
+			if(count($details)>0){
+					$folderdata=array(
+						'f_undo'=>0,
+						'f_updated_at'=>date('Y-m-d H:i:s')
+						);
+						$folder_delete=$this->Mobile_model->folder_details_update($folder_id,$folderdata);
+							if(count($folder_delete)>0){
+								$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'Folder is restored');
+								$this->response($message, REST_Controller::HTTP_OK);
+							}else{
+								$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+								$this->response($message, REST_Controller::HTTP_OK);
+							}
+			}else{
+				$message = array('status'=>0,'message'=>'Folder Id not available .Please try again');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}
+		
+	}
+	public function folderdownload_post(){
+		$folder_id=$this->post('folder_id');
+		$type=$this->post('type');
+		if($folder_id ==''){
+		$message = array('status'=>0,'message'=>'Folder Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$folder_data=$this->Mobile_model->get_folder_data($folder_id);
+		$newValues = array();
+		foreach($folder_data as $value) 
+		{
+			$folder_images=$this->Mobile_model->get_all_datainto_zip($value['f_id']);
+			if(count($folder_images)>0){
+				$this->zip->clear_data();
+			foreach($folder_images as $list){
+				$zipdata=$this->zip->read_file('assets/files/'.$list->img_name);
+			}
+			$this->zip->read_file($zipdata, TRUE);
+			$this->zip->archive('assets/zip/'.$value['f_id'].'.zip');
+			$this->zip->get_zip();
+			}
+		}
+		exit;
+		
+		foreach($folder_data as $list){
+				$zipdata=$this->zip->read_file('assets/files/'.$list->img_name);
+			}
+			$this->zip->read_file($zipdata, TRUE);
+			//$this->zip->download($f_id.'.zip');
+			//$this->zip->read_file($zipdata, TRUE);
+			$this->zip->archive('assets/zip/'.$folder_id.'.zip');
+			$this->zip->get_zip();
+			
+			/*if(count($details)>0){
+					$folderdata=array(
+						'f_undo'=>0,
+						'f_updated_at'=>date('Y-m-d H:i:s')
+						);
+						$folder_delete=$this->Mobile_model->folder_details_update($folder_id,$folderdata);
+							if(count($folder_delete)>0){
+								$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'Folder is restored');
+								$this->response($message, REST_Controller::HTTP_OK);
+							}else{
+								$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+								$this->response($message, REST_Controller::HTTP_OK);
+							}
+			}else{
+				$message = array('status'=>0,'message'=>'Folder Id not available .Please try again');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}*/
+		
 	}
 
     

@@ -54,5 +54,45 @@ class Mobile_model extends CI_Model
 		$this->db->insert('floder_list', $data);
 		return $insert_id = $this->db->insert_id();
 	}
+	public function folder_details_update($folder_id,$data){
+		$this->db->where('f_id', $folder_id);
+		return $this->db->update('floder_list', $data);
+	}
+	public function get_folder_details($f_id){
+		$this->db->select('floder_list.f_id')->from('floder_list');		
+		$this->db->where('f_id', $f_id);
+		return $this->db->get()->row_array();
+	}
+	public function add_folderfavorites($data){
+		$this->db->insert('floder_favourite', $data);
+		return $insert_id = $this->db->insert_id();
+	}
+	public function check_folderfavorites($u_id,$f_id){
+		$this->db->select('*')->from('floder_favourite');		
+		$this->db->where('f_id', $f_id);
+		$this->db->where('u_id', $u_id);
+		return $this->db->get()->row_array();
+	}
+	public function remove_folderfavorites($f_id){
+		$sql1="DELETE FROM floder_favourite WHERE id = '".$f_id."'";
+		return $this->db->query($sql1);
+	}
+	public function delete_folder($f_id){
+		$sql1="DELETE FROM floder_list WHERE f_id = '".$f_id."'";
+		return $this->db->query($sql1);
+	}
+	public function get_folder_data($f_id){
+		$this->db->select('floder_id,f_id,( SELECT  COUNT(*)FROM    floder_list WHERE   floder_id = f_id ) + ( SELECT  COUNT(*) FROM    floder_list WHERE   floder_id = f_id ) - ( SELECT  COUNT(*) FROM    floder_list WHERE   floder_id = f_id AND floder_id = f_id )  COUNT')->from('floder_list');		
+		$this->db->where('floder_id >=', $f_id);
+		$this->db->or_where('f_id ', $f_id);
+		$this->db->where('f_undo', 0);
+		return $this->db->get()->result_array();
+	}
+	public function get_all_datainto_zip($f_id){
+		$this->db->select('images.img_id,images.img_name,images.imag_org_name')->from('images');		
+		$this->db->where('floder_id', $f_id);
+		$this->db->order_by("images.img_create_at", "DESC");
+		return $this->db->get()->result();
+	}
 
 }

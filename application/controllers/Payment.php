@@ -17,6 +17,7 @@ class Payment extends CI_Controller {
 		$this->load->library('zend');
 		$this->load->model('User_model');
 		$this->load->library('zend');
+		//https://github.com/razorpay/razorpay-php
 		}
 	public function index()
 	{
@@ -65,6 +66,29 @@ class Payment extends CI_Controller {
 		echo '<pre>';print_r($_POST);exit;
 		
 	}
+	public  function refund(){
+		
+		$api_id= $this->config->item('keyId');
+		$api_Secret= $this->config->item('API_keySecret');	
+		$api = new RazorpayApi($api_id, $api_Secret);
+		$payment = $api->payment->fetch('pay_9jcdNamZ0Rj5zJ');
+		$refund = $payment->refund();
+		//$refund = $payment->refund(array('amount' => 100)); 
+		echo '<pre>';print_r($refund);exit;
+		
+	}
+	public  function capture(){
+		
+		$api_id= $this->config->item('keyId');
+		$api_Secret= $this->config->item('API_keySecret');	
+		$api = new RazorpayApi($api_id, $api_Secret);
+		$payment = $api->payment->fetch('pay_9jcdNamZ0Rj5zJ');
+		$capture=$payment->capture();
+		//$refund = $payment->refund(array('amount' => 100)); 
+		echo '<pre>';print_r($capture);exit;
+		
+	}
+	
 	
 	
 	
