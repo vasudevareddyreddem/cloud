@@ -385,6 +385,11 @@ $config['sess_match_ip'] = FALSE;
 $config['sess_time_to_update'] = 300;
 $config['sess_regenerate_destroy'] = FALSE;
 
+/*payment*/
+$config['keyId'] ='rzp_test_FMROR38S2ObKGw';
+$config['API_keySecret'] = '4ZAmE5b07syPo0P1WbFUNr7X';
+/*payment*/
+
 /*
 |--------------------------------------------------------------------------
 | Cookie Related Variables
