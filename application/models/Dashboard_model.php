@@ -79,6 +79,13 @@ class Dashboard_model extends CI_Model
 		$this->db->where('f_undo', 0);
 		return $this->db->get()->result();
 	}
+	public function get_links_list($u_id){
+		$this->db->select('links.l_id,links.l_name,links.l_created_at,link_favourite.yes')->from('links');
+		$this->db->join('link_favourite', 'link_favourite.file_id = links.l_id', 'left');
+		$this->db->where('links.u_id', $u_id);
+		$this->db->where('links.l_undo', 0);
+		return $this->db->get()->result_array();
+	}
 	public function get_floder_movingname_list($u_id,$f_id){
 		$this->db->select('floder_list.f_id,floder_list.f_name,floder_list.page_id')->from('floder_list');		
 		$this->db->where('u_id', $u_id);
@@ -140,6 +147,11 @@ class Dashboard_model extends CI_Model
 		$this->db->where('u_id', $u_id);
         return $this->db->get()->result_array();
 	}
+	public function get_linkfavourite_list($u_id){
+		$this->db->select('*')->from('link_favourite');
+		$this->db->where('u_id', $u_id);
+        return $this->db->get()->result_array();
+	}
 	public function remove_folder_favourite($u_id,$f_id){
 		$sql1="DELETE FROM floder_favourite WHERE u_id = '".$u_id."' AND  f_id = '".$f_id."'";
 		return $this->db->query($sql1);
@@ -148,12 +160,20 @@ class Dashboard_model extends CI_Model
 		$sql1="DELETE FROM favourite WHERE u_id = '".$u_id."' AND  file_id = '".$file_id."'";
 		return $this->db->query($sql1);
 	}
+	public function remove_link_favourite($u_id,$file_id){
+		$sql1="DELETE FROM link_favourite WHERE u_id = '".$u_id."' AND  file_id = '".$file_id."'";
+		return $this->db->query($sql1);
+	}
 	public function add_folder_favourite($data){
 		$this->db->insert('floder_favourite', $data);
 		return $insert_id = $this->db->insert_id();
 	}
 	public function add_favourite($data){
 		$this->db->insert('favourite', $data);
+		return $insert_id = $this->db->insert_id();
+	}
+	public function add_link_favourite($data){
+		$this->db->insert('link_favourite', $data);
 		return $insert_id = $this->db->insert_id();
 	}
 	/*fav*/

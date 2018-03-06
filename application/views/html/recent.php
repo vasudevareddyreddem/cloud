@@ -349,7 +349,7 @@
 
 function addfavourites(id,val){
 				jQuery.ajax({
-				url: "<?php echo site_url('dashboard/addfavourite');?>",
+				url: "<?php echo site_url('dashboard/addlinkfavourite');?>",
 				type: 'post',
 				data: {
 					form_key : window.FORM_KEY,

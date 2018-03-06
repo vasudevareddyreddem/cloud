@@ -169,28 +169,16 @@ class Dashboard extends CI_Controller {
 					$addfile = $this->Dashboard_model->save_userfile($filedata);
 					if(count($addfile)>0){
 						$this->session->set_flashdata('success',"File successfully Uploaded");
-						if(isset($post['pageid']) && $post['pageid']!=''){
-							redirect('dashboard/page/'.base64_encode($post['pageid']).'/'.base64_encode($post['floderid']));
-						}else{
-							redirect('dashboard');
-						}
+						redirect($this->agent->referrer());
 						
 					}else{
 						$this->session->set_flashdata('error',"technical problem will occurred. Please try again.");
-						if(isset($post['pageid']) && $post['pageid']!=''){
-							redirect('dashboard/page/'.base64_encode($post['pageid']).'/'.base64_encode($post['floderid']));
-						}else{
-							redirect('dashboard');
-						}
+						redirect($this->agent->referrer());
 					}
 					
 					}else{
 						$this->session->set_flashdata('error',"Upload file too Large. please decrease file size");
-						if(isset($post['pageid']) && $post['pageid']!=''){
-							redirect('dashboard/page/'.base64_encode($post['pageid']).'/'.base64_encode($post['floderid']));
-						}else{
-							redirect('dashboard');
-						}
+						redirect($this->agent->referrer());
 					}
 				
 				}else{
@@ -249,19 +237,11 @@ class Dashboard extends CI_Controller {
 					
 					if(count($addfile)>0){
 						$this->session->set_flashdata('success',"File successfully Uploaded");
-						if(isset($post['pageid']) && $post['pageid']!=''){
-							redirect('dashboard/page/'.base64_encode($post['pageid']).'/'.base64_encode($post['floderid']));
-						}else{
-							redirect('dashboard');
-						}
+						redirect($this->agent->referrer());
 						
 					}else{
 						$this->session->set_flashdata('error',"technical problem will occurred. Please try again.");
-						if(isset($post['pageid']) && $post['pageid']!=''){
-							redirect('dashboard/page/'.base64_encode($post['pageid']).'/'.base64_encode($post['floderid']));
-						}else{
-							redirect('dashboard');
-						}
+						redirect($this->agent->referrer());
 					}
 				
 				}else{
@@ -312,18 +292,10 @@ class Dashboard extends CI_Controller {
 					$addfloder = $this->Dashboard_model->save_floders($floderdata);
 					if(count($addfloder)>0){
 						$this->session->set_flashdata('success',"Floder successfully Created");
-						if(isset($post['pageid']) && $post['pageid']!=''){
-							redirect('dashboard/page/'.base64_encode($post['pageid']).'/'.base64_encode($post['floderid']));
-						}else{
-							redirect('dashboard');
-						}
+						redirect($this->agent->referrer());
 					}else{
 						$this->session->set_flashdata('error',"technical problem will occurred. Please try again.");
-						if(isset($post['pageid']) && $post['pageid']!=''){
-							redirect('dashboard/page/'.base64_encode($post['pageid']).'/'.base64_encode($post['floderid']));
-						}else{
-							redirect('dashboard');
-						}
+						redirect($this->agent->referrer());
 					}
 				
 				}
@@ -360,22 +332,10 @@ class Dashboard extends CI_Controller {
 						);
 						$this->Dashboard_model->save_recently_file_open($recentlyopen_file);
 						$this->session->set_flashdata('success',"Rename successfully changed");
-						if(isset($post['recent']) && $post['recent']==1){
-							redirect('recent');
-						}else if(isset($post['pageid']) && $post['pageid']!=''){
-							redirect('dashboard/page/'.base64_encode($post['pageid']).'/'.base64_encode($post['floderid']));
-						}else{
-							redirect('dashboard');
-						}
+						redirect($this->agent->referrer());
 					}else{
 						$this->session->set_flashdata('error',"technical problem will occurred. Please try again.");
-						if(isset($post['recent']) && $post['recent']==1){
-							redirect('recent');
-						}else if(isset($post['pageid']) && $post['pageid']!=''){
-							redirect('dashboard/page/'.base64_encode($post['pageid']).'/'.base64_encode($post['floderid']));
-						}else{
-							redirect('dashboard');
-						}
+						redirect($this->agent->referrer());
 					}
 				
 			
@@ -413,23 +373,11 @@ class Dashboard extends CI_Controller {
 						);
 						$this->Dashboard_model->recently_view_data($recentlyopen_folder);
 						$this->session->set_flashdata('success',"Rename successfully changed");
+						redirect($this->agent->referrer());
 						
-						if(isset($post['recent']) && $post['recent']=1){
-						redirect('recent');	
-						}else if(isset($post['pageid']) && $post['pageid']!=''){
-							redirect('dashboard/page/'.base64_encode($post['pageid']).'/'.base64_encode($post['floderid']));
-						}else{
-							redirect('dashboard');
-						}
 					}else{
 						$this->session->set_flashdata('error',"technical problem will occurred. Please try again.");
-						if(isset($post['recent']) && $post['recent']=1){
-						redirect('recent');	
-						}else if(isset($post['pageid']) && $post['pageid']!=''){
-							redirect('dashboard/page/'.base64_encode($post['pageid']).'/'.base64_encode($post['floderid']));
-						}else{
-							redirect('dashboard');
-						}
+						redirect($this->agent->referrer());
 					}
 				
 			
@@ -462,22 +410,10 @@ class Dashboard extends CI_Controller {
 					if(count($delete_image)>0){
 						
 						$this->session->set_flashdata('success',"FIle successfully Deleted");
-						if(isset($pid) && $pid =='recent'){
-							redirect('recent');
-						}else if(isset($pid) && $pid!=''){
-							redirect('dashboard/page/'.base64_encode($pid).'/'.base64_encode($fid));
-						}else{
-							redirect('dashboard');
-						}
+						redirect($this->agent->referrer());
 					}else{
 						$this->session->set_flashdata('error',"technical problem will occurred. Please try again.");
-						if(isset($pid) && $pid =='recent'){
-							redirect('recent');
-						}else if(isset($pid) && $pid!=''){
-							redirect('dashboard/page/'.base64_encode($pid).'/'.base64_encode($fid));
-						}else{
-							redirect('dashboard');
-						}
+						redirect($this->agent->referrer());
 					}
 				
 			
@@ -508,23 +444,10 @@ class Dashboard extends CI_Controller {
 			$del=$this->Dashboard_model->update_folder_todelte($floder_id,array('f_undo'=>1));
 			if(count($del)>0){
 				$this->session->set_flashdata('success',"Folder successfully Deleted");
-
-				if(isset($pid) && $pid =='recent'){
-					redirect('recent');
-				}else if(isset($pid) && $pid!=''){
-					redirect('dashboard/page/'.base64_encode($pid).'/'.base64_encode($fid));
-				}else{
-					redirect('dashboard');
-				}
+				redirect($this->agent->referrer());	
 			}else{
 					$this->session->set_flashdata('error',"technical problem will occurred. Please try again.");
-					if(isset($pid) && $pid =='recent'){
-						redirect('recent');
-					}else if(isset($pid) && $pid!=''){
-						redirect('dashboard/page/'.base64_encode($pid).'/'.base64_encode($fid));
-					}else{
-						redirect('dashboard');
-					}
+					redirect($this->agent->referrer());
 				}
 		}else{
 			 $this->session->set_flashdata('error','Please login to continue');
@@ -637,6 +560,59 @@ class Dashboard extends CI_Controller {
 				echo json_encode($data);
 				}
 			
+		}
+		
+	
+		
+	}else{
+		$data['msg']=0;	
+		echo json_encode($data); 
+		$this->session->set_flashdata('loginerror','Please login to continue');
+		 //redirect('customer');
+	}
+	 
+ } 
+ public function addlinkfavourite(){
+	 
+	if($this->session->userdata('userdetails'))
+	 {
+		$loginuser_id=$this->session->userdata('userdetails');
+		$post=$this->input->post();
+		$detailsa=array(
+		'u_id'=>$loginuser_id['u_id'],
+		'file_id'=>$post['item_id'],
+		'create_at'=>date('Y-m-d H:i:s'),
+		'yes'=>1,
+		'status'=>1,
+		);
+		$favourite = $this->Dashboard_model->get_linkfavourite_list($loginuser_id['u_id']);
+		if(count($favourite)>0){
+				foreach($favourite as $lists) { 
+							
+								$itemsids[]=$lists['file_id'];
+				}
+			if(in_array($post['item_id'],$itemsids)){
+				$removefavourite=$this->Dashboard_model->remove_link_favourite($loginuser_id['u_id'],$post['item_id']);
+				if(count($removefavourite)>0){
+				$data['msg']=2;	
+				echo json_encode($data);
+				}
+			
+			}else{
+				$addfavourite = $this->Dashboard_model->add_link_favourite($detailsa);
+				if(count($addfavourite)>0){
+					
+				$data['msg']=1;	
+				echo json_encode($data);
+				}
+			}
+			
+		}else{
+			$addfavourite = $this->Dashboard_model->add_link_favourite($detailsa);
+				if(count($addfavourite)>0){
+					$data['msg']=1;	
+					echo json_encode($data);
+				}
 		}
 		
 	
