@@ -25,6 +25,7 @@ class Recyclebin extends CI_Controller {
 	{
 		if($this->session->userdata('userdetails'))
 		{
+			unset($_SESSION['make_bread']);
 			$loginuser_id=$this->session->userdata('userdetails');
 			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
 			$filedata['floder_data']=$this->Recyclebin_model->get_undo_floder_data($loginuser_id['u_id']);
@@ -55,26 +56,24 @@ class Recyclebin extends CI_Controller {
 			$loginuser_id=$this->session->userdata('userdetails');
 			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
 			$f_id=base64_decode($this->uri->segment(3));
-
-			$folder_details = $this->Recyclebin_model->delete_for_all_data($f_id,$loginuser_id['u_id']);
-			//echo '<pre>';print_r($folder_details);exit;
-			foreach($folder_details as $list){
-				if($list['floder_id']!='' && $list['floder_id']!=0){
-				$lids[]=$list['floder_id'];
+			if(is_numeric($f_id)){
+			$_SESSION['make_bread1'][] = $f_id;
+			foreach($_SESSION['make_bread1'] as $list){
+				if(is_numeric($list)){
+					$li[]=$list;
 				}
 			}
-			if(isset($lids) && count($lids)>0){
-				$this->make_bread->add('Recycle Bin','recyclebin');
-			foreach(array_unique($lids) as $li){
-				if($li < $f_id){
+			$bread=implode(',',array_unique($li));
+			$len =  strpos($bread,$f_id);
+			$idds=substr($bread,0,$len);
+				$this->make_bread->add('Recycle bin','recyclebin');
+				foreach(explode(",",$idds) as $li){
+					if($li!=0){
 					$name=$this->Dashboard_model->get_customer_floder_name($li);
-					$this->make_bread->add($name['f_name'], 'recyclebin/folder/'.base64_encode($name["floder_id"]));
+					$this->make_bread->add($name['f_name'], 'dashboard/page/'.base64_encode($name["page_id"]).'/'.base64_encode($name["floder_id"]));
+					}
 				}
-				
-			}
-			$filedata['breadcoums'] = $this->make_bread->output();
-			}else{
-				$filedata['breadcoums']='';
+				$filedata['breadcoums'] = $this->make_bread->output();
 			}
 			$filedata['file_data']=$this->Recyclebin_model->get_delete_floder_data($loginuser_id['u_id'],$f_id);
 			$filedata['floder_data']=$this->Recyclebin_model->get_pagewiseflodername_data($f_id);	
