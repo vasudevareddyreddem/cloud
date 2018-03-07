@@ -143,6 +143,23 @@ class Mobile_model extends CI_Model
 		$sql1="DELETE FROM images WHERE img_id = '".$img_id."'";
 		return $this->db->query($sql1);
 	}
+	public function get_shared_file_details($u_id,$f_id){
+		$this->db->select('*')->from('shared_files');		
+		$this->db->where('u_id', $u_id);
+		$this->db->where('img_id', $f_id);
+		$this->db->or_where('u_email', $f_id);
+		return $this->db->get()->row_array();
+	}
+	public function file_share($data){
+		$this->db->insert('shared_files', $data);
+		return $insert_id = $this->db->insert_id();
+	}
+	public function get_folder_list($u_id){
+		$this->db->select('floder_list.f_id,floder_list.page_id,floder_list.floder_id,floder_list.f_name')->from('floder_list');		
+		$this->db->where('u_id', $u_id);
+		$this->db->or_where('f_status', 0);
+		return $this->db->get()->result_array();
+	}
 	/* file*/
 
 }

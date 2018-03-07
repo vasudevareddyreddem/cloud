@@ -733,6 +733,83 @@ class Mobile extends REST_Controller {
 			}
 		
 	}
+	public function fileshare_post(){
+		$file_id=$this->post('file_id');
+		$user_id=$this->post('user_id');
+		$shareduser_id=$this->post('shareduser_id');
+		$permission=$this->post('permission');
+		$email=$this->post('shared_email');
+		if($file_id ==''){
+		$message = array('status'=>0,'message'=>'File Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}if($user_id ==''){
+		$message = array('status'=>0,'message'=>'User Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		if($shareduser_id =='' && $email ==''){
+		$message = array('status'=>0,'message'=>'Shared user Id  or Email Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		if($permission ==''){
+		$message = array('status'=>0,'message'=>'permissions Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$details=$this->Mobile_model->get_file_details($file_id);
+			if(count($details)>0){
+				if($shareduser_id!=''){
+					$already_shared=$this->Mobile_model->get_shared_file_details($shareduser_id,$file_id);
+				}else{
+					$already_shared=$this->Mobile_model->get_shared_file_details($shareduser_id,$email);
+				}
+					if(count($already_shared)==0){
+						$filedata=array(
+							'u_id'=>isset($shareduser_id)?$shareduser_id:'',
+							'u_email'=>isset($email)?$email:'',
+							'img_id'=>$file_id,
+							's_permission'=>$permission,
+							's_status'=>1,
+							's_created'=>date('Y-m-d H:i:s'),
+							'file_created_id'=>$user_id
+							);
+							$shared_data=$this->Mobile_model->file_share($filedata);
+								if(count($shared_data)>0){
+									$message = array('status'=>1,'file_id'=>$file_id,'message'=>'File is successfully shared');
+									$this->response($message, REST_Controller::HTTP_OK);
+								}else{
+									$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+									$this->response($message, REST_Controller::HTTP_OK);
+								}
+
+					}else{
+						$message = array('status'=>0,'message'=>'File already shared. Please try another file');
+						$this->response($message, REST_Controller::HTTP_OK);
+					}								
+			}else{
+				$message = array('status'=>0,'message'=>'File not available .Please try again');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}
+	}
+	public function folder_list_post(){
+		$user_id=$this->post('user_id');
+		if($user_id==''){
+		$message = array('status'=>0,'message'=>'User Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$check_user=$this->Mobile_model->get_user_details($user_id);
+		if(count($check_user)>0){
+		$folder_list=$this->Mobile_model->get_folder_list($user_id);
+			if(count($folder_list)>0){
+				$message = array('status'=>1,'folder_list'=>$folder_list,'message'=>'Folder list are found');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}else{
+				$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}
+		}else{
+				$message = array('status'=>0,'message'=>'User not available .Please try again');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}
+	}
 	/* file download*/
 
     
