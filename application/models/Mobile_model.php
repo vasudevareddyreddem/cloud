@@ -94,5 +94,51 @@ class Mobile_model extends CI_Model
 		$this->db->order_by("images.img_create_at", "DESC");
 		return $this->db->get()->result();
 	}
+	
+	/* folder share*/
+	public function folder_share($data){
+		$this->db->insert('shared_folder', $data);
+		return $insert_id = $this->db->insert_id();
+	}
+	public function get_shared_folder_details($u_id,$f_id){
+		$this->db->select('*')->from('shared_folder');		
+		$this->db->where('u_id', $u_id);
+		$this->db->where('f_id', $f_id);
+		$this->db->or_where('u_email', $f_id);
+		return $this->db->get()->row_array();
+	}
+	public function get_user_list($val){
+		$this->db->select('users.u_id,users.u_name,users.u_email')->from('users');		
+		$this->db->where("u_name LIKE '%".$val."%' OR u_email LIKE '%".$val."%'");
+		$this->db->where('u_status', 1);
+		return $this->db->get()->result_array();
+	}
+	/* folder share*/
+	
+	/* file*/
+	public function get_file_details($img_id){
+		$this->db->select('images.img_id')->from('images');		
+		$this->db->where('img_id', $img_id);
+		return $this->db->get()->row_array();
+	}
+	public function file_details_update($img_id,$data){
+		$this->db->where('img_id', $img_id);
+		return $this->db->update('images', $data);
+	}
+	public function add_filefavorites($data){
+		$this->db->insert('favourite', $data);
+		return $insert_id = $this->db->insert_id();
+	}
+	public function check_filefavorites($u_id,$file_id){
+		$this->db->select('*')->from('favourite');		
+		$this->db->where('file_id', $file_id);
+		$this->db->where('u_id', $u_id);
+		return $this->db->get()->row_array();
+	}
+	public function remove_filefavorites($file_id){
+		$sql1="DELETE FROM favourite WHERE id = '".$file_id."'";
+		return $this->db->query($sql1);
+	}
+	/* file*/
 
 }

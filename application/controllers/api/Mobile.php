@@ -387,7 +387,7 @@ class Mobile extends REST_Controller {
 		$message = array('status'=>0,'message'=>'Folder Id is required');
 		$this->response($message, REST_Controller::HTTP_OK);			
 		}if($type ==''){
-		$message = array('status'=>0,'message'=>'Folder Id is required');
+		$message = array('status'=>0,'message'=>'Type is required');
 		$this->response($message, REST_Controller::HTTP_OK);			
 		}
 		$details=$this->Mobile_model->get_folder_details($folder_id);
@@ -448,6 +448,79 @@ class Mobile extends REST_Controller {
 			}
 		
 	}
+	public function foldershare_post(){
+		$folder_id=$this->post('folder_id');
+		$user_id=$this->post('user_id');
+		$shareduser_id=$this->post('shareduser_id');
+		$permission=$this->post('permission');
+		$email=$this->post('shared_email');
+		if($folder_id ==''){
+		$message = array('status'=>0,'message'=>'Folder Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}if($user_id ==''){
+		$message = array('status'=>0,'message'=>'User Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		if($shareduser_id =='' && $email ==''){
+		$message = array('status'=>0,'message'=>'Shared user Id  or Email Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		if($permission ==''){
+		$message = array('status'=>0,'message'=>'permissions Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$details=$this->Mobile_model->get_folder_details($folder_id);
+			if(count($details)>0){
+				if($shareduser_id!=''){
+					$already_shared=$this->Mobile_model->get_shared_folder_details($shareduser_id,$folder_id);
+				}else{
+					$already_shared=$this->Mobile_model->get_shared_folder_details($shareduser_id,$email);
+				}
+					if(count($already_shared)==0){
+						$folderdata=array(
+							'u_id'=>isset($shareduser_id)?$shareduser_id:'',
+							'u_email'=>isset($email)?$email:'',
+							'f_id'=>$folder_id,
+							's_permission'=>$permission,
+							's_status'=>1,
+							's_created'=>date('Y-m-d H:i:s'),
+							'file_created_id'=>$user_id
+							);
+							$shared_data=$this->Mobile_model->folder_share($folderdata);
+								if(count($shared_data)>0){
+									$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'Folder is successfully shared');
+									$this->response($message, REST_Controller::HTTP_OK);
+								}else{
+									$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+									$this->response($message, REST_Controller::HTTP_OK);
+								}
+
+					}else{
+						$message = array('status'=>0,'message'=>'Folder already shared. Please try another folder');
+						$this->response($message, REST_Controller::HTTP_OK);
+					}								
+			}else{
+				$message = array('status'=>0,'message'=>'Folder Id not available .Please try again');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}			
+		
+	}
+	public function users_list_post(){
+		$search_value=$this->post('search_value');
+		//echo strlen($search_value);exit;
+		if(strlen($search_value)<3){
+		$message = array('status'=>0,'message'=>'Search key length is greater than 3 letters');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$user_list=$this->Mobile_model->get_user_list($search_value);
+			if(count($user_list)>0){
+				$message = array('status'=>1,'users_list'=>$user_list,'message'=>'Users list are found');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}else{
+				$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}
+	}
 	public function folderdownload_post(){
 		$folder_id=$this->post('folder_id');
 		$type=$this->post('type');
@@ -500,6 +573,120 @@ class Mobile extends REST_Controller {
 			}*/
 		
 	}
+	
+	/* file download*/
+	public function filerename_post(){
+		$file_id=$this->post('file_id');
+		$filename=$this->post('filename');
+		if($file_id ==''){
+		$message = array('status'=>0,'message'=>'File Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		if($filename ==''){
+		$message = array('status'=>0,'message'=>'File Name is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$filedata=array(
+		'imag_org_name'=>$filename,
+		'f_update_at'=>date('Y-m-d H:i:s')
+		);
+		$details=$this->Mobile_model->get_file_details($file_id);
+		if(count($details)>0){
+			$folder_rename=$this->Mobile_model->file_details_update($file_id,$filedata);
+			if(count($folder_rename)>0){
+						$message = array('status'=>1,'file_id'=>$file_id,'message'=>'Successfully file Renamed');
+						$this->response($message, REST_Controller::HTTP_OK);
+					}else{
+						$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+						$this->response($message, REST_Controller::HTTP_OK);
+					}
+		}else{
+			$message = array('status'=>0,'message'=>'File not available .Please try again');
+			$this->response($message, REST_Controller::HTTP_OK);
+		}
+	}
+	public function filefavourite_post(){
+		$user_id=$this->post('user_id');
+		$file_id=$this->post('file_id');
+		if($user_id ==''){
+		$message = array('status'=>0,'message'=>'User Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}if($file_id ==''){
+		$message = array('status'=>0,'message'=>'File Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		
+		$filedata=array(
+		'u_id'=>$user_id,
+		'file_id'=>$file_id,
+		'yes'=>1,
+		'status'=>1,
+		'create_at'=>date('Y-m-d H:i:s')
+		);
+		$check=$this->Mobile_model->check_filefavorites($user_id,$file_id);
+		if(count($check)>0){
+			$details=$this->Mobile_model->remove_filefavorites($check['id']);
+				if(count($details)>0){
+							$message = array('status'=>1,'file_id'=>$file_id,'message'=>'File Successfully removed to Favourite ');
+							$this->response($message, REST_Controller::HTTP_OK);
+						}else{
+							$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+							$this->response($message, REST_Controller::HTTP_OK);
+						}
+		}else{
+			$details=$this->Mobile_model->add_filefavorites($filedata);
+				if(count($details)>0){
+							$message = array('status'=>1,'file_id'=>$file_id,'message'=>'File Successfully added to Favourite ');
+							$this->response($message, REST_Controller::HTTP_OK);
+						}else{
+							$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+							$this->response($message, REST_Controller::HTTP_OK);
+						}
+		}
+		
+	}
+	public function filedelete_post(){
+		$file_id=$this->post('file_id');
+		$type=$this->post('type');
+		if($file_id ==''){
+		$message = array('status'=>0,'message'=>'File Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}if($type ==''){
+		$message = array('status'=>0,'message'=>'Type is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$details=$this->Mobile_model->get_folder_details($folder_id);
+			if(count($details)>0){
+					if($type==1){
+						$folder_delete=$this->Mobile_model->delete_folder($folder_id);
+							if(count($folder_delete)>0){
+										$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'Folder Successfully removed');
+										$this->response($message, REST_Controller::HTTP_OK);
+									}else{
+										$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+										$this->response($message, REST_Controller::HTTP_OK);
+									}
+					}else{
+						$folderdata=array(
+						'f_undo'=>1,
+						'f_updated_at'=>date('Y-m-d H:i:s')
+						);
+						$folder_delete=$this->Mobile_model->folder_details_update($folder_id,$folderdata);
+							if(count($folder_delete)>0){
+										$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'Folder moved to trash');
+										$this->response($message, REST_Controller::HTTP_OK);
+									}else{
+										$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+										$this->response($message, REST_Controller::HTTP_OK);
+									}
+					}
+			}else{
+				$message = array('status'=>0,'message'=>'Folder Id not available .Please try again');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}
+		
+	}
+	/* file download*/
 
     
 
