@@ -1346,6 +1346,68 @@ class Mobile extends REST_Controller {
 			}
 	}
 	/*dashboardtab*/
+	/*filecall*/
+	public function filecall_post(){
+		$calling_name=$this->post('calling_name');
+		$user_id=$this->post('user_id');
+		$shareduser_id=$this->post('shareduser_id');
+		$email=$this->post('shared_email');
+		if($user_id ==''){
+		$message = array('status'=>0,'message'=>'User Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		if($calling_name ==''){
+		$message = array('status'=>0,'message'=>'Calling Name is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		if($shareduser_id =='' && $email ==''){
+		$message = array('status'=>0,'message'=>'Shared user Id  or Email Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$check_user=$this->Mobile_model->get_user_details($user_id);
+			if(count($check_user)>0){
+						$filecalldata=array(
+							'u_id'=>$user_id,
+							'f_c_calling'=>$calling_name,
+							'f_c_u_id'=>isset($shareduser_id)?$shareduser_id:'',
+							'f_c_email_id'=>isset($email)?$email:'',
+							'f_c_status'=>1,
+							'f_c_created_at'=>date('Y-m-d H:i:s'),
+							'f_c_updated_at'=>date('Y-m-d H:i:s'),
+							'f_c_request'=>0
+							);
+							$filecall=$this->Mobile_model->save_filecall($filecalldata);
+							if(count($filecall)>0){
+									/*notification */
+										$notificationdata=array(
+										'sent_u_id'=>$user_id,
+										'filecall_id'=>$filecall,
+										'u_id'=>$shareduser_id,
+										'filecall_status'=>1,
+										'filecall_created_at'=>date('Y-m-d H:i:s'),
+										'filecall_updated_at'=>date('Y-m-d H:i:s'),
+										);
+									$this->Mobile_model->save_filecall_notification($notificationdata);
+									/*notification */
+							
+									$message = array('status'=>1,'filecall_id'=>$filecall,'message'=>'File call request is successfully sent');
+									$this->response($message, REST_Controller::HTTP_OK);
+								}else{
+									$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+									$this->response($message, REST_Controller::HTTP_OK);
+								}
+
+													
+			}else{
+				$message = array('status'=>0,'message'=>'User not available .Please try again');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}			
+		
+	}
+	public function filecallaction(){
+		
+	}
+	/*filecall*/
     
 
 }

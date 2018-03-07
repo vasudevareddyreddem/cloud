@@ -374,6 +374,16 @@ class Mobile_model extends CI_Model
 		return $this->db->get()->result_array();
 	}
 	/*myfiles*/
+	/*file call*/
+	public function save_filecall($data){
+		$this->db->insert('filecall_list', $data);
+		return $insert_id = $this->db->insert_id();
+	}
+	public function save_filecall_notification($data){
+		$this->db->insert('filecaal_notification_list', $data);
+		return $insert_id = $this->db->insert_id();
+	}
+	/*file call*/
 	
 
 }
