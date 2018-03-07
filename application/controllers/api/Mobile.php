@@ -655,25 +655,27 @@ class Mobile extends REST_Controller {
 		$message = array('status'=>0,'message'=>'Type is required');
 		$this->response($message, REST_Controller::HTTP_OK);			
 		}
-		$details=$this->Mobile_model->get_folder_details($folder_id);
+		$details=$this->Mobile_model->get_file_details($file_id);
+		//echo '<pre>';print_r($details);exit;
 			if(count($details)>0){
 					if($type==1){
-						$folder_delete=$this->Mobile_model->delete_folder($folder_id);
-							if(count($folder_delete)>0){
-										$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'Folder Successfully removed');
+						unlink("assets/files/".$details['img_name']);
+						$file_delete=$this->Mobile_model->delete_file($file_id);
+							if(count($file_delete)>0){
+										$message = array('status'=>1,'file_id'=>$file_id,'message'=>'File Successfully removed');
 										$this->response($message, REST_Controller::HTTP_OK);
 									}else{
 										$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
 										$this->response($message, REST_Controller::HTTP_OK);
 									}
 					}else{
-						$folderdata=array(
-						'f_undo'=>1,
-						'f_updated_at'=>date('Y-m-d H:i:s')
+						$filedata=array(
+						'img_undo'=>1,
+						'f_update_at'=>date('Y-m-d H:i:s')
 						);
-						$folder_delete=$this->Mobile_model->folder_details_update($folder_id,$folderdata);
-							if(count($folder_delete)>0){
-										$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'Folder moved to trash');
+						$file_delete=$this->Mobile_model->file_details_update($file_id,$filedata);
+							if(count($file_delete)>0){
+										$message = array('status'=>1,'file_id'=>$file_id,'message'=>'File moved to trash');
 										$this->response($message, REST_Controller::HTTP_OK);
 									}else{
 										$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
@@ -681,7 +683,35 @@ class Mobile extends REST_Controller {
 									}
 					}
 			}else{
-				$message = array('status'=>0,'message'=>'Folder Id not available .Please try again');
+				$message = array('status'=>0,'message'=>'File  not available .Please try again');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}
+		
+	}
+	public function filerestore_post(){
+		$file_id=$this->post('file_id');
+		if($file_id ==''){
+		$message = array('status'=>0,'message'=>'File Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$details=$this->Mobile_model->get_file_details($file_id);
+		//echo '<pre>';print_r($details);exit;
+			if(count($details)>0){
+					$filedata=array(
+						'img_undo'=>0,
+						'f_update_at'=>date('Y-m-d H:i:s')
+						);
+						$file_delete=$this->Mobile_model->file_details_update($file_id,$filedata);
+							if(count($file_delete)>0){
+										$message = array('status'=>1,'file_id'=>$file_id,'message'=>'File restored');
+										$this->response($message, REST_Controller::HTTP_OK);
+									}else{
+										$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+										$this->response($message, REST_Controller::HTTP_OK);
+									}
+					
+			}else{
+				$message = array('status'=>0,'message'=>'File  not available .Please try again');
 				$this->response($message, REST_Controller::HTTP_OK);
 			}
 		

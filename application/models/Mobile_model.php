@@ -117,7 +117,7 @@ class Mobile_model extends CI_Model
 	
 	/* file*/
 	public function get_file_details($img_id){
-		$this->db->select('images.img_id')->from('images');		
+		$this->db->select('images.img_id,images.img_name')->from('images');		
 		$this->db->where('img_id', $img_id);
 		return $this->db->get()->row_array();
 	}
@@ -137,6 +137,10 @@ class Mobile_model extends CI_Model
 	}
 	public function remove_filefavorites($file_id){
 		$sql1="DELETE FROM favourite WHERE id = '".$file_id."'";
+		return $this->db->query($sql1);
+	}
+	public function delete_file($img_id){
+		$sql1="DELETE FROM images WHERE img_id = '".$img_id."'";
 		return $this->db->query($sql1);
 	}
 	/* file*/
