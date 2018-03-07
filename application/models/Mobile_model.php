@@ -354,6 +354,13 @@ class Mobile_model extends CI_Model
 		$this->db->order_by("images.img_create_at", "DESC");
 		return $this->db->get()->result_array();
 	}
+	public function get_files_list($u_id){
+		$this->db->select('images.img_id,images.img_name,images.imag_org_name,images.img_create_at,favourite.yes')->from('images');		
+		$this->db->join('favourite', 'favourite.file_id = images.img_id', 'left');	
+		$this->db->where('images.u_id', $u_id);
+		return $this->db->get()->result_array();
+	}
 	/*myfiles*/
+	
 
 }

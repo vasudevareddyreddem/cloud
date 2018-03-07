@@ -1227,6 +1227,32 @@ class Mobile extends REST_Controller {
 			}
 	}
 	/*recenttab*/
+	/*myfile*/
+	
+	public function myfilestab_post(){
+		$userid=$this->post('userid');
+		if($userid==''){
+		$message = array('status'=>0,'message'=>'User Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$check_user=$this->Mobile_model->get_user_details($userid);
+		if(count($check_user)>0){
+			$folder_list=$this->Mobile_model->get_flodername_data($userid);
+			$file_list=$this->Mobile_model->get_files_list($userid);
+			$link_list=$this->Mobile_model->get_link_list($userid);
+			if(count($folder_list)>0 || count($file_list)>0 || count($link_list)>0){
+				$message = array('status'=>1,'folder_list'=>$folder_list,'file_list'=>$file_list,'link_list'=>$link_list,'filepath'=>base_url('assets/files/'),'message'=>'Shared data are found');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}else{
+				$message = array('status'=>0,'message'=>'Shared data are not found');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}
+		}else{
+				$message = array('status'=>0,'message'=>'User not available .Please try again');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}
+	}
+	/*myfile*/
 	/*dashboardtab*/
 		public function dashboard_post(){
 		$userid=$this->post('userid');
