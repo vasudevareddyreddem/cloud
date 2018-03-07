@@ -278,5 +278,28 @@ class Mobile_model extends CI_Model
 		return $this->db->get()->result_array();
 	}
 	/*recyclebintab*/
+	/* shared tab*/
+		public function get_shredfile_list($u_id){
+		$this->db->select('shared_files.u_id,images.img_name,images.imag_org_name,shared_files.s_permission,shared_files.s_created')->from('shared_files');
+		$this->db->join('images', 'images.img_id = shared_files.img_id', 'left');
+		$this->db->where('shared_files.u_id', $u_id);
+		$this->db->order_by("shared_files.s_created", "DESC");
+		return $this->db->get()->result_array();
+		}
+		public function get_sharedlink_list($u_id){
+		$this->db->select('shared_links.u_id,links.l_name,shared_links.s_permission,shared_links.s_created')->from('shared_links');
+		$this->db->join('links', 'links.l_id = shared_links.link_id', 'left');
+		$this->db->where('shared_links.u_id', $u_id);
+		$this->db->order_by("shared_links.s_created", "DESC");
+		return $this->db->get()->result_array();
+		}
+		public function get_sharedfolder_list($u_id){
+		$this->db->select('floder_list.f_id,floder_list.f_name,shared_folder.s_permission')->from('shared_folder');
+		$this->db->join('floder_list', 'floder_list.f_id = shared_folder.f_id', 'left');
+		$this->db->where('shared_folder.u_id', $u_id);
+		$this->db->group_by('shared_folder.f_id');
+		return $this->db->get()->result();
+		}
+	/* shared tab*/
 
 }

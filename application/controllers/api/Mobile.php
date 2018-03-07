@@ -1165,7 +1165,7 @@ class Mobile extends REST_Controller {
 			$file_list=$this->Mobile_model->get_undofile_list($userid);
 			$link_list=$this->Mobile_model->get_undolink_list($userid);
 			if(count($folder_list)>0 || count($file_list)>0 || count($link_list)>0){
-				$message = array('status'=>1,'folder_list'=>$folder_list,'file_list'=>$file_list,'link_list'=>$link_list,'message'=>'Recycle bin data are found');
+				$message = array('status'=>1,'folder_list'=>$folder_list,'file_list'=>$file_list,'link_list'=>$link_list,'filepath'=>base_url('assets/files/'),'message'=>'Recycle bin data are found');
 				$this->response($message, REST_Controller::HTTP_OK);
 			}else{
 				$message = array('status'=>0,'message'=>'Recycle bin data are not found');
@@ -1177,7 +1177,32 @@ class Mobile extends REST_Controller {
 			}
 	}
 	/*recyclebintab*/
-
+	/*sharedtab*/
+		public function sharedtab_post(){
+		$userid=$this->post('userid');
+		if($userid==''){
+		$message = array('status'=>0,'message'=>'User Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$check_user=$this->Mobile_model->get_user_details($userid);
+		if(count($check_user)>0){
+			$folder_list=$this->Mobile_model->get_sharedfolder_list($userid);
+			$file_list=$this->Mobile_model->get_shredfile_list($userid);
+			//echo $this->db->last_query();exit;
+			$link_list=$this->Mobile_model->get_sharedlink_list($userid);
+			if(count($folder_list)>0 || count($file_list)>0 || count($link_list)>0){
+				$message = array('status'=>1,'folder_list'=>$folder_list,'file_list'=>$file_list,'link_list'=>$link_list,'filepath'=>base_url('assets/files/'),'message'=>'Shared data are found');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}else{
+				$message = array('status'=>0,'message'=>'Shared data are not found');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}
+		}else{
+				$message = array('status'=>0,'message'=>'User not available .Please try again');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}
+	}
+	/*sharedtab*/
     
 
 }
