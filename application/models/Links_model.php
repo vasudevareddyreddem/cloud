@@ -16,8 +16,8 @@ class Links_model extends CI_Model
 /*add links*/
 	
 	public function get_link_details($u_id){
-		$this->db->select('links.l_id,links.l_name,links.l_created_at,favourite.yes,favourite.u_id as favourite_u_id')->from('links');
-		$this->db->join('favourite', 'favourite.file_id = links.l_id', 'left');
+		$this->db->select('links.l_id,links.l_name,links.l_created_at,link_favourite.yes,link_favourite.u_id as favourite_u_id')->from('links');
+		$this->db->join('link_favourite', 'link_favourite.file_id = links.l_id', 'left');
 		$this->db->where('links.u_id', $u_id);
 		$this->db->where('links.l_undo', 0);
 		$this->db->order_by("links.l_created_at", "DESC");

@@ -205,5 +205,39 @@ class Mobile_model extends CI_Model
 		return $insert_id = $this->db->insert_id();
 	}
 	/* link*/
+	/*link tab*/
+	public function get_link_list($u_id){
+		$this->db->select('links.l_id,links.u_id,links.l_name,links.l_created_at,link_favourite.yes')->from('links');
+		$this->db->join('link_favourite', 'link_favourite.file_id = links.l_id', 'left');
+		$this->db->where('links.u_id', $u_id);
+		$this->db->where('links.l_undo', 0);
+		$this->db->order_by("links.l_created_at", "DESC");
+		return $this->db->get()->result_array();
+	}
+	/*link tab*/
+	/*recyclebintab*/
+		public function get_undofile_list($u_id){
+		$this->db->select('images.img_id,images.img_name,images.imag_org_name,favourite.yes')->from('images');
+		$this->db->join('favourite', 'favourite.file_id = images.img_id', 'left');
+		$this->db->where('images.u_id', $u_id);
+		$this->db->where('images.img_undo', 1);
+		$this->db->order_by("images.img_create_at", "DESC");
+		return $this->db->get()->result();
+	}	
+	public function get_undolink_list($u_id){
+		$this->db->select('links.l_id,links.u_id,links.l_name,links.l_created_at,link_favourite.yes')->from('links');
+		$this->db->join('link_favourite', 'link_favourite.file_id = links.l_id', 'left');
+		$this->db->where('links.u_id', $u_id);
+		$this->db->where('links.l_undo', 1);
+		$this->db->order_by("links.l_created_at", "DESC");
+		return $this->db->get()->result_array();
+	}	
+	public function get_undofolder_list($u_id){
+		$this->db->select('floder_list.f_id,floder_list.f_name,floder_list.u_id')->from('floder_list');		
+		$this->db->where('floder_list.u_id', $u_id);
+		$this->db->where('f_undo', 1);
+		return $this->db->get()->result_array();
+	}
+	/*recyclebintab*/
 
 }
