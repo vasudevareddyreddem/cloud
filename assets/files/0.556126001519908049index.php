@@ -1,1 +1,0 @@
-<input type="file" name="file_input[]" id="file_input" multiple webkitdirectory="">

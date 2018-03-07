@@ -395,14 +395,35 @@ class Mobile extends REST_Controller {
 		$details=$this->Mobile_model->get_folder_details($folder_id);
 			if(count($details)>0){
 					if($type==1){
-						$folder_delete=$this->Mobile_model->delete_folder($folder_id);
-							if(count($folder_delete)>0){
-										$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'Folder Successfully removed');
-										$this->response($message, REST_Controller::HTTP_OK);
-									}else{
-										$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
-										$this->response($message, REST_Controller::HTTP_OK);
+								$folder_details = $this->Mobile_model->perment_delete_for_all_data($folder_id);
+								if(count($folder_details)>0){
+									foreach($folder_details as $m_links){
+										$delete_folder_imgs = $this->Mobile_model->permedelte_folder_images_list($m_links['f_id']);
+										$this->Mobile_model->permenent_shared_delte_folder($m_links['f_id']);
+										foreach($delete_folder_imgs as $list){
+											$this->Mobile_model->permenentdelte_image($list['img_id']);
+											unlink("assets/files/".$list['img_name']);
+										}
+										$delete_folder = $this->Mobile_model->permenentdelte_folder($m_links['f_id']);
+										$this->Mobile_model->permenent_shared_delte_folder($m_links['f_id']);
+
 									}
+								}
+								$folder = $this->Mobile_model->permedelte_folder_images_list($folder_id);
+								$this->Mobile_model->permenent_shared_delte_folder($folder_id);
+								foreach($folder as $list){
+											$this->Mobile_model->permenentdelte_image($list['img_id']);
+											unlink("assets/files/".$list['img_name']);
+										}
+								$delete_folder = $this->Mobile_model->permenentdelte_folder($folder_id);
+								$this->Mobile_model->permenent_shared_delte_folder($folder_id);
+									if(count($delete_folder)>0){
+												$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'Folder Successfully removed');
+												$this->response($message, REST_Controller::HTTP_OK);
+											}else{
+												$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+												$this->response($message, REST_Controller::HTTP_OK);
+											}
 					}else{
 						$folderdata=array(
 						'f_undo'=>1,
