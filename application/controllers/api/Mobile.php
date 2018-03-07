@@ -1188,7 +1188,6 @@ class Mobile extends REST_Controller {
 		if(count($check_user)>0){
 			$folder_list=$this->Mobile_model->get_sharedfolder_list($userid);
 			$file_list=$this->Mobile_model->get_shredfile_list($userid);
-			//echo $this->db->last_query();exit;
 			$link_list=$this->Mobile_model->get_sharedlink_list($userid);
 			if(count($folder_list)>0 || count($file_list)>0 || count($link_list)>0){
 				$message = array('status'=>1,'folder_list'=>$folder_list,'file_list'=>$file_list,'link_list'=>$link_list,'filepath'=>base_url('assets/files/'),'message'=>'Shared data are found');
