@@ -113,6 +113,17 @@ class Mobile_model extends CI_Model
 		$this->db->where('u_status', 1);
 		return $this->db->get()->result_array();
 	}
+	
+	public function get_all_folder_details($f_id){
+		$this->db->select('floder_list.f_id,floder_list.u_id,floder_list.page_id,floder_list.floder_id,floder_list.f_name,floder_list.f_create_at,floder_list.f_undo')->from('floder_list');		
+		$this->db->where('f_id', $f_id);
+		return $this->db->get()->row_array();
+	}
+	public function get_all_file_details($f_id){
+		$this->db->select('images.img_id,images.floder_id,images.img_name,images.imag_org_name,images.img_create_at')->from('images');		
+		$this->db->where('floder_id', $f_id);
+		return $this->db->get()->result_array();
+	}
 	/* folder share*/
 	
 	/* file*/

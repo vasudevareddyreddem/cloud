@@ -277,6 +277,8 @@ class Mobile extends REST_Controller {
 					$this->response($message, REST_Controller::HTTP_OK);
 				}
 	}
+	
+	/* folder*/
 	public function createfolder_post()
     {
 		$userid=$this->post('userid');
@@ -520,6 +522,28 @@ class Mobile extends REST_Controller {
 				$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
 				$this->response($message, REST_Controller::HTTP_OK);
 			}
+	}	
+	public function folderdata_post(){
+		$folderid=$this->post('folderid');
+		if($folderid==''){
+		$message = array('status'=>0,'message'=>'Folder Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$details=$this->Mobile_model->get_folder_details($folderid);
+			if(count($details)>0){
+					$folder_details=$this->Mobile_model->get_all_folder_details($folderid);
+					if(count($folder_details)>0){
+							$file_details=$this->Mobile_model->get_all_file_details($folderid);
+							$message = array('status'=>1,'folder_details'=>$folder_details,'file_details'=>$file_details,'filepath'=>base_url('assets/files/'),'message'=>'Folder Details are found');
+							$this->response($message, REST_Controller::HTTP_OK);
+					}else{
+							$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+							$this->response($message, REST_Controller::HTTP_OK);
+					}
+		}else{
+				$message = array('status'=>0,'message'=>'Folder Id not available .Please try again');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}	
 	}
 	public function folderdownload_post(){
 		$folder_id=$this->post('folder_id');
@@ -573,6 +597,8 @@ class Mobile extends REST_Controller {
 			}*/
 		
 	}
+	
+	/*folder*/
 	
 	/* file download*/
 	public function filerename_post(){
