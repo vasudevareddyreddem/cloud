@@ -119,6 +119,12 @@ class Mobile_model extends CI_Model
 		$this->db->where('f_id', $f_id);
 		return $this->db->get()->row_array();
 	}
+	public function get_user_folder_details($u_id,$f_id){
+		$this->db->select('floder_list.f_id,floder_list.u_id,floder_list.page_id,floder_list.floder_id,floder_list.f_name,floder_list.f_create_at,floder_list.f_undo')->from('floder_list');		
+		$this->db->where('f_id', $f_id);
+		$this->db->where('u_id', $u_id);
+		return $this->db->get()->row_array();
+	}
 	public function get_all_file_details($f_id){
 		$this->db->select('images.img_id,images.floder_id,images.img_name,images.imag_org_name,images.img_create_at')->from('images');		
 		$this->db->where('floder_id', $f_id);
@@ -151,6 +157,13 @@ class Mobile_model extends CI_Model
 	{
 		$sql1="DELETE FROM floder_list WHERE f_id = '".$f_id."' ";
 		return $this->db->query($sql1);
+	}
+	public function get_floder_movingname_list($u_id,$f_id){
+		$this->db->select('floder_list.f_id,floder_list.f_name,floder_list.page_id')->from('floder_list');		
+		$this->db->where('u_id', $u_id);
+		$this->db->where('floder_id <', $f_id);
+		$this->db->where('f_undo', 0);
+		return $this->db->get()->result_array();
 	}
 	/* folder share*/
 	

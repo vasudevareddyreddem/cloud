@@ -471,6 +471,75 @@ class Mobile extends REST_Controller {
 			}
 		
 	}
+	public function foldermovig_list_post(){
+		$userid=$this->post('userid');
+		$folder_id=$this->post('folderid');
+		if($userid ==''){
+		$message = array('status'=>0,'message'=>'User Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}if($folder_id ==''){
+		$message = array('status'=>0,'message'=>'Folder Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$details=$this->Mobile_model->get_folder_details($folder_id);
+			if(count($details)>0){
+				$folder_list=$this->Mobile_model->get_floder_movingname_list($userid,$folder_id);
+							if(count($folder_list)>0){
+								$message = array('status'=>1,'folderlist'=>$folder_list,'message'=>'Folder list are found');
+								$this->response($message, REST_Controller::HTTP_OK);
+							}else{
+								$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+								$this->response($message, REST_Controller::HTTP_OK);
+							}
+			}else{
+				$message = array('status'=>0,'message'=>'Folder Id not available .Please try again');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}
+		
+	}
+	public function foldermove_post(){
+		$user_id=$this->post('userid');
+		$folder_id=$this->post('folderid');
+		$movefolderid=$this->post('movefolderid');
+		if($user_id ==''){
+		$message = array('status'=>0,'message'=>'User Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		if($folder_id ==''){
+		$message = array('status'=>0,'message'=>'Folder Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		if($movefolderid ==''){
+		$message = array('status'=>0,'message'=>'Moving Folder Id ');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$details=$this->Mobile_model->get_folder_details($folder_id);
+			if(count($details)>0){
+				$check_shared=$this->Mobile_model->get_user_folder_details($user_id,$folder_id);
+					if(count($check_shared)>=0){
+							$folderdata=array(
+								'floder_id'=>$movefolderid,
+								'f_updated_at'=>date('Y-m-d H:i:s')
+								);
+							$folder_moving=$this->Mobile_model->folder_details_update($folder_id,$folderdata);
+							if(count($folder_moving)>0){
+										$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'Folder is successfully moved');
+										$this->response($message, REST_Controller::HTTP_OK);
+									}else{
+										$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+										$this->response($message, REST_Controller::HTTP_OK);
+									}
+
+					}else{
+						$message = array('status'=>0,'message'=>'Folder already shared. Please try another folder');
+						$this->response($message, REST_Controller::HTTP_OK);
+					}								
+			}else{
+				$message = array('status'=>0,'message'=>'Folder Id not available .Please try again');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}			
+		
+	}
 	public function foldershare_post(){
 		$folder_id=$this->post('folder_id');
 		$user_id=$this->post('user_id');
