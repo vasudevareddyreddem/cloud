@@ -810,7 +810,121 @@ class Mobile extends REST_Controller {
 				$this->response($message, REST_Controller::HTTP_OK);
 			}
 	}
+	public function file_move_post(){
+		$user_id=$this->post('user_id');
+		$page_id=$this->post('page_id');
+		$floder_id=$this->post('floder_id');
+		$file_id=$this->post('file_id');
+		if($user_id==''){
+		$message = array('status'=>0,'message'=>'User Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		if($page_id ==''){
+		$message = array('status'=>0,'message'=>'Page Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		if($floder_id ==''){
+		$message = array('status'=>0,'message'=>'Folder is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		if($file_id ==''){
+		$message = array('status'=>0,'message'=>'File is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$details=$this->Mobile_model->get_folder_details($floder_id);
+			if($details['u_id']== $user_id){
+				$movedata=array(
+								'u_id'=>$user_id,
+								'page_id'=>$page_id,
+								'floder_id'=>$floder_id,
+								'f_update_at'=>date('Y-m-d H:i:s'),				
+								);
+							$file_moveing=$this->Mobile_model->file_details_update($file_id,$movedata);
+								if(count($file_moveing)>0){
+									$message = array('status'=>1,'file_id'=>$file_id,'message'=>'File is successfully Moved');
+									$this->response($message, REST_Controller::HTTP_OK);
+								}else{
+									$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+									$this->response($message, REST_Controller::HTTP_OK);
+								}
+							
+			}else{
+				$message = array('status'=>0,'message'=>'You have no permissions to access this folder .Please try again');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}
+	}
 	/* file download*/
+	/* link**/
+	public function createlink_post()
+    {
+		$user_id=$this->post('user_id');
+		$linkname=$this->post('linkname');
+		if($user_id ==''){
+			$message = array('status'=>0,'message'=>'User Id is required');
+			$this->response($message, REST_Controller::HTTP_OK);			
+		}if($linkname ==''){
+			$message = array('status'=>0,'message'=>'Link Name is required');
+			$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$linkdata=array(
+		'u_id'=>$user_id,
+		'l_name'=>$linkname,
+		'l_status'=>1,
+		'l_created_at'=>date('Y-m-d H:i:s'),
+		'l_updated_at'=>date('Y-m-d H:i:s'),
+		'l_undo'=>0
+		);
+		//echo '<pre>';print_r($folderdat);exit;
+		$link_details=$this->Mobile_model->save_links($linkdata);
+		if(count($link_details)>0){
+					$message = array('status'=>1,'link_id'=>$link_details,'message'=>'Successfully link created');
+					$this->response($message, REST_Controller::HTTP_OK);
+				}else{
+					$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+					$this->response($message, REST_Controller::HTTP_OK);
+				}
+	}
+	public function linkfavourite_post(){
+		$user_id=$this->post('user_id');
+		$linkid=$this->post('linkid');
+		if($user_id ==''){
+		$message = array('status'=>0,'message'=>'User Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}if($linkid ==''){
+		$message = array('status'=>0,'message'=>'Link Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		
+		$filedata=array(
+		'u_id'=>$user_id,
+		'file_id'=>$linkid,
+		'yes'=>1,
+		'status'=>1,
+		'create_at'=>date('Y-m-d H:i:s')
+		);
+		$check=$this->Mobile_model->check_linkfavorites($user_id,$linkid);
+		if(count($check)>0){
+			$details=$this->Mobile_model->remove_linkfavorites($check['id']);
+				if(count($details)>0){
+							$message = array('status'=>1,'linkid'=>$linkid,'message'=>'Link Successfully removed to Favourite ');
+							$this->response($message, REST_Controller::HTTP_OK);
+						}else{
+							$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+							$this->response($message, REST_Controller::HTTP_OK);
+						}
+		}else{
+			$details=$this->Mobile_model->add_linkfavorites($filedata);
+				if(count($details)>0){
+							$message = array('status'=>1,'linkid'=>$linkid,'message'=>'Link Successfully added to Favourite ');
+							$this->response($message, REST_Controller::HTTP_OK);
+						}else{
+							$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+							$this->response($message, REST_Controller::HTTP_OK);
+						}
+		}
+		
+	}
+	/* link**/
 
     
 

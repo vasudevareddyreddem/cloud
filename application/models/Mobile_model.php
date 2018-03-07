@@ -59,7 +59,7 @@ class Mobile_model extends CI_Model
 		return $this->db->update('floder_list', $data);
 	}
 	public function get_folder_details($f_id){
-		$this->db->select('floder_list.f_id')->from('floder_list');		
+		$this->db->select('floder_list.f_id,floder_list.u_id')->from('floder_list');		
 		$this->db->where('f_id', $f_id);
 		return $this->db->get()->row_array();
 	}
@@ -161,5 +161,25 @@ class Mobile_model extends CI_Model
 		return $this->db->get()->result_array();
 	}
 	/* file*/
+	/* link*/
+		public function save_links($data){
+		$this->db->insert('links', $data);
+		return $insert_id = $this->db->insert_id();
+	}
+	public function check_linkfavorites($u_id,$file_id){
+		$this->db->select('*')->from('link_favourite');		
+		$this->db->where('file_id', $file_id);
+		$this->db->where('u_id', $u_id);
+		return $this->db->get()->row_array();
+	}
+	public function add_linkfavorites($data){
+		$this->db->insert('link_favourite', $data);
+		return $insert_id = $this->db->insert_id();
+	}
+	public function remove_linkfavorites($linkid){
+		$sql1="DELETE FROM link_favourite WHERE id = '".$linkid."'";
+		return $this->db->query($sql1);
+	}
+	/* link*/
 
 }
