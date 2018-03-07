@@ -716,6 +716,23 @@ class Mobile extends REST_Controller {
 			}
 		
 	}
+	public function filedownload_post(){
+		$file_id=$this->post('file_id');
+		if($file_id ==''){
+		$message = array('status'=>0,'message'=>'File Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$details=$this->Mobile_model->get_file_details($file_id);
+		//echo '<pre>';print_r($details);exit;
+			if(count($details)>0){
+				$message = array('status'=>1,'file'=>base_url('assets/files/'.$details['img_name']),'message'=>'File successfully download');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}else{
+				$message = array('status'=>0,'message'=>'File  not available .Please try again');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}
+		
+	}
 	/* file download*/
 
     
