@@ -180,6 +180,30 @@ class Mobile_model extends CI_Model
 		$sql1="DELETE FROM link_favourite WHERE id = '".$linkid."'";
 		return $this->db->query($sql1);
 	}
+	public function get_link_details($l_id){
+		$this->db->select('links.l_id,links.l_name')->from('links');		
+		$this->db->where('l_id', $l_id);
+		return $this->db->get()->row_array();
+	}
+	public function link_details_update($l_id,$data){
+		$this->db->where('l_id', $l_id);
+		return $this->db->update('links', $data);
+	}
+	public function delete_link($l_id){
+		$sql1="DELETE FROM links WHERE l_id = '".$l_id."'";
+		return $this->db->query($sql1);
+	}
+	public function get_shared_link_details($u_id,$link_id){
+		$this->db->select('*')->from('shared_links');		
+		$this->db->where('u_id', $u_id);
+		$this->db->where('link_id', $link_id);
+		$this->db->or_where('u_email', $link_id);
+		return $this->db->get()->row_array();
+	}
+	public function link_share($data){
+		$this->db->insert('shared_links', $data);
+		return $insert_id = $this->db->insert_id();
+	}
 	/* link*/
 
 }

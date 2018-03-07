@@ -924,6 +924,162 @@ class Mobile extends REST_Controller {
 		}
 		
 	}
+	public function linkrename_post(){
+		$linkid=$this->post('linkid');
+		$linkename=$this->post('linkename');
+		if($linkid ==''){
+		$message = array('status'=>0,'message'=>'Link Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		if($linkename ==''){
+		$message = array('status'=>0,'message'=>'Link Name is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$linkdata=array(
+		'l_name'=>$linkename,
+		'l_updated_at'=>date('Y-m-d H:i:s')
+		);
+		$details=$this->Mobile_model->get_link_details($linkid);
+		if(count($details)>0){
+			$link_rename=$this->Mobile_model->link_details_update($linkid,$linkdata);
+			if(count($link_rename)>0){
+						$message = array('status'=>1,'linkid'=>$linkid,'message'=>'Successfully link Renamed');
+						$this->response($message, REST_Controller::HTTP_OK);
+					}else{
+						$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+						$this->response($message, REST_Controller::HTTP_OK);
+					}
+		}else{
+			$message = array('status'=>0,'message'=>'Link not available .Please try again');
+			$this->response($message, REST_Controller::HTTP_OK);
+		}
+	}
+	public function linkdelete_post(){
+		$linkid=$this->post('linkid');
+		$type=$this->post('type');
+		if($linkid ==''){
+		$message = array('status'=>0,'message'=>'Link Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}if($type ==''){
+		$message = array('status'=>0,'message'=>'Type is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$details=$this->Mobile_model->get_link_details($linkid);
+		//echo '<pre>';print_r($details);exit;
+			if(count($details)>0){
+					if($type==1){
+						$link_delete=$this->Mobile_model->delete_link($linkid);
+							if(count($link_delete)>0){
+										$message = array('status'=>1,'linkid'=>$linkid,'message'=>'Link Successfully removed');
+										$this->response($message, REST_Controller::HTTP_OK);
+									}else{
+										$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+										$this->response($message, REST_Controller::HTTP_OK);
+									}
+					}else{
+						$linkdata=array(
+							'l_undo'=>1,
+							'l_updated_at'=>date('Y-m-d H:i:s')
+							);
+						$link_rename=$this->Mobile_model->link_details_update($linkid,$linkdata);
+							if(count($link_rename)>0){
+										$message = array('status'=>1,'linkid'=>$linkid,'message'=>'Link moved to trash');
+										$this->response($message, REST_Controller::HTTP_OK);
+									}else{
+										$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+										$this->response($message, REST_Controller::HTTP_OK);
+									}
+					}
+			}else{
+				$message = array('status'=>0,'message'=>'Link not available .Please try again');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}
+		
+	}
+	public function linkshare_post(){
+		$linkid=$this->post('linkid');
+		$user_id=$this->post('user_id');
+		$shareduser_id=$this->post('shareduser_id');
+		$permission=$this->post('permission');
+		$email=$this->post('shared_email');
+		if($linkid ==''){
+		$message = array('status'=>0,'message'=>'Link Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}if($user_id ==''){
+		$message = array('status'=>0,'message'=>'User Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		if($shareduser_id =='' && $email ==''){
+		$message = array('status'=>0,'message'=>'Shared user Id  or Email Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		if($permission ==''){
+		$message = array('status'=>0,'message'=>'permissions Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+			$details=$this->Mobile_model->get_link_details($linkid);
+			if(count($details)>0){
+				if($shareduser_id!=''){
+					$already_shared=$this->Mobile_model->get_shared_link_details($shareduser_id,$linkid);
+				}else{
+					$already_shared=$this->Mobile_model->get_shared_link_details($shareduser_id,$email);
+				}
+					if(count($already_shared)==0){
+						$linkdata=array(
+							'u_id'=>isset($shareduser_id)?$shareduser_id:'',
+							'u_email'=>isset($email)?$email:'',
+							'link_id'=>$linkid,
+							's_permission'=>$permission,
+							's_status'=>1,
+							's_created'=>date('Y-m-d H:i:s'),
+							'file_created_id'=>$user_id
+							);
+							$shared_data=$this->Mobile_model->link_share($linkdata);
+								if(count($shared_data)>0){
+									$message = array('status'=>1,'linkid'=>$linkid,'message'=>'Link is successfully shared');
+									$this->response($message, REST_Controller::HTTP_OK);
+								}else{
+									$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+									$this->response($message, REST_Controller::HTTP_OK);
+								}
+
+					}else{
+						$message = array('status'=>0,'message'=>'Link already shared. Please try another Link');
+						$this->response($message, REST_Controller::HTTP_OK);
+					}								
+			}else{
+				$message = array('status'=>0,'message'=>'Link not available .Please try again');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}
+	}
+	public function linkrestore_post(){
+		$linkid=$this->post('linkid');
+		if($linkid ==''){
+		$message = array('status'=>0,'message'=>'Link Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$details=$this->Mobile_model->get_link_details($linkid);
+		//echo '<pre>';print_r($details);exit;
+			if(count($details)>0){
+					$linkdata=array(
+							'l_undo'=>0,
+							'l_updated_at'=>date('Y-m-d H:i:s')
+							);
+						$link_rename=$this->Mobile_model->link_details_update($linkid,$linkdata);
+							if(count($link_rename)>0){
+										$message = array('status'=>1,'linkid'=>$linkid,'message'=>'Link Restored');
+										$this->response($message, REST_Controller::HTTP_OK);
+									}else{
+										$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+										$this->response($message, REST_Controller::HTTP_OK);
+									}
+				
+			}else{
+				$message = array('status'=>0,'message'=>'Link not available .Please try again');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}
+		
+	}
 	/* link**/
 
     
