@@ -1202,6 +1202,55 @@ class Mobile extends REST_Controller {
 			}
 	}
 	/*sharedtab*/
+	/*recenttab*/
+		public function recenttab_post(){
+		$userid=$this->post('userid');
+		if($userid==''){
+		$message = array('status'=>0,'message'=>'User Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$check_user=$this->Mobile_model->get_user_details($userid);
+		if(count($check_user)>0){
+			$folder_list=$this->Mobile_model->get_recentfolder_list($userid);
+			$file_list=$this->Mobile_model->get_recentfile_list($userid);
+			$link_list=$this->Mobile_model->get_recentlink_list($userid);
+			if(count($folder_list)>0 || count($file_list)>0 || count($link_list)>0){
+				$message = array('status'=>1,'folder_list'=>$folder_list,'file_list'=>$file_list,'link_list'=>$link_list,'filepath'=>base_url('assets/files/'),'message'=>'Shared data are found');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}else{
+				$message = array('status'=>0,'message'=>'Shared data are not found');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}
+		}else{
+				$message = array('status'=>0,'message'=>'User not available .Please try again');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}
+	}
+	/*recenttab*/
+	/*dashboardtab*/
+		public function dashboard_post(){
+		$userid=$this->post('userid');
+		if($userid==''){
+		$message = array('status'=>0,'message'=>'User Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$check_user=$this->Mobile_model->get_user_details($userid);
+		if(count($check_user)>0){
+			$folder_list=$this->Mobile_model->get_flodername_data($userid);
+			$file_list=$this->Mobile_model->get_fileupload_data($userid);
+			if(count($folder_list)>0 || count($file_list)>0){
+				$message = array('status'=>1,'folder_list'=>$folder_list,'file_list'=>$file_list,'filepath'=>base_url('assets/files/'),'message'=>'Dashboard data are found');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}else{
+				$message = array('status'=>0,'message'=>'Dashboard data are not found');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}
+		}else{
+				$message = array('status'=>0,'message'=>'User not available .Please try again');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}
+	}
+	/*dashboardtab*/
     
 
 }

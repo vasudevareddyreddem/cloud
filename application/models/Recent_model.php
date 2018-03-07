@@ -10,7 +10,8 @@ class Recent_model extends CI_Model
 	}
 
 	public function recen_get_pagewisefileupload_data($u_id){
-		$this->db->select('images.img_id,images.img_name,images.imag_org_name')->from('images');		
+		$this->db->select('images.img_id,images.img_name,images.imag_org_name,favourite.yes')->from('images');		
+		$this->db->join('favourite', 'favourite.file_id = images.img_id', 'left');
 		$curr_date = date('Y-m-d h:i:s A', strtotime('-7 days'));
 		$this->db->where('images.u_id', $u_id);
 		$this->db->where('images.img_create_at >', $curr_date);

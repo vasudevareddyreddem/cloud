@@ -261,7 +261,7 @@ class Mobile_model extends CI_Model
 		$this->db->where('images.u_id', $u_id);
 		$this->db->where('images.img_undo', 1);
 		$this->db->order_by("images.img_create_at", "DESC");
-		return $this->db->get()->result();
+		return $this->db->get()->result_array();
 	}	
 	public function get_undolink_list($u_id){
 		$this->db->select('links.l_id,links.u_id,links.l_name,links.l_created_at,link_favourite.yes')->from('links');
@@ -298,8 +298,62 @@ class Mobile_model extends CI_Model
 		$this->db->join('floder_list', 'floder_list.f_id = shared_folder.f_id', 'left');
 		$this->db->where('shared_folder.u_id', $u_id);
 		$this->db->group_by('shared_folder.f_id');
-		return $this->db->get()->result();
+		return $this->db->get()->result_array();
 		}
 	/* shared tab*/
+	
+	/*reenttab*/
+	public function get_recentfile_list($u_id){
+		$this->db->select('images.img_id,images.img_name,images.imag_org_name,images.img_create_at,favourite.yes')->from('images');		
+		$this->db->join('favourite', 'favourite.file_id = images.img_id', 'left');
+
+		$curr_date = date('Y-m-d h:i:s A', strtotime('-7 days'));
+		$this->db->where('images.u_id', $u_id);
+		$this->db->where('images.img_create_at >', $curr_date);
+		$this->db->order_by("images.img_create_at", "DESC");
+		return $this->db->get()->result_array();
+	}
+	public function get_recentfolder_list($u_id){
+		$curr_date = date('Y-m-d h:i:s A', strtotime('-7 days'));
+		$this->db->select('floder_list.f_id,floder_list.f_name,floder_list.f_create_at')->from('floder_list');		
+		$this->db->where('u_id', $u_id);
+		$this->db->where('f_undo', 0);
+		$this->db->where('floder_id', 0);
+		$this->db->where('floder_list.f_create_at >', $curr_date);
+		$this->db->order_by("floder_list.f_create_at", "DESC");
+		return $this->db->get()->result_array();
+	}
+	public function get_recentlink_list($u_id){
+		$this->db->select('links.l_id,links.l_name,links.l_created_at,link_favourite.yes')->from('links');
+		$this->db->join('link_favourite', 'link_favourite.file_id = links.l_id', 'left');
+		
+		$curr_date = date('Y-m-d h:i:s A', strtotime('-7 days'));
+		$this->db->where('links.u_id', $u_id);
+		$this->db->where('links.l_created_at >', $curr_date);
+		$this->db->order_by("links.l_created_at", "DESC");
+		return $this->db->get()->result_array();
+	}
+	/*reenttab*/
+	/*myfiles*/
+	public function get_flodername_data($u_id){
+		$this->db->select('floder_list.f_id,floder_list.f_name,floder_list.f_create_at,floder_favourite.yes')->from('floder_list');		
+		$this->db->join('floder_favourite', 'floder_favourite.f_id = floder_list.f_id', 'left');
+		$this->db->where('floder_list.u_id', $u_id);
+		$this->db->where('floder_list.f_undo', 0);
+		$this->db->where('floder_list.floder_id', 0);
+		$this->db->order_by("floder_list.f_create_at", "DESC");
+		return $this->db->get()->result_array();
+	}
+	public function get_fileupload_data($u_id){
+		$this->db->select('images.img_id,images.img_name,images.imag_org_name,images.img_create_at,favourite.yes')->from('images');		
+		$this->db->join('favourite', 'favourite.file_id = images.img_id', 'left');
+		$this->db->where('images.u_id', $u_id);
+		$this->db->where('images.img_undo', 0);
+		$this->db->where('images.page_id', 0);
+		$this->db->where('images.floder_id', 0);
+		$this->db->order_by("images.img_create_at", "DESC");
+		return $this->db->get()->result_array();
+	}
+	/*myfiles*/
 
 }
