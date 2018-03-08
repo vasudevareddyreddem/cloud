@@ -55,6 +55,15 @@ class Links extends CI_Controller {
 						);
 			$addlink = $this->Links_model->save_links($addlink);
 			if(count($addlink)>0){
+					$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>'',
+								'folder'=>'',
+								'link'=>$addlink,
+								'action'=>'Create',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 				$this->session->set_flashdata('success',"link successfully added");
 				redirect($this->agent->referrer());
 			}else{
@@ -85,6 +94,15 @@ class Links extends CI_Controller {
 					$delete_link = $this->Links_model->update_link_details($link_id,$deletedata);
 					//echo $this->db->last_query();exit;
 					if(count($delete_link)>0){
+						$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>'',
+								'folder'=>'',
+								'link'=>$link_id,
+								'action'=>'Delete',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 						$this->session->set_flashdata('success',"Link successfully Deleted");
 						redirect($this->agent->referrer());
 					}else{
@@ -116,6 +134,15 @@ class Links extends CI_Controller {
 						//echo '<pre>';print_r($floderdata);exit;
 						$renamechanges = $this->Links_model->update_link_details($post['linkid'],$renamedata);
 						if(count($renamechanges)>0){
+							$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>'',
+								'folder'=>'',
+								'link'=>$post['linkid'],
+								'action'=>'Rename',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 								$this->session->set_flashdata('success',"Relink successfully changed");
 							redirect($this->agent->referrer());
 						}else{

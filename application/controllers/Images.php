@@ -58,6 +58,15 @@ class Images extends CI_Controller {
 			foreach($folder_data as $list){
 				$zipdata=$this->zip->read_file('assets/files/'.$list->img_name);
 			}
+			$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>'',
+								'folder'=>$f_id,
+								'link'=>'',
+								'action'=>'Download',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 			$this->zip->read_file($zipdata, TRUE);
 			$this->zip->download($f_id.'.zip');
 		}else{
@@ -92,7 +101,15 @@ class Images extends CI_Controller {
 						'r_file_updated_at'=>date('Y-m-d H:i:s'),
 						);
 						$this->Dashboard_model->save_recently_file_open($recentlyopen_file);
-						
+						$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>$post['moveimgid'],
+								'folder'=>'',
+								'link'=>'',
+								'action'=>'Move',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 						$this->session->set_flashdata('success',"File successfully Moved");
 						if(isset($post['pageid']) && $post['pageid']!=''){
 							redirect('dashboard/page/'.base64_encode($post['pageid']).'/'.base64_encode($post['floderid']));
@@ -145,7 +162,15 @@ class Images extends CI_Controller {
 						'r_f_updated_at'=>date('Y-m-d H:i:s'),
 						);
 						$this->Dashboard_model->recently_view_data($recentlyopen_folder);
-						
+						$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>'',
+								'folder'=>$post['movefolderid'],
+								'link'=>'',
+								'action'=>'Move',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 						$this->session->set_flashdata('success',"Folder successfully Moved");
 						if(isset($post['pageid']) && $post['pageid']!='' && $folder_details['floder_id']!=0){
 							redirect('dashboard/page/'.base64_encode($folder_details['page_id']).'/'.base64_encode($folder_details['floder_id']));
@@ -205,6 +230,15 @@ class Images extends CI_Controller {
 							);
 							$sharedfile=$this->Images_model->save_file_sharing($sharingdata);
 					}
+						$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>$post['sharingfile_id'],
+								'folder'=>'',
+								'link'=>'',
+								'action'=>'Share',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 			}else if(isset($post['yes']) && $post['yes']==2){
 				
 				if(isset($post['filesharing']) && $post['filesharing']!=''){
@@ -233,6 +267,15 @@ class Images extends CI_Controller {
 							);
 							$sharedfile=$this->Images_model->save_link_sharing($sharingdata);
 					}
+					$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>'',
+								'folder'=>'',
+								'link'=>$post['sharingfile_id'],
+								'action'=>'Share',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 			}else{
 					if(isset($post['filesharing']) && $post['filesharing']!=''){
 						foreach($post['filesharing'] as $list){
@@ -260,9 +303,19 @@ class Images extends CI_Controller {
 							);
 							$sharedfile=$this->Images_model->save_folder_sharing($sharingdata);
 					}
+					$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>'',
+								'folder'=>$post['sharingfile_id'],
+								'link'=>'',
+								'action'=>'Share',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 				
 			}
 			if(count($sharedfile)>0){
+			
 				$this->session->set_flashdata('success',"File successfully shared");
 				
 					redirect($redirection_url);

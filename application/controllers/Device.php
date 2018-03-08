@@ -16,6 +16,7 @@ class Device extends CI_Controller {
 		$this->load->model('Dashboard_model');
 		$this->load->model('User_model');
 		$this->load->library('zend');
+
 		}
 	public function index()
 	{

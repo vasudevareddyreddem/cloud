@@ -107,6 +107,15 @@ class Filecall extends CI_Controller {
 							}
 					}
 					if(count($sharedfile)>0){
+						$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>'',
+								'folder'=>'',
+								'link'=>'',
+								'action'=>'Request',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 						$this->session->set_flashdata('success',"File call request successfully submitted");
 						redirect('filecall');
 					}else{
@@ -123,6 +132,7 @@ class Filecall extends CI_Controller {
 	public function requestaccept(){
 		if($this->session->userdata('userdetails'))
 		{
+				$loginuser_id=$this->session->userdata('userdetails');
 				$filecall_id=base64_decode($this->uri->segment(3));
 			    $filecall_status=base64_decode($this->uri->segment(4));
 				$statusdata=array(
@@ -133,6 +143,15 @@ class Filecall extends CI_Controller {
 					$filecall_details = $this->Filecall_model->update_filecall_details($filecall_id,$statusdata);
 					//echo $this->db->last_query();exit;
 					if(count($filecall_details)>0){
+						$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>'',
+								'folder'=>'',
+								'link'=>'',
+								'action'=>'Request',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 						if($filecall_status==1){
 							$this->session->set_flashdata('success',"Request accepted");
 						}else{
@@ -172,7 +191,16 @@ class Filecall extends CI_Controller {
 							'f_c_updated_at'=>date('Y-m-d H:i:s'),				
 							);
 							$this->Filecall_model->update_filecall_details($post['filecalled_id'],$statusdata);
-								$this->session->set_flashdata('success',"Folder successfully shared");
+							$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>'',
+								'folder'=>$sharing_type[0],
+								'link'=>'',
+								'action'=>'FileCall',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
+							$this->session->set_flashdata('success',"Folder successfully shared");
 							}else{
 							$this->session->set_flashdata('error',"technical problem will occurred. Please try again.");
 							}
@@ -194,6 +222,15 @@ class Filecall extends CI_Controller {
 							'f_c_updated_at'=>date('Y-m-d H:i:s'),				
 							);
 							$this->Filecall_model->update_filecall_details($post['filecalled_id'],$statusdata);
+							$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>$sharing_type[0],
+								'folder'=>'',
+								'link'=>'',
+								'action'=>'FileCall',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 								$this->session->set_flashdata('success',"File successfully shared");
 							}else{
 							$this->session->set_flashdata('error',"technical problem will occurred. Please try again.");

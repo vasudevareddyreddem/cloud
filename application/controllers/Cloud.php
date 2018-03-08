@@ -47,8 +47,31 @@ class Cloud extends CI_Controller {
 				$useremail = $this->security->sanitize_filename($post['email'], TRUE);
 				$check_login=$this->User_model->check_login_details($useremail,md5($post['password']));
 				if(count($check_login)>0){
+						$date=date('Y-m-d H:i:s');
+						$date1  = new DateTime($date);
+						$date2 = new DateTime($check_login['password_lastupdate']);
+						$days  = $date2->diff($date1)->format('%a');
+						$updateuserdata=array(
+							'ip_address'=>$this->input->ip_address(),
+							'last_login_time'=>date('Y-m-d H:i:s')
+							);
+						$this->User_model->update_user_data($check_login['u_id'],$updateuserdata);
+							$activity=array(
+								'u_id'=>$check_login['u_id'],
+								'file'=>'',
+								'folder'=>'',
+								'link'=>'',
+								'action'=>'Login',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 					$this->session->set_userdata('userdetails',$check_login);
-					redirect('dashboard');
+					if($days >=90){
+							redirect('profile/resetpassword');
+						}else{
+							redirect('dashboard');
+						}
+					
 				}else{
 					$this->session->set_flashdata('error',"Login Details are wrong. Plase try again");
 					redirect('');
@@ -79,12 +102,27 @@ class Cloud extends CI_Controller {
 				'u_mobile'=>$usermobile,
 				'u_password'=>md5($post['password']),
 				'u_orginalpassword'=>$post['password'],
-				'u_status'=>0,
+				'question_1'=>$post['question_1'],
+				'question_2'=>$post['question_2'],
+				'question_3'=>$post['question_3'],
+				'last_login_time'=>date('Y-m-d H:i:s'),
+				'password_lastupdate'=>date('Y-m-d H:i:s'),
+				'ip_address'=>$this->input->ip_address(),
+				'u_status'=>1,
 				'role'=>1,
 				'u_create_at'=>date('Y-m-d H:i:s'),
 				);
 				$saveduser = $this->User_model->save_user($userdata);
 				if(count($saveduser)>0){
+					$activity=array(
+						'u_id'=>$saveduser,
+						'file'=>'',
+						'folder'=>'',
+						'link'=>'',
+						'action'=>'Register',
+						'create_at'=>date('Y-m-d H:i:s')
+						);
+					$this->User_model->activity_login($activity);
 					$file = Zend_Barcode::draw('code128', 'image', array('text' => $saveduser), array());
 					$code = time().$saveduser;
 					$store_image1 = imagepng($file, $this->config->item('documentroot')."assets/userbarcodes/{$code}.png");
@@ -160,6 +198,7 @@ class Cloud extends CI_Controller {
         $this->session->unset_userdata($userinfo);
 		$this->session->sess_destroy('userdetails');
 		$this->session->unset_userdata('userdetails');
+		$this->session->set_flashdata('loginerror','Please login to continue');
         redirect('');
 		  
 	}

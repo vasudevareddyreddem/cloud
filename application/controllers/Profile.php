@@ -51,6 +51,56 @@ class Profile extends CI_Controller {
 		}
 		
 	}
+	public function activitylogs()
+	{
+		if($this->session->userdata('userdetails'))
+		{
+			$loginuser_id=$this->session->userdata('userdetails');
+			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
+			$data['activity_logs']=$this->User_model->get_user_all_activity_logs($loginuser_id['u_id']);
+			//echo '<pre>';print_r($data);exit;
+			$data['notofication_list']=$this->Dashboard_model->get_user_notification_list($loginuser_id['u_id']);	
+			$data['notofication_uread_count']=$this->Dashboard_model->get_user_notification_unreadcount($loginuser_id['u_id']);	
+			$this->load->view('html/header',$data);
+			$this->load->view('html/sidebar',$data);
+			$this->load->view('html/activitylogs',$data);
+			$this->load->view('html/footer');
+		}else{
+			$this->load->view('html/login');
+		}
+		
+	}
+	public function clearlogs()
+	{
+		if($this->session->userdata('userdetails'))
+		{	
+			$loginuser_id=$this->session->userdata('userdetails');
+			$activity_logs=$this->User_model->get_user_all_activity_logs($loginuser_id['u_id']);
+			foreach($activity_logs as $list){
+				$delete_logs=$this->User_model->delete_all_activity_logs($list['id']);
+				//echo $this->db->last_query();exit;
+			}
+			if(count($delete_logs)>0){
+					$activity=array(
+						'u_id'=>$loginuser_id['u_id'],
+						'file'=>'',
+						'folder'=>'',
+						'link'=>'',
+						'action'=>'Clear Logs',
+						'create_at'=>date('Y-m-d H:i:s')
+						);
+					$this->User_model->activity_login($activity);
+					$this->session->set_flashdata('success',"Activity logs successfully Cleared");
+					redirect('dashboard');
+				}else{
+					$this->session->set_flashdata('error',"technical problem will occurred. Please try again.");
+					redirect('profile/activitylogs');
+				}
+		}else{
+			$this->load->view('html/login');
+		}
+		
+	}
 	 public function editpost(){
 	 
 		if($this->session->userdata('userdetails'))
@@ -102,6 +152,7 @@ class Profile extends CI_Controller {
 				'u_email'=>$useremail,
 				'u_mobile'=>$usermobile,
 				'u_dob'=>$dob,				
+				'u_gender'=>$post['gender'],				
 				'u_profilepic'=>$pic,				
 				'u_update_time'=>date('Y-m-d H:i:s'),
 				);
@@ -109,6 +160,15 @@ class Profile extends CI_Controller {
 				//echo '<pre>';print_r($updateuserdata);exit;
 				$upddateuser = $this->User_model->update_user_data($loginuser_id['u_id'],$updateuserdata);
 				if(count($upddateuser)>0){
+					$activity=array(
+						'u_id'=>$loginuser_id['u_id'],
+						'file'=>'',
+						'folder'=>'',
+						'link'=>'',
+						'action'=>'Update Profile',
+						'create_at'=>date('Y-m-d H:i:s')
+						);
+					$this->User_model->activity_login($activity);
 					$this->session->set_flashdata('success',"Profile successfully updated");
 					redirect('profile');
 				}else{
@@ -165,6 +225,15 @@ class Profile extends CI_Controller {
 						//echo '<pre>';print_r($updateuserdata);exit;
 						$upddateuser = $this->User_model->update_user_data($loginuser_id['u_id'],$updateuserdata);
 						if(count($upddateuser)>0){
+							$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>'',
+								'folder'=>'',
+								'link'=>'',
+								'action'=>'Change Password',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 							$this->session->set_flashdata('success',"password successfully updated");
 							redirect('profile/changepassword');
 						}else{
@@ -175,6 +244,71 @@ class Profile extends CI_Controller {
 				}else{
 					$this->session->set_flashdata('error',"Password and Confirm password are not matched");
 					redirect('profile/changepassword');
+				}
+				
+			}
+		}else{
+			 $this->session->set_flashdata('error','Please login to continue');
+			 redirect('');
+		} 
+	 
+	}
+	public function resetpassword()
+	{
+		if($this->session->userdata('userdetails'))
+		{
+			$loginuser_id=$this->session->userdata('userdetails');
+			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
+			$this->load->view('html/resetpassword',$data);
+		}else{
+			redirect('');
+		}
+		
+	}
+	public function resetpasswordpost(){
+	 
+		if($this->session->userdata('userdetails'))
+		{
+			$loginuser_id=$this->session->userdata('userdetails');
+			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
+			$post=$this->input->post();
+			$this->form_validation->set_rules('oldpassword', 'Old password',  'required|min_length[6]|xss_clean|callback_check_oldpassword');
+			$this->form_validation->set_rules('password', 'Password',  'required|min_length[6]|xss_clean');
+			$this->form_validation->set_rules('confirmpassword', 'Confirm Password',  'required|min_length[6]|xss_clean');
+			
+			if ($this->form_validation->run() == FALSE) {
+				$data['validationerrors'] = validation_errors();
+				$this->load->view('html/resetpassword',$data);
+			}else{
+				if(md5($post['password'])==md5($post['confirmpassword'])){
+						$updateuserdata=array(
+						'u_password'=>md5($post['confirmpassword']),
+						'u_orginalpassword'=>$post['confirmpassword'],
+						'u_update_time'=>date('Y-m-d H:i:s'),
+						'password_lastupdate'=>date('Y-m-d H:i:s')
+						);
+						//echo '<pre>';print_r($updateuserdata);exit;
+						$upddateuser = $this->User_model->update_user_data($loginuser_id['u_id'],$updateuserdata);
+						if(count($upddateuser)>0){
+							$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>'',
+								'folder'=>'',
+								'link'=>'',
+								'action'=>'Reset Password',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
+							$this->session->set_flashdata('success',"password successfully updated");
+							redirect('cloud/logout');
+						}else{
+							$this->session->set_flashdata('error',"technical problem will occurred. Please try again.");
+							redirect('profile/changepassword');
+						}
+					
+				}else{
+					$this->session->set_flashdata('error',"Password and Confirm password are not matched");
+					redirect('profile/resetpassword');
 				}
 				
 			}

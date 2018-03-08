@@ -43,6 +43,13 @@
                         </a>
                         
                     </li>
+					
+					<li class="">
+                        <a href="<?php echo base_url('profile/activitylogs'); ?>">
+                            <i class="material-icons">dashboard</i>
+                            <span>Activity Logs</span>
+                        </a>
+                    </li>
 					 <li class="">
                         <a href="<?php echo base_url('images'); ?>">
                             <i class="material-icons">dashboard</i>

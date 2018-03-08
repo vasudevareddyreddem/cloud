@@ -17,6 +17,15 @@ class Dashboard extends CI_Controller {
 		$this->load->model('Dashboard_model');
 		$this->load->library('zend');
 		$this->load->library('make_bread');
+		$loginuser_id=$this->session->userdata('userdetails');
+		$check_login=$this->User_model->get_user_all_details($loginuser_id['u_id']);
+		$date=date('Y-m-d H:i:s');
+		$date1  = new DateTime($date);
+		$date2 = new DateTime($check_login['password_lastupdate']);
+		$days  = $date2->diff($date1)->format('%a');
+		if($days >=90){
+		redirect('profile/resetpassword');
+		}
 
 		}
 	public function index()
@@ -168,6 +177,15 @@ class Dashboard extends CI_Controller {
 					//echo '<pre>';print_r($updateuserdata);exit;
 					$addfile = $this->Dashboard_model->save_userfile($filedata);
 					if(count($addfile)>0){
+						$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>$addfile,
+								'folder'=>'',
+								'link'=>'',
+								'action'=>'Create',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 						$this->session->set_flashdata('success',"File successfully Uploaded");
 						redirect($this->agent->referrer());
 						
@@ -231,6 +249,15 @@ class Dashboard extends CI_Controller {
 								);
 							//echo '<pre>';print_r($updateuserdata);exit;
 							$addfile = $this->Dashboard_model->save_userfile($filedata);
+							$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>$addfile,
+								'folder'=>'',
+								'link'=>'',
+								'action'=>'Create',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 						}
 					}
 					
@@ -291,6 +318,15 @@ class Dashboard extends CI_Controller {
 					//echo '<pre>';print_r($floderdata);exit;
 					$addfloder = $this->Dashboard_model->save_floders($floderdata);
 					if(count($addfloder)>0){
+						$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>'',
+								'folder'=>$addfloder,
+								'link'=>'',
+								'action'=>'Create',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 						$this->session->set_flashdata('success',"Floder successfully Created");
 						redirect($this->agent->referrer());
 					}else{
@@ -331,6 +367,15 @@ class Dashboard extends CI_Controller {
 						'r_file_updated_at'=>date('Y-m-d H:i:s'),
 						);
 						$this->Dashboard_model->save_recently_file_open($recentlyopen_file);
+						$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>$post['imagid'],
+								'folder'=>'',
+								'link'=>'',
+								'action'=>'Rename',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 						$this->session->set_flashdata('success',"Rename successfully changed");
 						redirect($this->agent->referrer());
 					}else{
@@ -372,6 +417,15 @@ class Dashboard extends CI_Controller {
 						'r_f_updated_at'=>date('Y-m-d H:i:s'),
 						);
 						$this->Dashboard_model->recently_view_data($recentlyopen_folder);
+						$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>'',
+								'folder'=>$post['renamefloderid'],
+								'link'=>'',
+								'action'=>'Rename',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 						$this->session->set_flashdata('success',"Rename successfully changed");
 						redirect($this->agent->referrer());
 						
@@ -408,7 +462,15 @@ class Dashboard extends CI_Controller {
 					$delete_image = $this->Dashboard_model->update_filename_changes($image_id,$deletedata);
 					//echo $this->db->last_query();exit;
 					if(count($delete_image)>0){
-						
+							$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>$image_id,
+								'folder'=>'',
+								'link'=>'',
+								'action'=>'Delete',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 						$this->session->set_flashdata('success',"FIle successfully Deleted");
 						redirect($this->agent->referrer());
 					}else{
@@ -443,6 +505,15 @@ class Dashboard extends CI_Controller {
 				}*/
 			$del=$this->Dashboard_model->update_folder_todelte($floder_id,array('f_undo'=>1));
 			if(count($del)>0){
+				$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>'',
+								'folder'=>$floder_id,
+								'link'=>'',
+								'action'=>'Delete',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 				$this->session->set_flashdata('success',"Folder successfully Deleted");
 				redirect($this->agent->referrer());	
 			}else{
@@ -521,6 +592,23 @@ class Dashboard extends CI_Controller {
 			if(in_array($post['item_id'],$itemsids)){
 				$removefavourite=$this->Dashboard_model->remove_favourite($loginuser_id['u_id'],$post['item_id']);
 				if(count($removefavourite)>0){
+					$recentlyopen_file=array(
+						'u_id'=>$loginuser_id['u_id'],
+						'file_id'=>$post['item_id'],
+						'r_file_status'=>1,
+						'r_file_create_at'=>date('Y-m-d H:i:s'),
+						'r_file_updated_at'=>date('Y-m-d H:i:s'),
+						);
+						$this->Dashboard_model->save_recently_file_open($recentlyopen_file);
+							$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>$post['item_id'],
+								'folder'=>'',
+								'link'=>'',
+								'action'=>'Favourite',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 				$data['msg']=2;	
 				echo json_encode($data);
 				}
@@ -536,6 +624,15 @@ class Dashboard extends CI_Controller {
 						'r_file_updated_at'=>date('Y-m-d H:i:s'),
 						);
 						$this->Dashboard_model->save_recently_file_open($recentlyopen_file);
+						$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>$post['item_id'],
+								'folder'=>'',
+								'link'=>'',
+								'action'=>'Favourite',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 						
 				$data['msg']=1;	
 				echo json_encode($data);
@@ -554,7 +651,15 @@ class Dashboard extends CI_Controller {
 						'r_file_updated_at'=>date('Y-m-d H:i:s'),
 						);
 						$this->Dashboard_model->save_recently_file_open($recentlyopen_file);
-						//echo $this->db->last_query();exit;
+						$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>$post['item_id'],
+								'folder'=>'',
+								'link'=>'',
+								'action'=>'Favourite',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 						
 				$data['msg']=1;	
 				echo json_encode($data);
@@ -594,6 +699,15 @@ class Dashboard extends CI_Controller {
 			if(in_array($post['item_id'],$itemsids)){
 				$removefavourite=$this->Dashboard_model->remove_link_favourite($loginuser_id['u_id'],$post['item_id']);
 				if(count($removefavourite)>0){
+					$activity=array(
+						'u_id'=>$loginuser_id['u_id'],
+						'file'=>'',
+						'folder'=>'',
+						'link'=>$post['item_id'],
+						'action'=>'Favourite',
+						'create_at'=>date('Y-m-d H:i:s')
+					);
+					$this->User_model->activity_login($activity);
 				$data['msg']=2;	
 				echo json_encode($data);
 				}
@@ -601,7 +715,15 @@ class Dashboard extends CI_Controller {
 			}else{
 				$addfavourite = $this->Dashboard_model->add_link_favourite($detailsa);
 				if(count($addfavourite)>0){
-					
+					$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>'',
+								'folder'=>'',
+								'link'=>$post['item_id'],
+								'action'=>'Favourite',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 				$data['msg']=1;	
 				echo json_encode($data);
 				}
@@ -610,6 +732,15 @@ class Dashboard extends CI_Controller {
 		}else{
 			$addfavourite = $this->Dashboard_model->add_link_favourite($detailsa);
 				if(count($addfavourite)>0){
+					$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>'',
+								'folder'=>'',
+								'link'=>$post['item_id'],
+								'action'=>'Favourite',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 					$data['msg']=1;	
 					echo json_encode($data);
 				}
@@ -647,6 +778,15 @@ class Dashboard extends CI_Controller {
 			if(in_array($post['item_id'],$itemsids)){
 				$removefavourite=$this->Dashboard_model->remove_folder_favourite($loginuser_id['u_id'],$post['item_id']);
 				if(count($removefavourite)>0){
+					$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>'',
+								'folder'=>$post['item_id'],
+								'link'=>'',
+								'action'=>'Favourite',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 				$data['msg']=2;	
 				echo json_encode($data);
 				}
@@ -662,7 +802,15 @@ class Dashboard extends CI_Controller {
 						'r_f_updated_at'=>date('Y-m-d H:i:s'),
 						);
 						$this->Dashboard_model->recently_view_data($recentlyopen_folder);
-						
+						$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>'',
+								'folder'=>$post['item_id'],
+								'link'=>'',
+								'action'=>'Favourite',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 				$data['msg']=1;	
 				echo json_encode($data);
 				}
@@ -680,7 +828,15 @@ class Dashboard extends CI_Controller {
 						'r_f_updated_at'=>date('Y-m-d H:i:s'),
 						);
 						$this->Dashboard_model->recently_view_data($recentlyopen_folder);
-						
+						$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>'',
+								'folder'=>$post['item_id'],
+								'link'=>'',
+								'action'=>'Favourite',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 				$data['msg']=1;	
 				echo json_encode($data);
 				}

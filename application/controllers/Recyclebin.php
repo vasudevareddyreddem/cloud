@@ -104,6 +104,15 @@ class Recyclebin extends CI_Controller {
 				$delete_image = $this->Recyclebin_model->delte_image($loginuser_id['u_id'],$image_id);
 					unlink("assets/files/".$imgdetails['img_name']);
 					if(count($delete_image)>0){
+						$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>$image_id,
+								'folder'=>'',
+								'link'=>'',
+								'action'=>'Delete',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 						$this->session->set_flashdata('success',"FIle successfully Deleted");
 						redirect('recyclebin');
 					
@@ -138,6 +147,15 @@ class Recyclebin extends CI_Controller {
 					$delete_image = $this->Recyclebin_model->update_filename_changes($image_id,$deletedata);
 					//echo $this->db->last_query();exit;
 					if(count($delete_image)>0){
+						$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>$image_id,
+								'folder'=>'',
+								'link'=>'',
+								'action'=>'Restore',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 						$this->session->set_flashdata('success',"FIle successfully Deleted");
 						redirect('recyclebin');
 						
@@ -169,6 +187,15 @@ class Recyclebin extends CI_Controller {
 					$delete_image = $this->Recyclebin_model->update_link_details($link_id,$deletedata);
 					//echo $this->db->last_query();exit;
 					if(count($delete_image)>0){
+						$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>'',
+								'folder'=>'',
+								'link'=>$link_id,
+								'action'=>'Restore',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 						$this->session->set_flashdata('success',"Link successfully Restore");
 						redirect('recyclebin');
 						
@@ -195,6 +222,15 @@ class Recyclebin extends CI_Controller {
 				$delete_image = $this->Recyclebin_model->delte_link($loginuser_id['u_id'],$link_id);
 				$this->Recyclebin_model->share_delte_link($link_id);
 					if(count($delete_image)>0){
+						$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>'',
+								'folder'=>'',
+								'link'=>$link_id,
+								'action'=>'Delete',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 						$this->session->set_flashdata('success',"LInk successfully Deleted");
 						redirect('recyclebin');
 					
@@ -228,6 +264,15 @@ class Recyclebin extends CI_Controller {
 					$delete_folder= $this->Recyclebin_model->update_folder_changes($folder_id,$deletedata);
 					//echo $this->db->last_query();exit;
 					if(count($delete_folder)>0){
+						$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>'',
+								'folder'=>$folder_id,
+								'link'=>'',
+								'action'=>'Restore',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 						$this->session->set_flashdata('success',"Folder successfully Restored");
 						redirect('recyclebin');
 						
@@ -279,6 +324,15 @@ class Recyclebin extends CI_Controller {
 				$this->Recyclebin_model->permenent_shared_delte_folder($folder_id);
 			
 					if(count($delete_folder)>0){
+						$activity=array(
+								'u_id'=>$loginuser_id['u_id'],
+								'file'=>'',
+								'folder'=>$folder_id,
+								'link'=>'',
+								'action'=>'Delete',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->User_model->activity_login($activity);
 						$this->session->set_flashdata('success',"Folder successfully Deleted");
 						redirect('recyclebin');
 					
