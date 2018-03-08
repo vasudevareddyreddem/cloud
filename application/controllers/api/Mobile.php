@@ -1516,7 +1516,40 @@ class Mobile extends REST_Controller {
 							}	
 
 				}else{
-					
+					if($shareduser_id!=''){
+						$already_shared=$this->Mobile_model->get_shared_file_details($shareduser_id,$file_id);
+					}else{
+						$already_shared=$this->Mobile_model->get_shared_file_details($shareduser_id,$email);
+					}
+						if(count($already_shared)==0){
+							$filedata=array(
+								'u_id'=>isset($shareduser_id)?$shareduser_id:'',
+								'u_email'=>isset($email)?$email:'',
+								'img_id'=>$file_id,
+								's_permission'=>$permission,
+								's_status'=>1,
+								's_created'=>date('Y-m-d H:i:s'),
+								'file_created_id'=>$user_id
+								);
+								$shared_data=$this->Mobile_model->file_share($filedata);
+									if(count($shared_data)>0){
+											$statusdata=array(
+												'f_c_request'=>1,
+												'f_c_updated_at'=>date('Y-m-d H:i:s'),				
+												);
+											$this->Mobile_model->update_filecall_details($filecall_id,$statusdata);
+
+										$message = array('status'=>1,'file_id'=>$file_id,'message'=>'File is successfully shared');
+										$this->response($message, REST_Controller::HTTP_OK);
+									}else{
+										$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+										$this->response($message, REST_Controller::HTTP_OK);
+									}
+
+						}else{
+							$message = array('status'=>0,'message'=>'File already shared. Please try another file');
+							$this->response($message, REST_Controller::HTTP_OK);
+						}
 
 				}				
 			}else{
