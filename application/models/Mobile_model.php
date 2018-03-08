@@ -383,6 +383,16 @@ class Mobile_model extends CI_Model
 		$this->db->insert('filecaal_notification_list', $data);
 		return $insert_id = $this->db->insert_id();
 	}
+	public function get_filecall_detais($u_id,$filecal_id){
+		$this->db->select('filecall_list.f_c_id')->from('filecall_list');		
+		$this->db->where('u_id', $u_id);
+		$this->db->where('f_c_id', $filecal_id);
+		return $this->db->get()->row_array();
+	}
+	public function update_filecall_details($id,$data){
+		$this->db->where('f_c_id',$id);
+		return $this->db->update('filecall_list',$data);
+	}
 	/*file call*/
 	
 

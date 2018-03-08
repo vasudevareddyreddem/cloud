@@ -1404,8 +1404,125 @@ class Mobile extends REST_Controller {
 			}			
 		
 	}
-	public function filecallaction(){
-		
+	public function filecalldecline_post(){
+		$user_id=$this->post('user_id');
+		$filecall_id=$this->post('filecall_id');
+		$filecall_status=$this->post('filecall_status');
+		if($user_id ==''){
+		$message = array('status'=>0,'message'=>'User Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		if($filecall_id ==''){
+		$message = array('status'=>0,'message'=>'File call Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		if($filecall_status ==''){
+		$message = array('status'=>0,'message'=>'FIle call status is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$check_user=$this->Mobile_model->get_user_details($user_id);
+		if(count($check_user)>0){
+					$check_filecall=$this->Mobile_model->get_filecall_detais($user_id,$filecall_id);
+					if(count($check_filecall)>0){
+						$statusdata=array(
+						'f_c_request'=>$filecall_status,
+						'f_c_updated_at'=>date('Y-m-d H:i:s'),				
+						);
+						$filecall_details = $this->Mobile_model->update_filecall_details($filecall_id,$statusdata);
+						if(count($filecall_details)>0){
+								$message = array('status'=>1,'filecall_id'=>$filecall_id,'message'=>'File call Request declined');
+									$this->response($message, REST_Controller::HTTP_OK);
+								}else{
+									$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+									$this->response($message, REST_Controller::HTTP_OK);
+								}
+					}else{
+							$message = array('status'=>0,'message'=>'Request not available .Please try again');
+							$this->response($message, REST_Controller::HTTP_OK);
+					}
+			
+		}else{
+				$message = array('status'=>0,'message'=>'User not available .Please try again');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}	
+	}
+	
+	public function filecallaccept_post(){
+		$filecall_id=$this->post('filecall_id');
+		$folder_id=$this->post('folder_id');
+		$user_id=$this->post('user_id');
+		$shareduser_id=$this->post('shareduser_id');
+		$permission=$this->post('permission');
+		$email=$this->post('shared_email');
+		$type=$this->post('type');
+		if($filecall_id ==''){
+		$message = array('status'=>0,'message'=>'File call Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		if($folder_id ==''){
+		$message = array('status'=>0,'message'=>'Folder Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}if($user_id ==''){
+		$message = array('status'=>0,'message'=>'User Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		if($shareduser_id =='' && $email ==''){
+		$message = array('status'=>0,'message'=>'Shared user Id  or Email Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		if($permission ==''){
+		$message = array('status'=>0,'message'=>'permissions Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}if($type ==''){
+		$message = array('status'=>0,'message'=>'Type is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$details=$this->Mobile_model->get_folder_details($folder_id);
+			if(count($details)>0){
+				if($type==1){
+						if($shareduser_id!=''){
+							$already_shared=$this->Mobile_model->get_shared_folder_details($shareduser_id,$folder_id);
+						}else{
+							$already_shared=$this->Mobile_model->get_shared_folder_details($shareduser_id,$email);
+						}
+							if(count($already_shared)==0){
+								$folderdata=array(
+									'u_id'=>isset($shareduser_id)?$shareduser_id:'',
+									'u_email'=>isset($email)?$email:'',
+									'f_id'=>$folder_id,
+									's_permission'=>$permission,
+									's_status'=>1,
+									's_created'=>date('Y-m-d H:i:s'),
+									'file_created_id'=>$user_id
+									);
+									$shared_data=$this->Mobile_model->folder_share($folderdata);
+										if(count($shared_data)>0){
+												$statusdata=array(
+												'f_c_request'=>1,
+												'f_c_updated_at'=>date('Y-m-d H:i:s'),				
+												);
+											$this->Mobile_model->update_filecall_details($filecall_id,$statusdata);
+
+											$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'File call request successfully accepted');
+											$this->response($message, REST_Controller::HTTP_OK);
+										}else{
+											$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+											$this->response($message, REST_Controller::HTTP_OK);
+										}
+
+							}else{
+								$message = array('status'=>0,'message'=>'Folder already shared. Please try another folder');
+								$this->response($message, REST_Controller::HTTP_OK);
+							}	
+
+				}else{
+					
+
+				}				
+			}else{
+				$message = array('status'=>0,'message'=>'Folder Id not available .Please try again');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}	
 	}
 	/*filecall*/
     
