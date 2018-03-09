@@ -412,6 +412,14 @@ class Mobile_model extends CI_Model
 		$this->db->insert('logs', $data);
 		return $insert_id = $this->db->insert_id();
 	}
+	public function recently_view_data($data){
+		$this->db->insert('recently_floder_open', $data);
+		return $insert_id = $this->db->insert_id();
+	}
+	public function save_recently_file_open($data){
+		$this->db->insert('recently_file_open', $data);
+		return $insert_id = $this->db->insert_id();
+	}
 	/* logs*/
 	
 

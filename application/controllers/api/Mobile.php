@@ -401,6 +401,14 @@ class Mobile extends REST_Controller {
 									'create_at'=>date('Y-m-d H:i:s')
 									);
 									$this->Mobile_model->activity_login($activity);
+									$open_folder=array(
+										'u_id'=>$user_id,
+										'f_id'=>$folder_id,
+										'r_f_status'=>1,
+										'r_f_create_at'=>date('Y-m-d H:i:s'),
+										'r_f_updated_at'=>date('Y-m-d H:i:s'),
+										);
+									$this->Mobile_model->recently_view_data($open_folder);
 						$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'Successfully folder Renamed');
 						$this->response($message, REST_Controller::HTTP_OK);
 					}else{
@@ -444,6 +452,14 @@ class Mobile extends REST_Controller {
 									'create_at'=>date('Y-m-d H:i:s')
 									);
 									$this->Mobile_model->activity_login($activity);
+									$open_folder=array(
+										'u_id'=>$user_id,
+										'f_id'=>$folder_id,
+										'r_f_status'=>1,
+										'r_f_create_at'=>date('Y-m-d H:i:s'),
+										'r_f_updated_at'=>date('Y-m-d H:i:s'),
+										);
+									$this->Mobile_model->recently_view_data($open_folder);
 							$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'Folder Successfully removed to Favourite ');
 							$this->response($message, REST_Controller::HTTP_OK);
 						}else{
@@ -462,6 +478,14 @@ class Mobile extends REST_Controller {
 									'create_at'=>date('Y-m-d H:i:s')
 									);
 									$this->Mobile_model->activity_login($activity);
+									$open_folder=array(
+										'u_id'=>$user_id,
+										'f_id'=>$folder_id,
+										'r_f_status'=>1,
+										'r_f_create_at'=>date('Y-m-d H:i:s'),
+										'r_f_updated_at'=>date('Y-m-d H:i:s'),
+										);
+									$this->Mobile_model->recently_view_data($open_folder);
 							$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'Folder Successfully added to Favourite ');
 							$this->response($message, REST_Controller::HTTP_OK);
 						}else{
@@ -542,6 +566,14 @@ class Mobile extends REST_Controller {
 									'create_at'=>date('Y-m-d H:i:s')
 									);
 									$this->Mobile_model->activity_login($activity);
+									$open_folder=array(
+										'u_id'=>$user_id,
+										'f_id'=>$folder_id,
+										'r_f_status'=>1,
+										'r_f_create_at'=>date('Y-m-d H:i:s'),
+										'r_f_updated_at'=>date('Y-m-d H:i:s'),
+										);
+									$this->Mobile_model->recently_view_data($open_folder);
 										$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'Folder moved to trash');
 										$this->response($message, REST_Controller::HTTP_OK);
 									}else{
@@ -583,6 +615,14 @@ class Mobile extends REST_Controller {
 									'create_at'=>date('Y-m-d H:i:s')
 									);
 									$this->Mobile_model->activity_login($activity);
+									$open_folder=array(
+										'u_id'=>$user_id,
+										'f_id'=>$folder_id,
+										'r_f_status'=>1,
+										'r_f_create_at'=>date('Y-m-d H:i:s'),
+										'r_f_updated_at'=>date('Y-m-d H:i:s'),
+										);
+									$this->Mobile_model->recently_view_data($open_folder);
 								$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'Folder is restored');
 								$this->response($message, REST_Controller::HTTP_OK);
 							}else{
@@ -656,6 +696,14 @@ class Mobile extends REST_Controller {
 									'create_at'=>date('Y-m-d H:i:s')
 									);
 									$this->Mobile_model->activity_login($activity);
+									$open_folder=array(
+										'u_id'=>$user_id,
+										'f_id'=>$folder_id,
+										'r_f_status'=>1,
+										'r_f_create_at'=>date('Y-m-d H:i:s'),
+										'r_f_updated_at'=>date('Y-m-d H:i:s'),
+										);
+									$this->Mobile_model->recently_view_data($open_folder);
 										$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'Folder is successfully moved');
 										$this->response($message, REST_Controller::HTTP_OK);
 									}else{
@@ -722,6 +770,14 @@ class Mobile extends REST_Controller {
 									'create_at'=>date('Y-m-d H:i:s')
 									);
 									$this->Mobile_model->activity_login($activity);
+									$open_folder=array(
+										'u_id'=>$user_id,
+										'f_id'=>$folder_id,
+										'r_f_status'=>1,
+										'r_f_create_at'=>date('Y-m-d H:i:s'),
+										'r_f_updated_at'=>date('Y-m-d H:i:s'),
+										);
+									$this->Mobile_model->recently_view_data($open_folder);
 									$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'Folder is successfully shared');
 									$this->response($message, REST_Controller::HTTP_OK);
 								}else{
@@ -865,6 +921,7 @@ class Mobile extends REST_Controller {
 									'create_at'=>date('Y-m-d H:i:s')
 									);
 									$this->Mobile_model->activity_login($activity);
+									
 						$message = array('status'=>1,'file_id'=>$file_id,'message'=>'Successfully file Renamed');
 						$this->response($message, REST_Controller::HTTP_OK);
 					}else{
@@ -907,6 +964,14 @@ class Mobile extends REST_Controller {
 									'create_at'=>date('Y-m-d H:i:s')
 									);
 									$this->Mobile_model->activity_login($activity);
+									$recentlyopen=array(
+									'u_id'=>$user_id,
+									'file_id'=>$file_id,
+									'r_file_status'=>1,
+									'r_file_create_at'=>date('Y-m-d H:i:s'),
+									'r_file_updated_at'=>date('Y-m-d H:i:s'),
+									);
+									$this->Mobile_model->save_recently_file_open($recentlyopen);
 							$message = array('status'=>1,'file_id'=>$file_id,'message'=>'File Successfully removed to Favourite ');
 							$this->response($message, REST_Controller::HTTP_OK);
 						}else{
@@ -925,6 +990,14 @@ class Mobile extends REST_Controller {
 									'create_at'=>date('Y-m-d H:i:s')
 									);
 									$this->Mobile_model->activity_login($activity);
+									$recentlyopen=array(
+									'u_id'=>$user_id,
+									'file_id'=>$file_id,
+									'r_file_status'=>1,
+									'r_file_create_at'=>date('Y-m-d H:i:s'),
+									'r_file_updated_at'=>date('Y-m-d H:i:s'),
+									);
+									$this->Mobile_model->save_recently_file_open($recentlyopen);
 							$message = array('status'=>1,'file_id'=>$file_id,'message'=>'File Successfully added to Favourite ');
 							$this->response($message, REST_Controller::HTTP_OK);
 						}else{
@@ -986,6 +1059,14 @@ class Mobile extends REST_Controller {
 									'create_at'=>date('Y-m-d H:i:s')
 									);
 									$this->Mobile_model->activity_login($activity);
+									$recentlyopen=array(
+									'u_id'=>$user_id,
+									'file_id'=>$file_id,
+									'r_file_status'=>1,
+									'r_file_create_at'=>date('Y-m-d H:i:s'),
+									'r_file_updated_at'=>date('Y-m-d H:i:s'),
+									);
+									$this->Mobile_model->save_recently_file_open($recentlyopen);
 										$message = array('status'=>1,'file_id'=>$file_id,'message'=>'File moved to trash');
 										$this->response($message, REST_Controller::HTTP_OK);
 									}else{
@@ -1027,6 +1108,14 @@ class Mobile extends REST_Controller {
 							'create_at'=>date('Y-m-d H:i:s')
 							);
 					$this->Mobile_model->activity_login($activity);
+					$recentlyopen=array(
+									'u_id'=>$user_id,
+									'file_id'=>$file_id,
+									'r_file_status'=>1,
+									'r_file_create_at'=>date('Y-m-d H:i:s'),
+									'r_file_updated_at'=>date('Y-m-d H:i:s'),
+									);
+									$this->Mobile_model->save_recently_file_open($recentlyopen);
 										$message = array('status'=>1,'file_id'=>$file_id,'message'=>'File restored');
 										$this->response($message, REST_Controller::HTTP_OK);
 									}else{
@@ -1062,6 +1151,14 @@ class Mobile extends REST_Controller {
 						'create_at'=>date('Y-m-d H:i:s')
 						);
 					$this->Mobile_model->activity_login($activity);
+					$recentlyopen=array(
+									'u_id'=>$user_id,
+									'file_id'=>$file_id,
+									'r_file_status'=>1,
+									'r_file_create_at'=>date('Y-m-d H:i:s'),
+									'r_file_updated_at'=>date('Y-m-d H:i:s'),
+									);
+									$this->Mobile_model->save_recently_file_open($recentlyopen);
 				$message = array('status'=>1,'file'=>base_url('assets/files/'.$details['img_name']),'message'=>'File successfully download');
 				$this->response($message, REST_Controller::HTTP_OK);
 			}else{
@@ -1119,6 +1216,14 @@ class Mobile extends REST_Controller {
 										'create_at'=>date('Y-m-d H:i:s')
 										);
 									$this->Mobile_model->activity_login($activity);
+									$recentlyopen=array(
+									'u_id'=>$user_id,
+									'file_id'=>$file_id,
+									'r_file_status'=>1,
+									'r_file_create_at'=>date('Y-m-d H:i:s'),
+									'r_file_updated_at'=>date('Y-m-d H:i:s'),
+									);
+									$this->Mobile_model->save_recently_file_open($recentlyopen);
 									$message = array('status'=>1,'file_id'=>$file_id,'message'=>'File is successfully shared');
 									$this->response($message, REST_Controller::HTTP_OK);
 								}else{
@@ -1196,6 +1301,14 @@ class Mobile extends REST_Controller {
 										'create_at'=>date('Y-m-d H:i:s')
 										);
 									$this->Mobile_model->activity_login($activity);
+									$recentlyopen=array(
+									'u_id'=>$user_id,
+									'file_id'=>$file_id,
+									'r_file_status'=>1,
+									'r_file_create_at'=>date('Y-m-d H:i:s'),
+									'r_file_updated_at'=>date('Y-m-d H:i:s'),
+									);
+									$this->Mobile_model->save_recently_file_open($recentlyopen);
 									$message = array('status'=>1,'file_id'=>$file_id,'message'=>'File is successfully Moved');
 									$this->response($message, REST_Controller::HTTP_OK);
 								}else{

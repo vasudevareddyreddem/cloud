@@ -21,7 +21,6 @@ class Recent_model extends CI_Model
 	public function recen_get_links_data($u_id){
 		$this->db->select('links.l_id,links.l_name,links.l_created_at,link_favourite.yes')->from('links');
 		$this->db->join('link_favourite', 'link_favourite.file_id = links.l_id', 'left');
-		
 		$curr_date = date('Y-m-d h:i:s A', strtotime('-7 days'));
 		$this->db->where('links.u_id', $u_id);
 		$this->db->where('links.l_created_at >', $curr_date);
