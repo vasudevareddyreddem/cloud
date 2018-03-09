@@ -124,6 +124,7 @@ class Mobile extends REST_Controller {
 		$useremail = $this->security->sanitize_filename($this->post('email'), TRUE);
 		$check_login=$this->Mobile_model->check_login_details($useremail,md5($password));
 			if(count($check_login)>0){
+						
 					$activity=array(
 							'u_id'=>$check_login['u_id'],
 							'file'=>'',
@@ -133,6 +134,14 @@ class Mobile extends REST_Controller {
 							'create_at'=>date('Y-m-d H:i:s')
 							);
 					$this->Mobile_model->activity_login($activity);
+					$date=date('Y-m-d H:i:s');
+						$date1  = new DateTime($date);
+						$date2 = new DateTime($check_login['password_lastupdate']);
+						$days  = $date2->diff($date1)->format('%a');
+						if($days >=90){
+						$message = array('status'=>1,'userid'=>$check_login['u_id'],'message'=>'Your login password expired. Please reset your password.');
+						$this->response($message, REST_Controller::HTTP_OK);	
+						}
 					$this->session->set_userdata('userdetails',$check_login);
 					$message = array('status'=>1,'userdetails'=>$check_login,'message'=>'User successfully Login');
 					$this->response($message, REST_Controller::HTTP_OK);

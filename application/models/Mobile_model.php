@@ -28,7 +28,7 @@ class Mobile_model extends CI_Model
 		return $this->db->get()->row_array();
 	}
 	public function check_login_details($email,$pwd){
-		$this->db->select('users.u_id,users.role,users.u_name,users.u_email,users.u_mobile,users.u_dob,users.u_gender,users.u_barcode,users.u_barcode_image,u_profilepic')->from('users');		
+		$this->db->select('users.u_id,users.role,users.u_name,users.u_email,users.u_mobile,users.u_dob,users.u_gender,users.u_barcode,users.u_barcode_image,u_profilepic,password_lastupdate')->from('users');		
 		$this->db->where('u_email', $email);
 		$this->db->where('u_password', $pwd);
 		return $this->db->get()->row_array();
