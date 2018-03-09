@@ -85,6 +85,15 @@ class Mobile extends REST_Controller {
 				);
 				$saveduser = $this->Mobile_model->save_user($userdata);
 				if(count($saveduser)>0){
+					$activity=array(
+							'u_id'=>$saveduser,
+							'file'=>'',
+							'folder'=>'',
+							'link'=>'',
+							'action'=>'Register',
+							'create_at'=>date('Y-m-d H:i:s')
+							);
+					$this->Mobile_model->activity_login($activity);
 					$this->zend->load('Zend/Barcode');
 					$file = Zend_Barcode::draw('code128', 'image', array('text' => $saveduser), array());
 					$code = time().$saveduser;
@@ -114,7 +123,16 @@ class Mobile extends REST_Controller {
 		}
 		$useremail = $this->security->sanitize_filename($this->post('email'), TRUE);
 		$check_login=$this->Mobile_model->check_login_details($useremail,md5($password));
-		if(count($check_login)>0){
+			if(count($check_login)>0){
+					$activity=array(
+							'u_id'=>$check_login['u_id'],
+							'file'=>'',
+							'folder'=>'',
+							'link'=>'',
+							'action'=>'Login',
+							'create_at'=>date('Y-m-d H:i:s')
+							);
+					$this->Mobile_model->activity_login($activity);
 					$this->session->set_userdata('userdetails',$check_login);
 					$message = array('status'=>1,'userdetails'=>$check_login,'message'=>'User successfully Login');
 					$this->response($message, REST_Controller::HTTP_OK);
@@ -145,8 +163,17 @@ class Mobile extends REST_Controller {
 					$changepassword = $this->Mobile_model->set_user_password($userid,$newpwd);
 					//echo $this->db->last_query();exit;
 					if(count($changepassword)>0){
+						$activity=array(
+							'u_id'=>$userid,
+							'file'=>'',
+							'folder'=>'',
+							'link'=>'',
+							'action'=>'Change Password',
+							'create_at'=>date('Y-m-d H:i:s')
+							);
+						$this->Mobile_model->activity_login($activity);
 						$message = array('status'=>1,'userid'=>$userid,'message'=>'password successfully Updated');
-					$this->response($message, REST_Controller::HTTP_OK);	
+						$this->response($message, REST_Controller::HTTP_OK);	
 					}else{
 						$message = array('status'=>0,'userid'=>$userid,'message'=>'Technical problem will occurred .Please try again');
 					$this->response($message, REST_Controller::HTTP_OK);
@@ -167,6 +194,15 @@ class Mobile extends REST_Controller {
 		}
 		$emailcheking =$this->Mobile_model->mobile_checking($email);
 		if(count($emailcheking)>0){
+			$activity=array(
+							'u_id'=>$emailcheking['u_id'],
+							'file'=>'',
+							'folder'=>'',
+							'link'=>'',
+							'action'=>'Forgot Password',
+							'create_at'=>date('Y-m-d H:i:s')
+							);
+					$this->Mobile_model->activity_login($activity);
 				$data['usedetails']=$emailcheking;
 				$this->load->library('email');
 				$this->email->set_newline("\r\n");
@@ -176,12 +212,15 @@ class Mobile extends REST_Controller {
 				$this->email->subject('shofus - Forgot Password');
 				$html = $this->load->view('email/forgetpassword', $data, true); 
 				$this->email->message($html);
-				$this->email->send();
-			echo '<pre>';print_r($html);exit;
-			$message = array('status'=>0,'message'=>'Email id already exist. Please use  another Email id');
-			$this->response($message, REST_Controller::HTTP_OK);
+				if($this->email->send()){
+					$message = array('status'=>1,'userid'=>$emailcheking['u_id'],'message'=>'Password sent to your Registered Email Address.');
+					$this->response($message, REST_Controller::HTTP_OK);
+				}else{
+						$message = array('status'=>1,'userid'=>$emailcheking['u_id'],'message'=>'Technical problem will occurred .Please try again');
+					$this->response($message, REST_Controller::HTTP_OK);
+				}
 		}else{
-				$message = array('status'=>0,'userid'=>$userid,'message'=>'Email id not Registered. Please use another Email Address');
+				$message = array('status'=>0,'message'=>'Email id not Registered. Please use another Email Address');
 				$this->response($message, REST_Controller::HTTP_OK);
 		}
 
@@ -270,6 +309,15 @@ class Mobile extends REST_Controller {
 		//echo '<pre>';print_r($update);exit;
 		$user_details =$this->Mobile_model->update_user_details($userid,$update);
 		if(count($user_details)>0){
+					$activity=array(
+							'u_id'=>$userid,
+							'file'=>'',
+							'folder'=>'',
+							'link'=>'',
+							'action'=>'Update Profile',
+							'create_at'=>date('Y-m-d H:i:s')
+							);
+						$this->Mobile_model->activity_login($activity);
 					$message = array('status'=>1,'userid'=>$userid,'message'=>'User profile successfully updated');
 					$this->response($message, REST_Controller::HTTP_OK);
 				}else{
@@ -304,6 +352,15 @@ class Mobile extends REST_Controller {
 		//echo '<pre>';print_r($folderdat);exit;
 		$folder_details=$this->Mobile_model->save_floders($folderdata);
 		if(count($folder_details)>0){
+					$activity=array(
+							'u_id'=>$userid,
+							'file'=>'',
+							'folder'=>$folder_details,
+							'link'=>'',
+							'action'=>'Create',
+							'create_at'=>date('Y-m-d H:i:s')
+							);
+							$this->Mobile_model->activity_login($activity);
 					$message = array('status'=>1,'folder_id'=>$folder_details,'message'=>'Successfully folder created');
 					$this->response($message, REST_Controller::HTTP_OK);
 				}else{
@@ -312,8 +369,13 @@ class Mobile extends REST_Controller {
 				}
 	}
 	public function folderrename_post(){
+		$user_id=$this->post('user_id');
 		$folder_id=$this->post('folder_id');
 		$foldername=$this->post('foldername');
+		if($user_id ==''){
+			$message = array('status'=>0,'message'=>'User Id is required');
+			$this->response($message, REST_Controller::HTTP_OK);			
+		}
 		if($folder_id ==''){
 		$message = array('status'=>0,'message'=>'Folder Id is required');
 		$this->response($message, REST_Controller::HTTP_OK);			
@@ -330,6 +392,15 @@ class Mobile extends REST_Controller {
 		if(count($details)>0){
 			$folder_rename=$this->Mobile_model->folder_details_update($folder_id,$folderdata);
 			if(count($folder_rename)>0){
+							$activity=array(
+									'u_id'=>$user_id,
+									'file'=>'',
+									'folder'=>$folder_id,
+									'link'=>'',
+									'action'=>'Rename',
+									'create_at'=>date('Y-m-d H:i:s')
+									);
+									$this->Mobile_model->activity_login($activity);
 						$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'Successfully folder Renamed');
 						$this->response($message, REST_Controller::HTTP_OK);
 					}else{
@@ -364,6 +435,15 @@ class Mobile extends REST_Controller {
 		if(count($check)>0){
 			$details=$this->Mobile_model->remove_folderfavorites($check['id']);
 				if(count($details)>0){
+								$activity=array(
+									'u_id'=>$user_id,
+									'file'=>'',
+									'folder'=>$folder_id,
+									'link'=>'',
+									'action'=>'Favourite',
+									'create_at'=>date('Y-m-d H:i:s')
+									);
+									$this->Mobile_model->activity_login($activity);
 							$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'Folder Successfully removed to Favourite ');
 							$this->response($message, REST_Controller::HTTP_OK);
 						}else{
@@ -373,6 +453,15 @@ class Mobile extends REST_Controller {
 		}else{
 			$details=$this->Mobile_model->add_folderfavorites($folderdata);
 				if(count($details)>0){
+						$activity=array(
+									'u_id'=>$user_id,
+									'file'=>'',
+									'folder'=>$folder_id,
+									'link'=>'',
+									'action'=>'Favourite',
+									'create_at'=>date('Y-m-d H:i:s')
+									);
+									$this->Mobile_model->activity_login($activity);
 							$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'Folder Successfully added to Favourite ');
 							$this->response($message, REST_Controller::HTTP_OK);
 						}else{
@@ -383,9 +472,13 @@ class Mobile extends REST_Controller {
 		
 	}
 	public function folderdelete_post(){
+		$user_id=$this->post('user_id');
 		$folder_id=$this->post('folder_id');
 		$type=$this->post('type');
-		if($folder_id ==''){
+		if($user_id ==''){
+		$message = array('status'=>0,'message'=>'User Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}if($folder_id ==''){
 		$message = array('status'=>0,'message'=>'Folder Id is required');
 		$this->response($message, REST_Controller::HTTP_OK);			
 		}if($type ==''){
@@ -418,6 +511,15 @@ class Mobile extends REST_Controller {
 								$delete_folder = $this->Mobile_model->permenentdelte_folder($folder_id);
 								$this->Mobile_model->permenent_shared_delte_folder($folder_id);
 									if(count($delete_folder)>0){
+												$activity=array(
+												'u_id'=>$user_id,
+												'file'=>'',
+												'folder'=>$folder_id,
+												'link'=>'',
+												'action'=>'Delete',
+												'create_at'=>date('Y-m-d H:i:s')
+												);
+												$this->Mobile_model->activity_login($activity);
 												$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'Folder Successfully removed');
 												$this->response($message, REST_Controller::HTTP_OK);
 											}else{
@@ -431,6 +533,15 @@ class Mobile extends REST_Controller {
 						);
 						$folder_delete=$this->Mobile_model->folder_details_update($folder_id,$folderdata);
 							if(count($folder_delete)>0){
+								$activity=array(
+									'u_id'=>$user_id,
+									'file'=>'',
+									'folder'=>$folder_id,
+									'link'=>'',
+									'action'=>'Delete',
+									'create_at'=>date('Y-m-d H:i:s')
+									);
+									$this->Mobile_model->activity_login($activity);
 										$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'Folder moved to trash');
 										$this->response($message, REST_Controller::HTTP_OK);
 									}else{
@@ -445,9 +556,13 @@ class Mobile extends REST_Controller {
 		
 	}
 	public function folderrestore_post(){
+		$user_id=$this->post('user_id');
 		$folder_id=$this->post('folder_id');
 		$type=$this->post('type');
-		if($folder_id ==''){
+		if($user_id ==''){
+		$message = array('status'=>0,'message'=>'User Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}if($folder_id ==''){
 		$message = array('status'=>0,'message'=>'Folder Id is required');
 		$this->response($message, REST_Controller::HTTP_OK);			
 		}
@@ -459,6 +574,15 @@ class Mobile extends REST_Controller {
 						);
 						$folder_delete=$this->Mobile_model->folder_details_update($folder_id,$folderdata);
 							if(count($folder_delete)>0){
+								$activity=array(
+									'u_id'=>$user_id,
+									'file'=>'',
+									'folder'=>$folder_id,
+									'link'=>'',
+									'action'=>'Restore',
+									'create_at'=>date('Y-m-d H:i:s')
+									);
+									$this->Mobile_model->activity_login($activity);
 								$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'Folder is restored');
 								$this->response($message, REST_Controller::HTTP_OK);
 							}else{
@@ -523,6 +647,15 @@ class Mobile extends REST_Controller {
 								);
 							$folder_moving=$this->Mobile_model->folder_details_update($folder_id,$folderdata);
 							if(count($folder_moving)>0){
+									$activity=array(
+									'u_id'=>$user_id,
+									'file'=>'',
+									'folder'=>$folder_id,
+									'link'=>'',
+									'action'=>'Move',
+									'create_at'=>date('Y-m-d H:i:s')
+									);
+									$this->Mobile_model->activity_login($activity);
 										$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'Folder is successfully moved');
 										$this->response($message, REST_Controller::HTTP_OK);
 									}else{
@@ -580,6 +713,15 @@ class Mobile extends REST_Controller {
 							);
 							$shared_data=$this->Mobile_model->folder_share($folderdata);
 								if(count($shared_data)>0){
+									$activity=array(
+									'u_id'=>$user_id,
+									'file'=>'',
+									'folder'=>$folder_id,
+									'link'=>'',
+									'action'=>'Share',
+									'create_at'=>date('Y-m-d H:i:s')
+									);
+									$this->Mobile_model->activity_login($activity);
 									$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'Folder is successfully shared');
 									$this->response($message, REST_Controller::HTTP_OK);
 								}else{
@@ -692,9 +834,13 @@ class Mobile extends REST_Controller {
 	
 	/* file download*/
 	public function filerename_post(){
+		$user_id=$this->post('user_id');
 		$file_id=$this->post('file_id');
 		$filename=$this->post('filename');
-		if($file_id ==''){
+		if($user_id ==''){
+		$message = array('status'=>0,'message'=>'User Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}if($file_id ==''){
 		$message = array('status'=>0,'message'=>'File Id is required');
 		$this->response($message, REST_Controller::HTTP_OK);			
 		}
@@ -710,6 +856,15 @@ class Mobile extends REST_Controller {
 		if(count($details)>0){
 			$folder_rename=$this->Mobile_model->file_details_update($file_id,$filedata);
 			if(count($folder_rename)>0){
+							$activity=array(
+									'u_id'=>$user_id,
+									'file'=>$file_id,
+									'folder'=>'',
+									'link'=>'',
+									'action'=>'Rename',
+									'create_at'=>date('Y-m-d H:i:s')
+									);
+									$this->Mobile_model->activity_login($activity);
 						$message = array('status'=>1,'file_id'=>$file_id,'message'=>'Successfully file Renamed');
 						$this->response($message, REST_Controller::HTTP_OK);
 					}else{
@@ -743,6 +898,15 @@ class Mobile extends REST_Controller {
 		if(count($check)>0){
 			$details=$this->Mobile_model->remove_filefavorites($check['id']);
 				if(count($details)>0){
+								$activity=array(
+									'u_id'=>$user_id,
+									'file'=>$file_id,
+									'folder'=>'',
+									'link'=>'',
+									'action'=>'Favourite',
+									'create_at'=>date('Y-m-d H:i:s')
+									);
+									$this->Mobile_model->activity_login($activity);
 							$message = array('status'=>1,'file_id'=>$file_id,'message'=>'File Successfully removed to Favourite ');
 							$this->response($message, REST_Controller::HTTP_OK);
 						}else{
@@ -752,6 +916,15 @@ class Mobile extends REST_Controller {
 		}else{
 			$details=$this->Mobile_model->add_filefavorites($filedata);
 				if(count($details)>0){
+						$activity=array(
+									'u_id'=>$user_id,
+									'file'=>$file_id,
+									'folder'=>'',
+									'link'=>'',
+									'action'=>'Favourite',
+									'create_at'=>date('Y-m-d H:i:s')
+									);
+									$this->Mobile_model->activity_login($activity);
 							$message = array('status'=>1,'file_id'=>$file_id,'message'=>'File Successfully added to Favourite ');
 							$this->response($message, REST_Controller::HTTP_OK);
 						}else{
@@ -762,9 +935,13 @@ class Mobile extends REST_Controller {
 		
 	}
 	public function filedelete_post(){
+		$user_id=$this->post('user_id');
 		$file_id=$this->post('file_id');
 		$type=$this->post('type');
-		if($file_id ==''){
+		if($user_id ==''){
+		$message = array('status'=>0,'message'=>'User Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}if($file_id ==''){
 		$message = array('status'=>0,'message'=>'File Id is required');
 		$this->response($message, REST_Controller::HTTP_OK);			
 		}if($type ==''){
@@ -778,6 +955,15 @@ class Mobile extends REST_Controller {
 						unlink("assets/files/".$details['img_name']);
 						$file_delete=$this->Mobile_model->delete_file($file_id);
 							if(count($file_delete)>0){
+								$activity=array(
+									'u_id'=>$user_id,
+									'file'=>$file_id,
+									'folder'=>'',
+									'link'=>'',
+									'action'=>'Delete',
+									'create_at'=>date('Y-m-d H:i:s')
+									);
+									$this->Mobile_model->activity_login($activity);
 										$message = array('status'=>1,'file_id'=>$file_id,'message'=>'File Successfully removed');
 										$this->response($message, REST_Controller::HTTP_OK);
 									}else{
@@ -791,6 +977,15 @@ class Mobile extends REST_Controller {
 						);
 						$file_delete=$this->Mobile_model->file_details_update($file_id,$filedata);
 							if(count($file_delete)>0){
+								$activity=array(
+									'u_id'=>$user_id,
+									'file'=>$file_id,
+									'folder'=>'',
+									'link'=>'',
+									'action'=>'Delete',
+									'create_at'=>date('Y-m-d H:i:s')
+									);
+									$this->Mobile_model->activity_login($activity);
 										$message = array('status'=>1,'file_id'=>$file_id,'message'=>'File moved to trash');
 										$this->response($message, REST_Controller::HTTP_OK);
 									}else{
@@ -805,8 +1000,12 @@ class Mobile extends REST_Controller {
 		
 	}
 	public function filerestore_post(){
+		$user_id=$this->post('user_id');
 		$file_id=$this->post('file_id');
-		if($file_id ==''){
+		if($user_id ==''){
+		$message = array('status'=>0,'message'=>'User Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}if($file_id ==''){
 		$message = array('status'=>0,'message'=>'File Id is required');
 		$this->response($message, REST_Controller::HTTP_OK);			
 		}
@@ -819,6 +1018,15 @@ class Mobile extends REST_Controller {
 						);
 						$file_delete=$this->Mobile_model->file_details_update($file_id,$filedata);
 							if(count($file_delete)>0){
+							$activity=array(
+							'u_id'=>$user_id,
+							'file'=>$file_id,
+							'folder'=>'',
+							'link'=>'',
+							'action'=>'Restore',
+							'create_at'=>date('Y-m-d H:i:s')
+							);
+					$this->Mobile_model->activity_login($activity);
 										$message = array('status'=>1,'file_id'=>$file_id,'message'=>'File restored');
 										$this->response($message, REST_Controller::HTTP_OK);
 									}else{
@@ -833,8 +1041,12 @@ class Mobile extends REST_Controller {
 		
 	}
 	public function filedownload_post(){
+		$user_id=$this->post('user_id');
 		$file_id=$this->post('file_id');
-		if($file_id ==''){
+		if($user_id ==''){
+		$message = array('status'=>0,'message'=>'User Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}if($file_id ==''){
 		$message = array('status'=>0,'message'=>'File Id is required');
 		$this->response($message, REST_Controller::HTTP_OK);			
 		}
@@ -846,7 +1058,7 @@ class Mobile extends REST_Controller {
 						'file'=>$file_id,
 						'folder'=>'',
 						'link'=>'',
-						'action'=>'Share',
+						'action'=>'Download',
 						'create_at'=>date('Y-m-d H:i:s')
 						);
 					$this->Mobile_model->activity_login($activity);
