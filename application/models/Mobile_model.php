@@ -426,6 +426,16 @@ class Mobile_model extends CI_Model
 		$this->db->where('u_id', $uid);
 		return $this->db->get()->row_array();
 	}
+	public function get_email_link_detail($l_id){
+		$this->db->select('*')->from('shared_links');		
+		$this->db->where('link_id', $l_id);
+		return $this->db->get()->row_array();
+	}
+	public function get_image_details($img_id){
+		$this->db->select('images.img_name,images.imag_org_name')->from('images');		
+		$this->db->where('img_id', $img_id);
+		return $this->db->get()->row_array();
+	}
 	
 
 }

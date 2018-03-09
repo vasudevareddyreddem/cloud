@@ -1224,6 +1224,25 @@ class Mobile extends REST_Controller {
 							);
 							$shared_data=$this->Mobile_model->file_share($filedata);
 								if(count($shared_data)>0){
+										if(isset($shareduser_id) && $shareduser_id!=''){
+											$shared['shared_user']=$this->Mobile_model->get_user_all_details($shareduser_id);
+										}
+										$links=$this->Mobile_model->get_image_details($file_id);
+										$shared['link']=base_url('assets/files/'.$links['img_name']);
+										$shared['lable']=$links['imag_org_name'];
+										$this->email->set_newline("\r\n");
+										$this->email->set_mailtype("html");
+										$this->email->from('Cloud.com');
+										if(isset($shareduser_id) && $shareduser_id!=''){
+										$this->email->to($shared['shared_user']['u_email']);
+										}else{
+											$this->email->to($email);
+										}
+										$this->email->subject('Cloudkoza - Shared File');
+										$html = $this->load->view('email/shareemail',$shared, TRUE); 
+										$this->email->message($html);
+										$this->email->send();
+									
 									$activity=array(
 										'u_id'=>$user_id,
 										'file'=>$file_id,
@@ -1574,6 +1593,24 @@ class Mobile extends REST_Controller {
 							);
 							$shared_data=$this->Mobile_model->link_share($linkdata);
 								if(count($shared_data)>0){
+									if(isset($shareduser_id) && $shareduser_id!=''){
+											$shared['shared_user']=$this->Mobile_model->get_user_all_details($shareduser_id);
+										}
+										$links=$this->Mobile_model->get_email_link_detail($linkid);
+										$shared['link']=$links['l_name'];
+										$shared['lable']=$links['l_name'];
+										$this->email->set_newline("\r\n");
+										$this->email->set_mailtype("html");
+										$this->email->from('Cloud.com');
+										if(isset($shareduser_id) && $shareduser_id!=''){
+										$this->email->to($shared['shared_user']['u_email']);
+										}else{
+											$this->email->to($email);
+										}
+										$this->email->subject('Cloudkoza - Shared File');
+										$html = $this->load->view('email/shareemail',$shared, TRUE); 
+										$this->email->message($html);
+										$this->email->send();
 									$activity=array(
 											'u_id'=>$user_id,
 											'file'=>'',
