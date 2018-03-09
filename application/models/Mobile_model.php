@@ -59,7 +59,7 @@ class Mobile_model extends CI_Model
 		return $this->db->update('floder_list', $data);
 	}
 	public function get_folder_details($f_id){
-		$this->db->select('floder_list.f_id,floder_list.u_id')->from('floder_list');		
+		$this->db->select('floder_list.f_id,floder_list.u_id,floder_list.f_name')->from('floder_list');		
 		$this->db->where('f_id', $f_id);
 		return $this->db->get()->row_array();
 	}
@@ -421,6 +421,11 @@ class Mobile_model extends CI_Model
 		return $insert_id = $this->db->insert_id();
 	}
 	/* logs*/
+	public function get_user_all_details($uid){
+		$this->db->select('*')->from('users');		
+		$this->db->where('u_id', $uid);
+		return $this->db->get()->row_array();
+	}
 	
 
 }
