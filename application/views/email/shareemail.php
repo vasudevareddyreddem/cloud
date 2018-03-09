@@ -12,7 +12,7 @@
 		
 		<table style="border:0;width:100%;border-collapse:collapse;font-family:Arial,Helvetica,sans-serif;color:#555;font-size:16px;margin-bottom:10px" cellpadding="8">
 			
-			<tbody><tr><td><b>Dear Customer,</b></td></tr>
+			<tbody><tr><td><b>Dear Customer  <?php echo $shared_user['u_name']; ?>,</b></td></tr>
 			<tr><td><b style="color:#555">Please find below Link.</b></td></tr>
 			<tr>
 				<td>
@@ -39,7 +39,7 @@ Dummy text is text that is used in the publishing industry or by web designers t
 					<b style="color:#869a00">Cloud,</b><br>
 					<b style="color:#ff0060">Cloud Solutions </b><br>
 					<b style="color:#038bff">INDIA : 040-63xxx<br>
-					<a href="http://www.cloud.com" target="_blank" >www.Cloud.com</a></b><br></p>
+					<a href="https://cloudkoza.com/" target="_blank" >https://cloudkoza.com/</a></b><br></p>
 				</td>
 			</tr>
 			
@@ -49,7 +49,7 @@ Dummy text is text that is used in the publishing industry or by web designers t
 		
 		<table style="border:0;width:100%;border-collapse:collapse">
 		<tbody><tr bgcolor="#2a3940" style="font-size:14px;line-height:22px">
-			<td style="padding:20px;color:#fff;text-align:center;font-family:Arial,Helvetica,sans-serif">Copyright © 2015 <a href="http://www.ustaxfiler.com" style="text-decoration:none;color:#607d8b" target="_blank" >www.cloud.com</a> All Rights Reserved</td>
+			<td style="padding:20px;color:#fff;text-align:center;font-family:Arial,Helvetica,sans-serif">Copyright © 2018 <a href="https://cloudkoza.com/" style="text-decoration:none;color:#607d8b" target="_blank" >https://cloudkoza.com/</a> All Rights Reserved</td>
 		</tr>
 		</tbody></table>
 	</td></tr></tbody></table><div class="yj6qo"></div><div class="adL">

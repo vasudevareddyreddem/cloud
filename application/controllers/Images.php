@@ -215,7 +215,19 @@ class Images extends CI_Controller {
 							'file_created_id'=>$loginuser_id['u_id']
 							);
 							$sharedfile=$this->Images_model->save_file_sharing($sharingdata);
-							//echo '<pre>';print_r($sharingdata);
+							
+							$shared['shared_user']=$this->User_model->get_user_all_details($list);
+							$shared['link']=
+							//echo '<pre>';print_r($shared_user);exit;
+							$this->email->set_newline("\r\n");
+							$this->email->set_mailtype("html");
+							$this->email->from('Cloud.com');
+							$this->email->to($shared['shared_user']['u_email']);
+							$this->email->subject('Cloudkoza - Shared File');
+							$html = $this->load->view('email/shareemail',$shared, TRUE); 
+							$this->email->message($html);
+							echo $html;	exit;
+							$this->email->send();
 						}
 						//exit;
 					}
@@ -239,6 +251,7 @@ class Images extends CI_Controller {
 								'create_at'=>date('Y-m-d H:i:s')
 								);
 							$this->User_model->activity_login($activity);
+							echo '<pre>';print_r($post);exit;
 			}else if(isset($post['yes']) && $post['yes']==2){
 				
 				if(isset($post['filesharing']) && $post['filesharing']!=''){
@@ -288,7 +301,7 @@ class Images extends CI_Controller {
 							'file_created_id'=>$loginuser_id['u_id']
 							);
 							$sharedfile=$this->Images_model->save_folder_sharing($sharingdata);
-							//echo '<pre>';print_r($sharingdata);
+							//echo '<pre>';print_r($sharingdata);exit;
 						}
 						//exit;
 					}
