@@ -30,7 +30,8 @@ class Profile extends CI_Controller {
 			$this->load->view('html/profile');
 			$this->load->view('html/footer');
 		}else{
-			$this->load->view('html/login');
+			 $this->session->set_flashdata('error','Please login to continue');
+			 redirect('');
 		}
 		
 	}
@@ -47,7 +48,8 @@ class Profile extends CI_Controller {
 			$this->load->view('html/editprofile',$data);
 			$this->load->view('html/footer');
 		}else{
-			$this->load->view('html/login');
+			 $this->session->set_flashdata('error','Please login to continue');
+			 redirect('');
 		}
 		
 	}
@@ -66,7 +68,8 @@ class Profile extends CI_Controller {
 			$this->load->view('html/activitylogs',$data);
 			$this->load->view('html/footer');
 		}else{
-			$this->load->view('html/login');
+			 $this->session->set_flashdata('error','Please login to continue');
+			 redirect('');
 		}
 		
 	}
@@ -97,7 +100,8 @@ class Profile extends CI_Controller {
 					redirect('profile/activitylogs');
 				}
 		}else{
-			$this->load->view('html/login');
+			 $this->session->set_flashdata('error','Please login to continue');
+			 redirect('');
 		}
 		
 	}
@@ -261,7 +265,8 @@ class Profile extends CI_Controller {
 			$data['userdetails']=$this->User_model->get_user_all_details($loginuser_id['u_id']);
 			$this->load->view('html/resetpassword',$data);
 		}else{
-			redirect('');
+			 $this->session->set_flashdata('error','Please login to continue');
+			 redirect('');
 		}
 		
 	}
@@ -313,7 +318,7 @@ class Profile extends CI_Controller {
 				
 			}
 		}else{
-			 $this->session->set_flashdata('error','Please login to continue');
+			  $this->session->set_flashdata('error','Please login to continue');
 			 redirect('');
 		} 
 	 
