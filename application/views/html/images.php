@@ -22,6 +22,7 @@
                               <div class="content">
                                  <div class="text">
                                     <h3><?php echo htmlentities($fnames->f_name); ?></h3>
+									<label > <?php echo date('M j h:i A',strtotime(htmlentities($fnames->f_create_at)));?></label>
                                  </div>
                               </div>
                            </div>
@@ -126,7 +127,7 @@
                <?php } ?>
                <?php if(isset($file_data) && count($file_data)>0){ ?>
                <div class="body">
-                  <h4>Images</h4>
+                  <h4>Files</h4>
                   <div class="row clearfix">
                      <?php //echo '<pre>';print_r($file_data);exit; ?>
                      <?php $cnt=1;foreach($file_data as $list){ ?>
@@ -152,6 +153,7 @@
                            </div>
                            <div class="header help-class folder-ti">
                               <label > &nbsp; <?php echo htmlentities($list->imag_org_name); ?></label>
+							  <label > <?php echo date('M j h:i A',strtotime(htmlentities($list->img_create_at)));?></label>
                               <?php if(isset($list->yes) && $list->yes==1){ ?>
                               <div class="pos-fav" id="addfavouriteids<?php echo $list->img_id; ?><?php echo $cnt; ?>">
                                  <span class="glyphicon glyphicon-heart"></span>

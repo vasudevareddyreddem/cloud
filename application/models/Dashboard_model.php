@@ -54,7 +54,7 @@ class Dashboard_model extends CI_Model
 		return $this->db->get()->row_array();
 	}
 	public function recen_get_pagewisefileupload_data($u_id){
-		$this->db->select('images.img_id,images.img_name,images.imag_org_name')->from('recently_file_open');		
+		$this->db->select('images.img_id,images.img_name,images.imag_org_name,images.img_create_at')->from('recently_file_open');		
 		$this->db->join('images', 'images.img_id = recently_file_open.file_id', 'left');
 		$this->db->where('images.u_id', $u_id);
 		$this->db->where('images.img_undo', 0);
@@ -64,7 +64,7 @@ class Dashboard_model extends CI_Model
 		return $this->db->get()->result();
 	}
 	public function get_fileupload_data($u_id){
-		$this->db->select('images.img_id,images.img_name,images.imag_org_name')->from('images');		
+		$this->db->select('images.img_id,images.img_name,images.imag_org_name,images.img_create_at')->from('images');		
 		$this->db->where('u_id', $u_id);
 		$this->db->where('img_undo', 0);
 		$this->db->where('page_id', 0);
@@ -94,7 +94,7 @@ class Dashboard_model extends CI_Model
 		return $this->db->get()->result();
 	}
 	public function get_flodername_data($u_id){
-		$this->db->select('floder_list.f_id,floder_list.f_name')->from('floder_list');		
+		$this->db->select('floder_list.f_id,floder_list.f_name,floder_list.f_create_at')->from('floder_list');		
 		$this->db->where('u_id', $u_id);
 		$this->db->where('f_undo', 0);
 		$this->db->where('floder_id', 0);
@@ -122,7 +122,7 @@ class Dashboard_model extends CI_Model
 		return $this->db->get()->result();
 	}
 	public function recen_get_floder_data($u_id){
-		$this->db->select('floder_list.f_id,floder_list.f_name')->from('recently_floder_open');		
+		$this->db->select('floder_list.f_id,floder_list.f_name,floder_list.f_create_at')->from('recently_floder_open');		
 		$this->db->join('floder_list', 'floder_list.f_id = recently_floder_open.f_id', 'left');		
 		$this->db->where('recently_floder_open.u_id', $u_id);
 		$this->db->group_by('floder_list.f_id');

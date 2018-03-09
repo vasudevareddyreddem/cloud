@@ -47,7 +47,7 @@ class Dashboard extends CI_Controller {
 			$data['notofication_list']=$this->Dashboard_model->get_user_notification_list($loginuser_id['u_id']);	
 			$data['notofication_uread_count']=$this->Dashboard_model->get_user_notification_unreadcount($loginuser_id['u_id']);				
 			//echo $this->db->last_query();
-			//echo '<pre>';print_r($data);exit;
+			//echo '<pre>';print_r($filedata);exit;
 			$this->load->view('html/header',$data);
 			$this->load->view('html/sidebar',$data);
 			$this->load->view('html/index',$filedata);

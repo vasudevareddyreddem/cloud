@@ -10,7 +10,7 @@ class Recent_model extends CI_Model
 	}
 
 	public function recen_get_pagewisefileupload_data($u_id){
-		$this->db->select('images.img_id,images.img_name,images.imag_org_name,favourite.yes')->from('images');		
+		$this->db->select('images.img_id,images.img_name,images.imag_org_name,images.img_create_at,favourite.yes')->from('images');		
 		$this->db->join('favourite', 'favourite.file_id = images.img_id', 'left');
 		$curr_date = date('Y-m-d h:i:s A', strtotime('-7 days'));
 		$this->db->where('images.u_id', $u_id);
@@ -43,7 +43,7 @@ class Recent_model extends CI_Model
 	}
 	public function get_flodername_data($u_id){
 		$curr_date = date('Y-m-d h:i:s A', strtotime('-7 days'));
-		$this->db->select('floder_list.f_id,floder_list.f_name')->from('floder_list');		
+		$this->db->select('floder_list.f_id,floder_list.f_name,floder_list.f_create_at')->from('floder_list');		
 		$this->db->where('u_id', $u_id);
 		$this->db->where('f_undo', 0);
 		$this->db->where('floder_id', 0);

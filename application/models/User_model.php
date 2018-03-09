@@ -9,6 +9,11 @@ class User_model extends CI_Model
 		$this->load->database("default");
 	}
 
+	public function get_question_list(){
+		$this->db->select('*')->from('questions');		
+		$this->db->where('status', 1);
+		return $this->db->get()->result_array();
+	}
 	public function save_user($data){
 		$this->db->insert('users', $data);
 		return $insert_id = $this->db->insert_id();

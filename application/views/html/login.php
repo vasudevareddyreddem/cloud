@@ -134,8 +134,69 @@
 						  </div>
 					</div>
 					<div class="form-group">
+						  <label class=" control-label" >Security Question</label> 
+							<div class=" inputGroupContainer">
+									<select class="form-control show-tick dropdown" onchange="questions_answer1('this.value')" id="questions1" name="questions1">
+                                        <option value="">-- Please select --</option>
+										<?php foreach($questions_list as $list){ ?>
+										<option value="<?php echo $list['id']; ?>"><?php echo $list['name']; ?></option>
+										<?php } ?>
+                                    </select>
+							</div>
+					</div>
+					<div class="form-group" id="ans1" style="display:none">
+							<div class=" inputGroupContainer">
+								<div class="input-group">
+								<span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+								<input id="answer1" name="answer1" onkeyup="buttonenable();" placeholder="" class="form-control" autocomplete="off"  type="text">
+								</div>
+							</div>
+					</div>
+					<span id="ques2" style="display:none">
+						<div class="form-group">
+						  <label class=" control-label">&nbsp;</label>
+								<div class=" inputGroupContainer">
+										<select class="form-control show-tick dropdown" onchange="questions_answer2('this.value')" id="questions2" name="questions2">
+											<option value="">-- Please select --</option>
+											<?php foreach($questions_list as $list){ ?>
+											<option value="<?php echo $list['id']; ?>"><?php echo $list['name']; ?></option>
+											<?php } ?>
+										</select>
+								</div>
+						</div>
+						<div class="form-group" id="ans2" style="display:none">
+								<div class=" inputGroupContainer">
+									<div class="input-group">
+									<span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+									<input id="answer2" name="answer2" onkeyup="buttonenable();" placeholder="" class="form-control" autocomplete="off"  type="text">
+									</div>
+								</div>
+						</div>
+					</span>
+					<span id="ques3" style="display:none">
+						<div class="form-group">
+						  <label class=" control-label">&nbsp;</label>
+								<div class=" inputGroupContainer">
+										<select class="form-control show-tick dropdown" onchange="questions_answer3('this.value')" id="questions3" name="questions3">
+											<option value="">-- Please select --</option>
+											<?php foreach($questions_list as $list){ ?>
+											<option value="<?php echo $list['id']; ?>"><?php echo $list['name']; ?></option>
+											<?php } ?>
+										</select>
+								</div>
+						</div>
+						<div class="form-group" id="ans3" style="display:none">
+								<div class=" inputGroupContainer">
+									<div class="input-group">
+									<span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+									<input id="answer3" name="answer3" onkeyup="buttonenable();" placeholder="" class="form-control" autocomplete="off"  type="text">
+									</div>
+								</div>
+						</div>
+					</span>
+					<div class="form-group">
 						<div class="col-xs-4">
-								<button class="btn btn-block bg-pink waves-effect" type="submit">Send</button>
+								<button class="btn btn-block bg-pink waves-effect" id="Buttonregister" type="submit">Send</button>
 							</div>
 							<div class="col-xs-4">
 							<a href="javascript:void(0);" onclick="login()" class="btn btn-block bg-pink waves-effect" type="submit">Cancel</a>
@@ -153,7 +214,7 @@
 										'name' => $this->security->get_csrf_token_name(),
 										'hash' => $this->security->get_csrf_hash()
 								); ?>
-								<input type="hidden" name="<?=$csrf['name'];?>" value="<?=$csrf['hash'];?>" />
+							<input type="hidden" name="<?=$csrf['name'];?>" value="<?=$csrf['hash'];?>" />
 							
 					<div class="form-group">
 						<label class=" control-label">E-Mail</label>  
@@ -172,6 +233,15 @@
 							<a href="javascript:void(0);" onclick="login()" class="btn btn-block bg-pink waves-effect" type="submit">Cancel</a>
 							</div>
 					</div>
+					<div class="form-group">
+						<label class=" control-label">E-Mail</label>  
+							<div class=" inputGroupContainer">
+								<div class="input-group">
+								<span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+								<input id="email" name="email" placeholder="E-Mail Address" class="form-control" autocomplete="off"  type="text">
+								</div>
+							</div>
+					</div>
 					</form>
 				</div>
             </div>
@@ -183,6 +253,32 @@
   <script src="<?php echo base_url(); ?>assets/vendor/js/bootstrapValidator.min.js"></script>
   
 <script>
+function buttonenable(){
+	document.getElementById("Buttonregister").disabled = false;
+}
+function questions_answer1(val){
+	if(val!=''){
+		$('#ans1').show();
+		$('#ques2').show();
+	}else{
+		$('#ans1').hide();
+	}
+}
+function questions_answer2(val){
+	if(val!=''){
+		$('#ans2').show();
+		$('#ques3').show();
+	}else{
+		$('#ans2').hide();
+	}
+}
+function questions_answer3(val){
+	if(val!=''){
+		$('#ans3').show();
+	}else{
+		$('#ans3').hide();
+	}
+}
 function register(){
 		$('#login_form').hide();
 		$('#register_form').show();
@@ -281,6 +377,7 @@ function register(){
                 }
             },
 			
+			
 			password: {
                 validators: {
 					notEmpty: {
@@ -307,7 +404,62 @@ function register(){
 						message: 'password and confirm Password do not match'
 					}
 					}
-				}
+				},
+				answer1: {
+              validators: {
+					 notEmpty: {
+						message: 'Answer is required'
+					},
+                    regexp: {
+					regexp: /^[a-zA-Z0-9. ]+$/,
+					message: 'Answer can only consist of alphanumaric, space and dot'
+					}
+                }
+            },
+			questions1: {
+              validators: {
+					 notEmpty: {
+						message: 'Question is required'
+					}
+                }
+            },
+			answer2: {
+              validators: {
+					 notEmpty: {
+						message: 'Answer is required'
+					},
+                    regexp: {
+					regexp: /^[a-zA-Z0-9. ]+$/,
+					message: 'Answer can only consist of alphanumaric, space and dot'
+					}
+                }
+            },
+			questions2: {
+              validators: {
+					 notEmpty: {
+						message: 'Question is required'
+					}
+                }
+            },
+			questions3: {
+              validators: {
+					 notEmpty: {
+						message: 'Question is required'
+					}
+                }
+            },
+			answer3: {
+              validators: {
+					 notEmpty: {
+						message: 'Answer is required'
+					},
+                    regexp: {
+					regexp: /^[a-zA-Z0-9. ]+$/,
+					message: 'Answer can only consist of alphanumaric, space and dot'
+					}
+                }
+            }
+			
             }
         })
      

@@ -23,6 +23,7 @@ class Cloud extends CI_Controller {
 			redirect('dashboard');
 		}else{
 			$data['tab'] ='';
+			$data['questions_list'] =$this->User_model->get_question_list();
 			$this->load->view('html/login',$data);
 		}
 		
@@ -81,6 +82,7 @@ class Cloud extends CI_Controller {
 	
 	public function register_post(){
 		$post=$this->input->post();
+		//echo '<pre>';print_r($post);exit;
 		$this->form_validation->set_rules('custname', 'Name', 'required');
         $this->form_validation->set_rules('email', 'Email', 'required|valid_email|trim|xss_clean|callback_check_email_unique');
         $this->form_validation->set_rules('mobile', 'Mobile',  'required|min_length[10]|xss_clean|callback_check_mobile_unique');
@@ -102,9 +104,12 @@ class Cloud extends CI_Controller {
 				'u_mobile'=>$usermobile,
 				'u_password'=>md5($post['password']),
 				'u_orginalpassword'=>$post['password'],
-				'question_1'=>$post['question_1'],
-				'question_2'=>$post['question_2'],
-				'question_3'=>$post['question_3'],
+				'question_1'=>$post['questions1'],
+				'answer_1'=>$post['answer1'],
+				'question_2'=>$post['questions2'],
+				'answer_2'=>$post['answer2'],
+				'question_3'=>$post['questions3'],
+				'answer_3'=>$post['answer3'],
 				'last_login_time'=>date('Y-m-d H:i:s'),
 				'password_lastupdate'=>date('Y-m-d H:i:s'),
 				'ip_address'=>$this->input->ip_address(),

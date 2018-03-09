@@ -16,7 +16,7 @@ class Images_model extends CI_Model
 		return $this->db->get()->row_array();
 	}
 	public function get_fileupload_data($u_id){
-		$this->db->select('images.img_id,images.img_name,images.imag_org_name,favourite.yes')->from('images');
+		$this->db->select('images.img_id,images.img_name,images.imag_org_name,images.img_create_at,favourite.yes')->from('images');
 		$this->db->join('favourite', 'favourite.file_id = images.img_id', 'left');
 		$this->db->where('images.u_id', $u_id);
 		$this->db->where('images.img_undo', 0);
@@ -49,14 +49,14 @@ class Images_model extends CI_Model
 		return $insert_id = $this->db->insert_id();
 	}
 	public function get_shared_file($u_id){
-		$this->db->select('images.img_id,images.img_name,images.imag_org_name,shared_files.s_permission')->from('shared_files');
+		$this->db->select('images.img_id,images.img_name,images.imag_org_name,images.img_create_at,shared_files.s_permission')->from('shared_files');
 		$this->db->join('images', 'images.img_id = shared_files.img_id', 'left');
 		$this->db->where('shared_files.u_id', $u_id);
 		$this->db->group_by('shared_files.img_id');
 		return $this->db->get()->result();
 	}
 	public function get_shared_folder($u_id){
-		$this->db->select('floder_list.f_id,floder_list.f_name,shared_folder.s_permission')->from('shared_folder');
+		$this->db->select('floder_list.f_id,floder_list.f_name,floder_list.f_create_at,shared_folder.s_permission')->from('shared_folder');
 		$this->db->join('floder_list', 'floder_list.f_id = shared_folder.f_id', 'left');
 		$this->db->where('shared_folder.u_id', $u_id);
 		$this->db->group_by('shared_folder.f_id');

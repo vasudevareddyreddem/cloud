@@ -10,7 +10,7 @@ class Recyclebin_model extends CI_Model
 	}
 
 	public function get_undo_file_data($u_id){
-		$this->db->select('images.img_id,images.img_name,images.imag_org_name')->from('images');		
+		$this->db->select('images.img_id,images.img_name,images.imag_org_name,images.img_create_at')->from('images');		
 		$this->db->where('images.u_id', $u_id);
 		$this->db->where('images.img_undo', 1);
 		return $this->db->get()->result();
@@ -27,7 +27,7 @@ class Recyclebin_model extends CI_Model
 		
 	}
 	public function get_undo_floder_data($u_id){
-		$this->db->select('floder_list.f_id,floder_list.f_name,floder_list.u_id')->from('floder_list');		
+		$this->db->select('floder_list.f_id,floder_list.f_name,floder_list.u_id,floder_list.f_create_at')->from('floder_list');		
 		$this->db->where('floder_list.u_id', $u_id);
 		$this->db->where('f_undo', 1);
 		return $this->db->get()->result();
