@@ -841,6 +841,15 @@ class Mobile extends REST_Controller {
 		$details=$this->Mobile_model->get_file_details($file_id);
 		//echo '<pre>';print_r($details);exit;
 			if(count($details)>0){
+					$activity=array(
+						'u_id'=>$user_id,
+						'file'=>$file_id,
+						'folder'=>'',
+						'link'=>'',
+						'action'=>'Share',
+						'create_at'=>date('Y-m-d H:i:s')
+						);
+					$this->Mobile_model->activity_login($activity);
 				$message = array('status'=>1,'file'=>base_url('assets/files/'.$details['img_name']),'message'=>'File successfully download');
 				$this->response($message, REST_Controller::HTTP_OK);
 			}else{
@@ -889,6 +898,15 @@ class Mobile extends REST_Controller {
 							);
 							$shared_data=$this->Mobile_model->file_share($filedata);
 								if(count($shared_data)>0){
+									$activity=array(
+										'u_id'=>$user_id,
+										'file'=>$file_id,
+										'folder'=>'',
+										'link'=>'',
+										'action'=>'Share',
+										'create_at'=>date('Y-m-d H:i:s')
+										);
+									$this->Mobile_model->activity_login($activity);
 									$message = array('status'=>1,'file_id'=>$file_id,'message'=>'File is successfully shared');
 									$this->response($message, REST_Controller::HTTP_OK);
 								}else{
@@ -957,6 +975,15 @@ class Mobile extends REST_Controller {
 								);
 							$file_moveing=$this->Mobile_model->file_details_update($file_id,$movedata);
 								if(count($file_moveing)>0){
+									$activity=array(
+										'u_id'=>$user_id,
+										'file'=>$file_id,
+										'folder'=>'',
+										'link'=>'',
+										'action'=>'Move',
+										'create_at'=>date('Y-m-d H:i:s')
+										);
+									$this->Mobile_model->activity_login($activity);
 									$message = array('status'=>1,'file_id'=>$file_id,'message'=>'File is successfully Moved');
 									$this->response($message, REST_Controller::HTTP_OK);
 								}else{
@@ -993,6 +1020,15 @@ class Mobile extends REST_Controller {
 		//echo '<pre>';print_r($folderdat);exit;
 		$link_details=$this->Mobile_model->save_links($linkdata);
 		if(count($link_details)>0){
+						$activity=array(
+							'u_id'=>$user_id,
+							'file'=>'',
+							'folder'=>'',
+							'link'=>$link_details,
+							'action'=>'Create',
+							'create_at'=>date('Y-m-d H:i:s')
+							);
+						$this->Mobile_model->activity_login($activity);
 					$message = array('status'=>1,'link_id'=>$link_details,'message'=>'Successfully link created');
 					$this->response($message, REST_Controller::HTTP_OK);
 				}else{
@@ -1022,6 +1058,15 @@ class Mobile extends REST_Controller {
 		if(count($check)>0){
 			$details=$this->Mobile_model->remove_linkfavorites($check['id']);
 				if(count($details)>0){
+					$activity=array(
+							'u_id'=>$user_id,
+							'file'=>'',
+							'folder'=>'',
+							'link'=>$linkid,
+							'action'=>'Favourite',
+							'create_at'=>date('Y-m-d H:i:s')
+							);
+						$this->Mobile_model->activity_login($activity);
 							$message = array('status'=>1,'linkid'=>$linkid,'message'=>'Link Successfully removed to Favourite ');
 							$this->response($message, REST_Controller::HTTP_OK);
 						}else{
@@ -1031,6 +1076,15 @@ class Mobile extends REST_Controller {
 		}else{
 			$details=$this->Mobile_model->add_linkfavorites($filedata);
 				if(count($details)>0){
+							$activity=array(
+								'u_id'=>$user_id,
+								'file'=>'',
+								'folder'=>'',
+								'link'=>$linkid,
+								'action'=>'Favourite',
+								'create_at'=>date('Y-m-d H:i:s')
+								);
+							$this->Mobile_model->activity_login($activity);
 							$message = array('status'=>1,'linkid'=>$linkid,'message'=>'Link Successfully added to Favourite ');
 							$this->response($message, REST_Controller::HTTP_OK);
 						}else{
@@ -1041,9 +1095,13 @@ class Mobile extends REST_Controller {
 		
 	}
 	public function linkrename_post(){
+		$user_id=$this->post('user_id');
 		$linkid=$this->post('linkid');
 		$linkename=$this->post('linkename');
-		if($linkid ==''){
+		if($user_id ==''){
+		$message = array('status'=>0,'message'=>'user Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}if($linkid ==''){
 		$message = array('status'=>0,'message'=>'Link Id is required');
 		$this->response($message, REST_Controller::HTTP_OK);			
 		}
@@ -1059,6 +1117,15 @@ class Mobile extends REST_Controller {
 		if(count($details)>0){
 			$link_rename=$this->Mobile_model->link_details_update($linkid,$linkdata);
 			if(count($link_rename)>0){
+						$activity=array(
+							'u_id'=>$user_id,
+							'file'=>'',
+							'folder'=>'',
+							'link'=>$linkid,
+							'action'=>'Rename',
+							'create_at'=>date('Y-m-d H:i:s')
+							);
+						$this->Mobile_model->activity_login($activity);
 						$message = array('status'=>1,'linkid'=>$linkid,'message'=>'Successfully link Renamed');
 						$this->response($message, REST_Controller::HTTP_OK);
 					}else{
