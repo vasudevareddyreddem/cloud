@@ -394,6 +394,25 @@ class Mobile_model extends CI_Model
 		return $this->db->update('filecall_list',$data);
 	}
 	/*file call*/
+	/* logs*/
+	public function get_activity_logs_list($uid){
+		$this->db->select('logs.id,logs.create_at,logs.action,floder_list.f_name,images.imag_org_name,links.l_name')->from('logs');
+		$this->db->join('floder_list', 'floder_list.f_id = logs.folder', 'left');		
+		$this->db->join('images', 'images.img_id = logs.file', 'left');		
+		$this->db->join('links', 'links.l_id = logs.link', 'left');		
+		$this->db->where('logs.u_id', $uid);
+		$this->db->order_by("logs.create_at", "DESC");
+		return $this->db->get()->result_array();
+	}
+	public function delete_all_activity_logs($id){
+		$sql1="DELETE FROM logs WHERE id = '".$id."'";
+		return $this->db->query($sql1);
+	}
+	public function activity_login($data){
+		$this->db->insert('logs', $data);
+		return $insert_id = $this->db->insert_id();
+	}
+	/* logs*/
 	
 
 }

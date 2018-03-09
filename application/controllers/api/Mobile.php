@@ -1071,9 +1071,13 @@ class Mobile extends REST_Controller {
 		}
 	}
 	public function linkdelete_post(){
+		$user_id=$this->post('user_id');
 		$linkid=$this->post('linkid');
 		$type=$this->post('type');
-		if($linkid ==''){
+		if($user_id ==''){
+		$message = array('status'=>0,'message'=>'User Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}if($linkid ==''){
 		$message = array('status'=>0,'message'=>'Link Id is required');
 		$this->response($message, REST_Controller::HTTP_OK);			
 		}if($type ==''){
@@ -1099,6 +1103,15 @@ class Mobile extends REST_Controller {
 							);
 						$link_rename=$this->Mobile_model->link_details_update($linkid,$linkdata);
 							if(count($link_rename)>0){
+								$activity=array(
+											'u_id'=>$user_id,
+											'file'=>'',
+											'folder'=>'',
+											'link'=>$linkid,
+											'action'=>'Delete',
+											'create_at'=>date('Y-m-d H:i:s')
+											);
+										$this->Mobile_model->activity_login($activity);
 										$message = array('status'=>1,'linkid'=>$linkid,'message'=>'Link moved to trash');
 										$this->response($message, REST_Controller::HTTP_OK);
 									}else{
@@ -1152,6 +1165,15 @@ class Mobile extends REST_Controller {
 							);
 							$shared_data=$this->Mobile_model->link_share($linkdata);
 								if(count($shared_data)>0){
+									$activity=array(
+											'u_id'=>$user_id,
+											'file'=>'',
+											'folder'=>'',
+											'link'=>$linkid,
+											'action'=>'Share',
+											'create_at'=>date('Y-m-d H:i:s')
+											);
+										$this->Mobile_model->activity_login($activity);
 									$message = array('status'=>1,'linkid'=>$linkid,'message'=>'Link is successfully shared');
 									$this->response($message, REST_Controller::HTTP_OK);
 								}else{
@@ -1169,8 +1191,12 @@ class Mobile extends REST_Controller {
 			}
 	}
 	public function linkrestore_post(){
+		$user_id=$this->post('user_id');
 		$linkid=$this->post('linkid');
-		if($linkid ==''){
+		if($user_id ==''){
+		$message = array('status'=>0,'message'=>'User Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}if($linkid ==''){
 		$message = array('status'=>0,'message'=>'Link Id is required');
 		$this->response($message, REST_Controller::HTTP_OK);			
 		}
@@ -1183,6 +1209,15 @@ class Mobile extends REST_Controller {
 							);
 						$link_rename=$this->Mobile_model->link_details_update($linkid,$linkdata);
 							if(count($link_rename)>0){
+								$activity=array(
+											'u_id'=>$user_id,
+											'file'=>'',
+											'folder'=>'',
+											'link'=>$linkid,
+											'action'=>'Restore',
+											'create_at'=>date('Y-m-d H:i:s')
+											);
+										$this->Mobile_model->activity_login($activity);
 										$message = array('status'=>1,'linkid'=>$linkid,'message'=>'Link Restored');
 										$this->response($message, REST_Controller::HTTP_OK);
 									}else{
@@ -1389,7 +1424,15 @@ class Mobile extends REST_Controller {
 										);
 									$this->Mobile_model->save_filecall_notification($notificationdata);
 									/*notification */
-							
+										$activity=array(
+											'u_id'=>$user_id,
+											'file'=>'',
+											'folder'=>'',
+											'link'=>'',
+											'action'=>'FileCall',
+											'create_at'=>date('Y-m-d H:i:s')
+											);
+										$this->Mobile_model->activity_login($activity);
 									$message = array('status'=>1,'filecall_id'=>$filecall,'message'=>'File call request is successfully sent');
 									$this->response($message, REST_Controller::HTTP_OK);
 								}else{
@@ -1430,6 +1473,16 @@ class Mobile extends REST_Controller {
 						);
 						$filecall_details = $this->Mobile_model->update_filecall_details($filecall_id,$statusdata);
 						if(count($filecall_details)>0){
+								$activity=array(
+									'u_id'=>$user_id,
+									'file'=>'',
+									'folder'=>'',
+									'link'=>'',
+									'action'=>'Request',
+									'create_at'=>date('Y-m-d H:i:s')
+									);
+								$this->Mobile_model->activity_login($activity);
+
 								$message = array('status'=>1,'filecall_id'=>$filecall_id,'message'=>'File call Request declined');
 									$this->response($message, REST_Controller::HTTP_OK);
 								}else{
@@ -1502,7 +1555,15 @@ class Mobile extends REST_Controller {
 												'f_c_updated_at'=>date('Y-m-d H:i:s'),				
 												);
 											$this->Mobile_model->update_filecall_details($filecall_id,$statusdata);
-
+											$activity=array(
+																	'u_id'=>$user_id,
+																	'file'=>'',
+																	'folder'=>$folder_id,
+																	'link'=>'',
+																	'action'=>'Request',
+																	'create_at'=>date('Y-m-d H:i:s')
+																	);
+																$this->Mobile_model->activity_login($activity);
 											$message = array('status'=>1,'folder_id'=>$folder_id,'message'=>'File call request successfully accepted');
 											$this->response($message, REST_Controller::HTTP_OK);
 										}else{
@@ -1538,7 +1599,16 @@ class Mobile extends REST_Controller {
 												'f_c_updated_at'=>date('Y-m-d H:i:s'),				
 												);
 											$this->Mobile_model->update_filecall_details($filecall_id,$statusdata);
-
+												$activity=array(
+														'u_id'=>$user_id,
+														'file'=>$file_id,
+														'folder'=>'',
+														'link'=>'',
+														'action'=>'Request',
+														'create_at'=>date('Y-m-d H:i:s')
+														);
+													$this->Mobile_model->activity_login($activity);
+								
 										$message = array('status'=>1,'file_id'=>$file_id,'message'=>'File is successfully shared');
 										$this->response($message, REST_Controller::HTTP_OK);
 									}else{
@@ -1558,6 +1628,51 @@ class Mobile extends REST_Controller {
 			}	
 	}
 	/*filecall*/
+	/*logs*/
+	public function activity_logs_post(){
+		$user_id=$this->post('user_id');
+		if($user_id ==''){
+		$message = array('status'=>0,'message'=>'User Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$activity_logs=$this->Mobile_model->get_activity_logs_list($user_id);
+			if(count($activity_logs)>0){
+				$message = array('status'=>1,'activity_logs'=>$activity_logs,'message'=>'Activity logs are found');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}else{
+				$message = array('status'=>0,'message'=>'Activity logs are not found');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}
+	}
+	public function activity_logs_clear_post(){
+		$user_id=$this->post('user_id');
+		if($user_id ==''){
+		$message = array('status'=>0,'message'=>'User Id is required');
+		$this->response($message, REST_Controller::HTTP_OK);			
+		}
+		$activity_logs=$this->Mobile_model->get_activity_logs_list($user_id);
+		foreach($activity_logs as $list){
+				$delete_logs=$this->Mobile_model->delete_all_activity_logs($list['id']);
+				//echo $this->db->last_query();exit;
+			}
+			if(count($delete_logs)>0){
+					$activity=array(
+						'u_id'=>$user_id,
+						'file'=>'',
+						'folder'=>'',
+						'link'=>'',
+						'action'=>'Clear Logs',
+						'create_at'=>date('Y-m-d H:i:s')
+						);
+					$this->Mobile_model->activity_login($activity);
+				$message = array('status'=>1,'user_id'=>$user_id,'message'=>'Activity logs are cleared');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}else{
+				$message = array('status'=>0,'message'=>'Technical problem will occurred .Please try again');
+				$this->response($message, REST_Controller::HTTP_OK);
+			}
+	}
+	/*logs*/
     
 
 }
