@@ -94,5 +94,36 @@ class Images_model extends CI_Model
 		//$this->db->where('floder_list.f_undo', 0);
 		return $this->db->get()->result_array();
 	}
+	public function get_shared_file_details($u_id,$f_id){
+		$this->db->select('*')->from('shared_files');		
+		$this->db->where('u_id', $u_id);
+		$this->db->where('img_id', $f_id);
+		$this->db->or_where('u_email', $u_id);
+		return $this->db->get()->row_array();
+	}
+	public function get_link_details($u_id,$l_id){
+		$this->db->select('*')->from('shared_links');		
+		$this->db->where('u_id', $u_id);
+		$this->db->where('link_id', $l_id);
+		$this->db->or_where('u_email', $u_id);
+		return $this->db->get()->row_array();
+	}
+	public function get_email_link_detail($l_id){
+		$this->db->select('*')->from('shared_links');		
+		$this->db->where('link_id', $l_id);
+		return $this->db->get()->row_array();
+	}
+	public function get_shared_folder_details($u_id,$l_id){
+		$this->db->select('*')->from('shared_folder');		
+		$this->db->where('u_id', $u_id);
+		$this->db->where('f_id', $l_id);
+		$this->db->or_where('u_email', $u_id);
+		return $this->db->get()->row_array();
+	}
+	public function get_email_folder_detail($f_id){
+		$this->db->select('*')->from('floder_list');		
+		$this->db->where('f_id', $f_id);
+		return $this->db->get()->row_array();
+	}
 /*filesharing*/
 }

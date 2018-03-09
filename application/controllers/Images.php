@@ -214,33 +214,52 @@ class Images extends CI_Controller {
 							's_created'=>date('Y-m-d H:i:s'),
 							'file_created_id'=>$loginuser_id['u_id']
 							);
-							$sharedfile=$this->Images_model->save_file_sharing($sharingdata);
-							
-							$shared['shared_user']=$this->User_model->get_user_all_details($list);
-							$shared['link']=
-							//echo '<pre>';print_r($shared_user);exit;
-							$this->email->set_newline("\r\n");
-							$this->email->set_mailtype("html");
-							$this->email->from('Cloud.com');
-							$this->email->to($shared['shared_user']['u_email']);
-							$this->email->subject('Cloudkoza - Shared File');
-							$html = $this->load->view('email/shareemail',$shared, TRUE); 
-							$this->email->message($html);
-							echo $html;	exit;
-							$this->email->send();
+							$already_shared=$this->Images_model->get_shared_file_details($list,$post['sharingfile_id']);
+							if(count($already_shared)==0){ 
+								$sharedfile=$this->Images_model->save_file_sharing($sharingdata);
+								$shared['shared_user']=$this->User_model->get_user_all_details($list);
+								$links=$this->User_model->get_image_details($post['sharingfile_id']);
+								$shared['link']=base_url('assets/files/'.$links['img_name']);
+								$shared['lable']=$links['imag_org_name'];
+								$this->email->set_newline("\r\n");
+								$this->email->set_mailtype("html");
+								$this->email->from('Cloud.com');
+								$this->email->to($shared['shared_user']['u_email']);
+								$this->email->subject('Cloudkoza - Shared File');
+								$html = $this->load->view('email/shareemail',$shared, TRUE); 
+								$this->email->message($html);
+								$this->email->send();
+							}
 						}
 						//exit;
 					}
 					if(isset($post['sharingnotification']) && $post['sharingnotification']!=''){
-						$sharingdata=array(
-							'u_email'=>$post['sharingnotification'],
-							'img_id'=>$post['sharingfile_id'],
-							's_permission'=>$post['permissions'],
-							's_status'=>1,
-							's_created'=>date('Y-m-d H:i:s'),
-							'file_created_id'=>$loginuser_id['u_id']
-							);
-							$sharedfile=$this->Images_model->save_file_sharing($sharingdata);
+						$already_shared=$this->Images_model->get_shared_file_details($post['sharingnotification'],$post['sharingfile_id']);
+						if(count($already_shared)==0){
+								$sharingdata=array(
+									'u_email'=>$post['sharingnotification'],
+									'img_id'=>$post['sharingfile_id'],
+									's_permission'=>$post['permissions'],
+									's_status'=>1,
+									's_created'=>date('Y-m-d H:i:s'),
+									'file_created_id'=>$loginuser_id['u_id']
+									);
+									$already_shared=$this->Images_model->get_shared_file_details($post['sharingnotification'],$post['sharingfile_id']);
+									if(count($already_shared)==0){ 
+										$sharedfile=$this->Images_model->save_file_sharing($sharingdata);
+										$links=$this->User_model->get_image_details($post['sharingfile_id']);
+										$shared['link']=base_url('assets/files/'.$links['img_name']);
+										$shared['lable']=$links['imag_org_name'];
+										$this->email->set_newline("\r\n");
+										$this->email->set_mailtype("html");
+										$this->email->from('Cloud.com');
+										$this->email->to($post['sharingnotification']);
+										$this->email->subject('Cloudkoza - Shared File');
+										$html = $this->load->view('email/shareemail',$shared, TRUE); 
+										$this->email->message($html);
+										$this->email->send();
+									}
+						}
 					}
 						$activity=array(
 								'u_id'=>$loginuser_id['u_id'],
@@ -251,7 +270,7 @@ class Images extends CI_Controller {
 								'create_at'=>date('Y-m-d H:i:s')
 								);
 							$this->User_model->activity_login($activity);
-							echo '<pre>';print_r($post);exit;
+							//echo '<pre>';print_r($post);exit;
 			}else if(isset($post['yes']) && $post['yes']==2){
 				
 				if(isset($post['filesharing']) && $post['filesharing']!=''){
@@ -264,7 +283,23 @@ class Images extends CI_Controller {
 							's_created'=>date('Y-m-d H:i:s'),
 							'file_created_id'=>$loginuser_id['u_id']
 							);
-							$sharedfile=$this->Images_model->save_link_sharing($sharingdata);
+							$already_shared=$this->Images_model->get_link_details($list,$post['sharingfile_id']);
+							if(count($already_shared)==0){
+								$sharedfile=$this->Images_model->save_link_sharing($sharingdata);
+								$shared['shared_user']=$this->User_model->get_user_all_details($list);
+								$links=$this->User_model->get_email_link_detail($post['sharingfile_id']);
+								$shared['link']=$links['l_name'];
+								$shared['lable']=$links['l_name'];
+								$this->email->set_newline("\r\n");
+								$this->email->set_mailtype("html");
+								$this->email->from('Cloud.com');
+								$this->email->to($shared['shared_user']['u_email']);
+								$this->email->subject('Cloudkoza - Shared File');
+								$html = $this->load->view('email/shareemail',$shared, TRUE); 
+								$this->email->message($html);
+								$this->email->send();
+							}
+							
 							//echo '<pre>';print_r($sharingdata);
 						}
 						//exit;
@@ -278,7 +313,22 @@ class Images extends CI_Controller {
 							's_created'=>date('Y-m-d H:i:s'),
 							'file_created_id'=>$loginuser_id['u_id']
 							);
-							$sharedfile=$this->Images_model->save_link_sharing($sharingdata);
+							$already_shared=$this->Images_model->get_link_details($post['sharingnotification'],$post['sharingfile_id']);
+							if(count($already_shared)==0){
+								$sharedfile=$this->Images_model->save_link_sharing($sharingdata);
+								$shared['shared_user']=$this->User_model->get_user_all_details($list);
+								$links=$this->User_model->get_email_link_detail($post['sharingfile_id']);
+								$shared['link']=$links['l_name'];
+								$shared['lable']=$links['l_name'];
+								$this->email->set_newline("\r\n");
+								$this->email->set_mailtype("html");
+								$this->email->from('Cloud.com');
+								$this->email->to($post['sharingnotification']);
+								$this->email->subject('Cloudkoza - Shared File');
+								$html = $this->load->view('email/shareemail',$shared, TRUE); 
+								$this->email->message($html);
+								$this->email->send();
+							}
 					}
 					$activity=array(
 								'u_id'=>$loginuser_id['u_id'],
@@ -300,7 +350,23 @@ class Images extends CI_Controller {
 							's_created'=>date('Y-m-d H:i:s'),
 							'file_created_id'=>$loginuser_id['u_id']
 							);
-							$sharedfile=$this->Images_model->save_folder_sharing($sharingdata);
+							$already_shared=$this->Images_model->get_shared_folder_details($list,$post['sharingfile_id']);
+								if(count($already_shared)==0){
+									$sharedfile=$this->Images_model->save_folder_sharing($sharingdata);
+									$shared['shared_user']=$this->User_model->get_user_all_details($list);
+									$links=$this->Images_model->get_email_folder_detail($post['sharingfile_id']);
+									$shared['link']=base_url('shared');
+									$shared['lable']=$links['f_name'];
+									$this->email->set_newline("\r\n");
+									$this->email->set_mailtype("html");
+									$this->email->from('Cloud.com');
+									$this->email->to($shared['shared_user']['u_email']);
+									$this->email->subject('Cloudkoza - Shared File');
+									$html = $this->load->view('email/shareemail',$shared, TRUE); 
+									$this->email->message($html);
+									$this->email->send();
+								}
+							
 							//echo '<pre>';print_r($sharingdata);exit;
 						}
 						//exit;
@@ -314,7 +380,21 @@ class Images extends CI_Controller {
 							's_created'=>date('Y-m-d H:i:s'),
 							'file_created_id'=>$loginuser_id['u_id']
 							);
-							$sharedfile=$this->Images_model->save_folder_sharing($sharingdata);
+							$already_shared=$this->Images_model->get_shared_folder_details($post['sharingnotification'],$post['sharingfile_id']);
+								if(count($already_shared)==0){
+									$sharedfile=$this->Images_model->save_folder_sharing($sharingdata);
+									$links=$this->Images_model->get_email_folder_detail($post['sharingfile_id']);
+									$shared['link']=base_url('shared');
+									$shared['lable']=$links['f_name'];
+									$this->email->set_newline("\r\n");
+									$this->email->set_mailtype("html");
+									$this->email->from('Cloud.com');
+									$this->email->to($post['sharingnotification']);
+									$this->email->subject('Cloudkoza - Shared File');
+									$html = $this->load->view('email/shareemail',$shared, TRUE); 
+									$this->email->message($html);
+									$this->email->send();
+								}
 					}
 					$activity=array(
 								'u_id'=>$loginuser_id['u_id'],
@@ -334,7 +414,7 @@ class Images extends CI_Controller {
 					redirect($redirection_url);
 			
 			}else{
-				$this->session->set_flashdata('error',"technical problem will occurred. Please try again.");
+				$this->session->set_flashdata('error',"File  already shared. Please try another File");
 					
 							redirect($redirection_url);
 					

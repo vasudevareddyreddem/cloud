@@ -12,7 +12,7 @@
 		
 		<table style="border:0;width:100%;border-collapse:collapse;font-family:Arial,Helvetica,sans-serif;color:#555;font-size:16px;margin-bottom:10px" cellpadding="8">
 			
-			<tbody><tr><td><b>Dear Customer  <?php echo $shared_user['u_name']; ?>,</b></td></tr>
+			<tbody><tr><td><b>Dear Customer  <?php echo isset($shared_user['u_name'])?$shared_user['u_name']:''; ?>,</b></td></tr>
 			<tr><td><b style="color:#555">Please find below Link.</b></td></tr>
 			<tr>
 				<td>
@@ -20,7 +20,7 @@
 					<tbody>
 					<tr>
 					<td bgcolor="#f9f9f9" style="border-bottom:1px solid #eee;border-right:1px solid #eee">Shared Link</td>
-					<td bgcolor="#f9f9f9" style="border-bottom:1px solid #eee"><a href="mailto:bayapureddy004@gmail.com" target="_blank">bayapureddy004@gmail.com</a></td>
+					<td bgcolor="#f9f9f9" style="border-bottom:1px solid #eee"><a href="<?php echo $link; ?>" target="_blank"><?php echo $lable; ?></a></td>
 					</tr>
 					<tr>
 					

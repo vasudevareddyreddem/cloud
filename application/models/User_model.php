@@ -77,6 +77,15 @@ class User_model extends CI_Model
 		$sql1="DELETE FROM logs WHERE id = '".$id."'";
 		return $this->db->query($sql1);
 	}
-
+	public function get_image_details($img_id){
+		$this->db->select('images.img_name,images.imag_org_name')->from('images');		
+		$this->db->where('img_id', $img_id);
+		return $this->db->get()->row_array();
+	}
+	public function get_link_details($linkid){
+		$this->db->select('links.l_name')->from('links');		
+		$this->db->where('l_id', $linkid);
+		return $this->db->get()->row_array();
+	}	
 
 }
