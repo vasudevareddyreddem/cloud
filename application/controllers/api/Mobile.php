@@ -1823,8 +1823,9 @@ class Mobile extends REST_Controller {
 		if(count($check_user)>0){
 			$folder_list=$this->Mobile_model->get_flodername_data($userid);
 			$file_list=$this->Mobile_model->get_fileupload_data($userid);
+			$recen_file=$this->Mobile_model->recen_get_pagewisefileupload_data($userid);
 			if(count($folder_list)>0 || count($file_list)>0){
-				$message = array('status'=>1,'folder_list'=>$folder_list,'file_list'=>$file_list,'filepath'=>base_url('assets/files/'),'message'=>'Dashboard data are found');
+				$message = array('status'=>1,'recent_file'=>$recen_file,'folder_list'=>$folder_list,'file_list'=>$file_list,'filepath'=>base_url('assets/files/'),'message'=>'Dashboard data are found');
 				$this->response($message, REST_Controller::HTTP_OK);
 			}else{
 				$message = array('status'=>0,'message'=>'Dashboard data are not found');

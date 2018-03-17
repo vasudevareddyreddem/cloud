@@ -28,6 +28,23 @@ class Cloud extends CI_Controller {
 		}
 		
 	}
+	
+	public function test(){
+		$this->load->view('testing');
+	}
+	public function testpost(){
+		$this->load->helper('path');
+		$map = directory_map('..\share');
+		$image_path = realpath(APPPATH . '../share');
+		$post=$this->input->post();
+		
+		echo '<pre>';print_r($image_path);
+		echo '<pre>';print_r($map);
+		echo '<pre>';print_r($_FILES);
+		exit;
+		
+	
+	}
 	public function index_backup()
 	{
 		$this->load->view('html/header');
