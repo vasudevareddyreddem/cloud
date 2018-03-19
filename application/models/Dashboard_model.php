@@ -54,13 +54,15 @@ class Dashboard_model extends CI_Model
 		return $this->db->get()->row_array();
 	}
 	public function recen_get_pagewisefileupload_data($u_id){
-		$this->db->select('images.img_id,images.img_name,images.imag_org_name,images.img_create_at')->from('recently_file_open');		
+		$this->db->select('images.img_id,images.img_name,images.imag_org_name,images.img_create_at,favourite.yes')->from('recently_file_open');		
 		$this->db->join('images', 'images.img_id = recently_file_open.file_id', 'left');
+		$this->db->join('favourite', 'favourite.file_id = images.img_id', 'left');	
+
 		$this->db->where('images.u_id', $u_id);
 		$this->db->where('images.img_undo', 0);
-		$this->db->group_by('images.img_id', 0);
+		$this->db->group_by('images.img_id');
 		$this->db->limit(4);
-		$this->db->order_by("recently_file_open.r_file_updated_at", "DESC");
+		$this->db->order_by("recently_file_open.r_file_create_at", "DESC");
 		return $this->db->get()->result();
 	}
 	public function get_fileupload_data($u_id){

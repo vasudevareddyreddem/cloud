@@ -28,7 +28,7 @@ class Mobile_model extends CI_Model
 		return $this->db->get()->row_array();
 	}
 	public function check_login_details($email,$pwd){
-		$this->db->select('users.u_id,users.role,users.u_name,users.u_email,users.u_mobile,users.u_dob,users.u_gender,users.u_barcode,users.u_barcode_image,u_profilepic')->from('users');		
+		$this->db->select('users.u_id,users.role,users.u_name,users.u_email,users.u_mobile,users.u_dob,users.u_gender,users.u_barcode,users.u_barcode_image,u_profilepic,password_lastupdate')->from('users');		
 		$this->db->where('u_email', $email);
 		$this->db->where('u_password', $pwd);
 		return $this->db->get()->row_array();
@@ -59,7 +59,7 @@ class Mobile_model extends CI_Model
 		return $this->db->update('floder_list', $data);
 	}
 	public function get_folder_details($f_id){
-		$this->db->select('floder_list.f_id,floder_list.u_id')->from('floder_list');		
+		$this->db->select('floder_list.f_id,floder_list.u_id,floder_list.f_name')->from('floder_list');		
 		$this->db->where('f_id', $f_id);
 		return $this->db->get()->row_array();
 	}
@@ -421,6 +421,34 @@ class Mobile_model extends CI_Model
 		return $insert_id = $this->db->insert_id();
 	}
 	/* logs*/
+	public function get_user_all_details($uid){
+		$this->db->select('*')->from('users');		
+		$this->db->where('u_id', $uid);
+		return $this->db->get()->row_array();
+	}
+	public function get_email_link_detail($l_id){
+		$this->db->select('*')->from('shared_links');		
+		$this->db->where('link_id', $l_id);
+		return $this->db->get()->row_array();
+	}
+	public function get_image_details($img_id){
+		$this->db->select('images.img_name,images.imag_org_name')->from('images');		
+		$this->db->where('img_id', $img_id);
+		return $this->db->get()->row_array();
+	}
 	
+	
+	public function recen_get_pagewisefileupload_data($u_id){
+		$this->db->select('images.img_id,images.img_name,images.imag_org_name,images.img_create_at,favourite.yes')->from('recently_file_open');		
+		$this->db->join('images', 'images.img_id = recently_file_open.file_id', 'left');
+		$this->db->join('favourite', 'favourite.file_id = images.img_id', 'left');	
+
+		$this->db->where('images.u_id', $u_id);
+		$this->db->where('images.img_undo', 0);
+		$this->db->group_by('images.img_id');
+		$this->db->limit(4);
+		$this->db->order_by("recently_file_open.r_file_create_at", "DESC");
+		return $this->db->get()->result();
+	}
 
 }

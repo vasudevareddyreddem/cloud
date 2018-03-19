@@ -124,6 +124,7 @@ class Mobile extends REST_Controller {
 		$useremail = $this->security->sanitize_filename($this->post('email'), TRUE);
 		$check_login=$this->Mobile_model->check_login_details($useremail,md5($password));
 			if(count($check_login)>0){
+						
 					$activity=array(
 							'u_id'=>$check_login['u_id'],
 							'file'=>'',
@@ -133,6 +134,14 @@ class Mobile extends REST_Controller {
 							'create_at'=>date('Y-m-d H:i:s')
 							);
 					$this->Mobile_model->activity_login($activity);
+					$date=date('Y-m-d H:i:s');
+						$date1  = new DateTime($date);
+						$date2 = new DateTime($check_login['password_lastupdate']);
+						$days  = $date2->diff($date1)->format('%a');
+						if($days >=90){
+						$message = array('status'=>1,'userid'=>$check_login['u_id'],'message'=>'Your login password expired. Please reset your password.');
+						$this->response($message, REST_Controller::HTTP_OK);	
+						}
 					$this->session->set_userdata('userdetails',$check_login);
 					$message = array('status'=>1,'userdetails'=>$check_login,'message'=>'User successfully Login');
 					$this->response($message, REST_Controller::HTTP_OK);
@@ -761,6 +770,23 @@ class Mobile extends REST_Controller {
 							);
 							$shared_data=$this->Mobile_model->folder_share($folderdata);
 								if(count($shared_data)>0){
+										if(isset($shareduser_id) && $shareduser_id!=''){
+										$shared['shared_user']=$this->Mobile_model->get_user_all_details($shareduser_id);
+										}
+										$shared['link']=base_url('shared');
+										$shared['lable']=$details['f_name'];
+										$this->email->set_newline("\r\n");
+										$this->email->set_mailtype("html");
+										$this->email->from('Cloud.com');
+										if(isset($shareduser_id) && $shareduser_id!=''){
+										$this->email->to($shared['shared_user']['u_email']);
+										}else{
+											$this->email->to($email);
+										}
+										$this->email->subject('Cloudkoza - Shared File');
+										$html = $this->load->view('email/shareemail',$shared, TRUE); 
+										$this->email->message($html);
+										$this->email->send();
 									$activity=array(
 									'u_id'=>$user_id,
 									'file'=>'',
@@ -1207,6 +1233,25 @@ class Mobile extends REST_Controller {
 							);
 							$shared_data=$this->Mobile_model->file_share($filedata);
 								if(count($shared_data)>0){
+										if(isset($shareduser_id) && $shareduser_id!=''){
+											$shared['shared_user']=$this->Mobile_model->get_user_all_details($shareduser_id);
+										}
+										$links=$this->Mobile_model->get_image_details($file_id);
+										$shared['link']=base_url('assets/files/'.$links['img_name']);
+										$shared['lable']=$links['imag_org_name'];
+										$this->email->set_newline("\r\n");
+										$this->email->set_mailtype("html");
+										$this->email->from('Cloud.com');
+										if(isset($shareduser_id) && $shareduser_id!=''){
+										$this->email->to($shared['shared_user']['u_email']);
+										}else{
+											$this->email->to($email);
+										}
+										$this->email->subject('Cloudkoza - Shared File');
+										$html = $this->load->view('email/shareemail',$shared, TRUE); 
+										$this->email->message($html);
+										$this->email->send();
+									
 									$activity=array(
 										'u_id'=>$user_id,
 										'file'=>$file_id,
@@ -1557,6 +1602,24 @@ class Mobile extends REST_Controller {
 							);
 							$shared_data=$this->Mobile_model->link_share($linkdata);
 								if(count($shared_data)>0){
+									if(isset($shareduser_id) && $shareduser_id!=''){
+											$shared['shared_user']=$this->Mobile_model->get_user_all_details($shareduser_id);
+										}
+										$links=$this->Mobile_model->get_email_link_detail($linkid);
+										$shared['link']=$links['l_name'];
+										$shared['lable']=$links['l_name'];
+										$this->email->set_newline("\r\n");
+										$this->email->set_mailtype("html");
+										$this->email->from('Cloud.com');
+										if(isset($shareduser_id) && $shareduser_id!=''){
+										$this->email->to($shared['shared_user']['u_email']);
+										}else{
+											$this->email->to($email);
+										}
+										$this->email->subject('Cloudkoza - Shared File');
+										$html = $this->load->view('email/shareemail',$shared, TRUE); 
+										$this->email->message($html);
+										$this->email->send();
 									$activity=array(
 											'u_id'=>$user_id,
 											'file'=>'',
@@ -1760,8 +1823,9 @@ class Mobile extends REST_Controller {
 		if(count($check_user)>0){
 			$folder_list=$this->Mobile_model->get_flodername_data($userid);
 			$file_list=$this->Mobile_model->get_fileupload_data($userid);
+			$recen_file=$this->Mobile_model->recen_get_pagewisefileupload_data($userid);
 			if(count($folder_list)>0 || count($file_list)>0){
-				$message = array('status'=>1,'folder_list'=>$folder_list,'file_list'=>$file_list,'filepath'=>base_url('assets/files/'),'message'=>'Dashboard data are found');
+				$message = array('status'=>1,'recent_file'=>$recen_file,'folder_list'=>$folder_list,'file_list'=>$file_list,'filepath'=>base_url('assets/files/'),'message'=>'Dashboard data are found');
 				$this->response($message, REST_Controller::HTTP_OK);
 			}else{
 				$message = array('status'=>0,'message'=>'Dashboard data are not found');
